@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoAdverts</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 16px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 12px 0;
+    }
+    .plan {
+      background: #1f1f1f;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 12px 0;
+    }
+    button {
+      background: #00bfff;
+      color: white;
+      border: none;
+      padding: 14px;
+      width: 100%;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    button:active { background: #0099cc; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>#1 Automated Advertising Bot</h1>
+  </div>
+
+  <div class="card">
+    <p>• Automated plan deployments<br>
+       • Unlimited posts on rotation<br>
+       • Automated crypto deposits<br>
+       • Unlimited account ban replacements<br>
+       • Fully insured against plan downtimes</p>
+  </div>
+
+  <h2 style="margin: 20px 0 10px;">Choose your plan</h2>
+
+  <div class="plan">
+    <strong>STARTER — $15/mo</strong><br>
+    Up to 1 account
+    <button onclick="buyPlan(15)">Purchase</button>
+  </div>
+
+  <div class="plan">
+    <strong>PREMIUM — $35/mo</strong><br>
+    Up to 2 accounts
+    <button onclick="buyPlan(35)">Purchase</button>
+  </div>
+
+  <div class="plan">
+    <strong>ADVANCED — $80/mo</strong><br>
+    Up to 5 accounts
+    <button onclick="buyPlan(80)">Purchase</button>
+  </div>
+
+  <div class="plan">
+    <strong>ULTIMATE — $125/mo</strong><br>
+    Unlimited accounts
+    <button onclick="buyPlan(125)">Purchase</button>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.setHeaderColor("#0a0a0a");
+
+    function buyPlan(price) {
+      tg.sendData(JSON.stringify({action: "buy", price: price}));
+      tg.showAlert(`Payment flow for $${price} started!`);
+    }
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoAdverts</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 16px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 12px 0;
+    }
+    .plan {
+      background: #1f1f1f;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 12px 0;
+    }
+    button {
+      background: #00bfff;
+      color: white;
+      border: none;
+      padding: 14px;
+      width: 100%;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    button:active { background: #0099cc; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>#1 Automated Advertising Bot</h1>
+  </div>
+
+  <div class="card">
+    <p>• Automated plan deployments<br>
+       • Unlimited posts on rotation<br>
+       • Automated crypto deposits<br>
+       • Unlimited account ban replacements<br>
+       • Fully insured against plan downtimes</p>
+  </div>
+
+  <h2 style="margin: 20px 0 10px;">Choose your plan</h2>
+
+  <div class="plan">
+    <strong>STARTER — $15/mo</strong><br>
+    Up to 1 account
+    <button onclick="buyPlan(15)">Purchase</button>
+  </div>
+
+  <div class="plan">
+    <strong>PREMIUM — $35/mo</strong><br>
+    Up to 2 accounts
+    <button onclick="buyPlan(35)">Purchase</button>
+  </div>
+
+  <div class="plan">
+    <strong>ADVANCED — $80/mo</strong><br>
+    Up to 5 accounts
+    <button onclick="buyPlan(80)">Purchase</button>
+  </div>
+
+  <div class="plan">
+    <strong>ULTIMATE — $125/mo</strong><br>
+    Unlimited accounts
+    <button onclick="buyPlan(125)">Purchase</button>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    tg.setHeaderColor("#0a0a0a");
+
+    function buyPlan(price) {
+      tg.sendData(JSON.stringify({action: "buy", price: price}));
+      tg.showAlert(`Payment flow for $${price} started!`);
+    }
+  </script>
+</body>
+</html>
