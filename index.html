@@ -10,7 +10,7 @@
     
     body {
       background: #0f0f0f;
-      color: #ffffff;
+      color: #fff;
       font-family: 'Inter', system-ui, sans-serif;
       margin: 0;
       padding: 0;
@@ -19,64 +19,43 @@
     }
     .header {
       background: #1a1a1a;
-      padding: 14px 16px;
+      padding: 14px;
+      text-align: center;
       font-size: 17px;
       font-weight: 600;
-      text-align: center;
       border-bottom: 1px solid #333;
     }
     .content {
       padding: 16px;
-      padding-bottom: 85px;
+      padding-bottom: 90px;
       overflow-y: auto;
-      height: calc(100vh - 140px);
+      height: calc(100vh - 150px);
     }
-    .plan-card {
+    .plan-card, .form-card {
       background: #1a1a1a;
       border-radius: 12px;
       padding: 16px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      margin-bottom: 16px;
     }
-    .plan-left h3 {
-      margin: 0 0 4px 0;
-      font-size: 17px;
-    }
-    .plan-left p {
-      margin: 0;
-      color: #aaaaaa;
-      font-size: 14px;
-    }
-    .price {
-      font-size: 24px;
-      font-weight: 700;
-      color: #00b4ff;
-      text-align: right;
-    }
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-left: 12px;
+    input, textarea {
+      width: 100%;
+      background: #222;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      color: white;
+      margin: 8px 0;
     }
     button {
-      padding: 9px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
+      width: 100%;
+      padding: 14px;
       border: none;
-      cursor: pointer;
+      border-radius: 10px;
+      font-weight: 600;
+      margin-top: 8px;
     }
-    .btn-info {
-      background: #2a2a2a;
-      color: white;
-    }
-    .btn-purchase {
-      background: #2481cc;
-      color: white;
-    }
+    .btn-purchase { background: #2481cc; color: white; }
+    .btn-submit { background: #00bfff; color: white; }
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -85,97 +64,72 @@
       background: #1a1a1a;
       display: flex;
       justify-content: space-around;
-      padding: 10px 0 8px;
+      padding: 10px 0;
       border-top: 1px solid #333;
     }
     .nav-item {
       text-align: center;
-      color: #aaaaaa;
+      color: #aaa;
       font-size: 11px;
       cursor: pointer;
     }
-    .nav-item.active {
-      color: #ffffff;
-    }
+    .nav-item.active { color: #fff; }
   </style>
 </head>
 <body>
-  <div class="header">
-    #1 Automated Advertising Bot
-  </div>
+  <div class="header">#1 Automated Advertising Bot</div>
 
+  <!-- PURCHASE PAGE -->
   <div id="purchase-page" class="content">
+    <h2>Choose your plan</h2>
     <div class="plan-card">
-      <div class="plan-left">
-        <h3>STARTER</h3>
-        <p>Up to 1 account</p>
-      </div>
-      <div class="price">$15<span style="font-size:14px;">/mo</span></div>
-      <div class="buttons">
-        <button class="btn-info" onclick="showMore(15)">More Info</button>
-        <button class="btn-purchase" onclick="buyPlan(15)">Purchase</button>
-      </div>
+      <strong>STARTER — $15/mo</strong><br>1 Account
+      <button class="btn-purchase" onclick="buyPlan(15)">Purchase</button>
     </div>
-
     <div class="plan-card">
-      <div class="plan-left">
-        <h3>PREMIUM</h3>
-        <p>Up to 2 accounts</p>
-      </div>
-      <div class="price">$35<span style="font-size:14px;">/mo</span></div>
-      <div class="buttons">
-        <button class="btn-info" onclick="showMore(35)">More Info</button>
-        <button class="btn-purchase" onclick="buyPlan(35)">Purchase</button>
-      </div>
+      <strong>PREMIUM — $35/mo</strong><br>3 Accounts
+      <button class="btn-purchase" onclick="buyPlan(35)">Purchase</button>
     </div>
-
     <div class="plan-card">
-      <div class="plan-left">
-        <h3>ADVANCED</h3>
-        <p>Up to 5 accounts</p>
-      </div>
-      <div class="price">$80<span style="font-size:14px;">/mo</span></div>
-      <div class="buttons">
-        <button class="btn-info" onclick="showMore(80)">More Info</button>
-        <button class="btn-purchase" onclick="buyPlan(80)">Purchase</button>
-      </div>
-    </div>
-
-    <div class="plan-card">
-      <div class="plan-left">
-        <h3>PREMIUM</h3>
-        <p>Up to 1 account</p>
-      </div>
-      <div class="price">$50<span style="font-size:14px;">/mo</span></div>
-      <div class="buttons">
-        <button class="btn-info" onclick="showMore(50)">More Info</button>
-        <button class="btn-purchase" onclick="buyPlan(50)">Purchase</button>
-      </div>
+      <strong>ADVANCED — $80/mo</strong><br>5 Accounts
+      <button class="btn-purchase" onclick="buyPlan(80)">Purchase</button>
     </div>
   </div>
 
-  <!-- Other pages (hidden by default) -->
-  <div id="services-page" class="content" style="display: none;">
-    <h2>📋 Services</h2>
-    <p>No active services yet.</p>
+  <!-- SUBMIT AD PAGE -->
+  <div id="ads-page" class="content" style="display:none;">
+    <h2>📤 Submit New Ad</h2>
+    <div class="form-card">
+      <p>Paste the link of your ad message:</p>
+      <input type="text" id="ad-link" placeholder="https://t.me/c/123456789/42 or chat_id/message_id" />
+      <button class="btn-submit" onclick="submitAd()">Submit Ad</button>
+    </div>
+    <p style="color:#aaa; font-size:14px;">Your ad will be automatically forwarded from your assigned accounts.</p>
   </div>
 
-  <div id="referrals-page" class="content" style="display: none;">
+  <!-- SERVICES / MY ADS -->
+  <div id="services-page" class="content" style="display:none;">
+    <h2>📋 My Services</h2>
+    <p>No active ads yet.<br>Go to Submit Ad to start.</p>
+  </div>
+
+  <!-- Referrals & Profile (simple) -->
+  <div id="referrals-page" class="content" style="display:none;">
     <h2>🔗 Referrals</h2>
-    <p>Invite friends and earn 30% forever.</p>
+    <p>Earn 30% commission on every referral purchase.</p>
   </div>
 
-  <div id="profile-page" class="content" style="display: none;">
+  <div id="profile-page" class="content" style="display:none;">
     <h2>👤 Profile</h2>
     <p>Balance: $0.00</p>
   </div>
 
   <!-- Bottom Navigation -->
   <div class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab(0)">🛒<br><span>Purchase</span></div>
-    <div class="nav-item" onclick="switchTab(1)">📋<br><span>Services</span></div>
-    <div class="nav-item" onclick="switchTab(2)">🔗<br><span>Referrals</span></div>
-    <div class="nav-item" onclick="switchTab(3)">👤<br><span>Profile</span></div>
+    <div class="nav-item" onclick="switchTab(0)">🛒<br>Purchase</div>
+    <div class="nav-item active" onclick="switchTab(1)">📤<br>Submit Ad</div>
+    <div class="nav-item" onclick="switchTab(2)">📋<br>Services</div>
+    <div class="nav-item" onclick="switchTab(3)">🔗<br>Referrals</div>
   </div>
 
   <script>
@@ -184,26 +138,33 @@
     tg.setHeaderColor("#0f0f0f");
 
     function switchTab(tab) {
-      document.querySelectorAll('.content').forEach(page => page.style.display = 'none');
-      const pages = ['purchase-page', 'services-page', 'referrals-page', 'profile-page'];
+      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
+      const pages = ['purchase-page', 'ads-page', 'services-page', 'referrals-page', 'profile-page'];
       document.getElementById(pages[tab]).style.display = 'block';
 
-      document.querySelectorAll('.nav-item').forEach((item, index) => {
-        item.classList.toggle('active', index === tab);
+      document.querySelectorAll('.nav-item').forEach((el, i) => {
+        el.classList.toggle('active', i === tab);
       });
     }
 
     function buyPlan(price) {
-      tg.sendData(JSON.stringify({action: "buy_plan", price: price}));
-      tg.showAlert(`Opening payment for $${price}/month...`);
+      tg.sendData(JSON.stringify({ action: "buy_plan", price: price }));
+      tg.showAlert(`Payment for $${price}/mo started!`);
     }
 
-    function showMore(price) {
-      tg.showAlert(`More details for $${price} plan coming soon.`);
+    function submitAd() {
+      const link = document.getElementById('ad-link').value.trim();
+      if (!link) {
+        tg.showAlert("Please paste your ad message link");
+        return;
+      }
+      tg.sendData(JSON.stringify({ action: "submit_ad", link: link }));
+      tg.showAlert("Ad submitted successfully!");
+      document.getElementById('ad-link').value = '';
     }
 
-    // Start on Purchase tab
-    switchTab(0);
+    // Start on Submit Ad tab
+    switchTab(1);
   </script>
 </body>
 </html>
