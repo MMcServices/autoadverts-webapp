@@ -7,187 +7,202 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    
     body {
-      background: #0a0a0a;
+      background: #0f0f0f;
       color: #fff;
       font-family: 'Inter', system-ui, sans-serif;
       margin: 0;
-      padding: 16px;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
     }
     .header {
+      padding: 16px;
       text-align: center;
-      margin-bottom: 20px;
-    }
-    .card {
       background: #1a1a1a;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 12px 0;
+      font-size: 18px;
+      font-weight: 600;
     }
-    .plan {
-      background: #1f1f1f;
-      border-radius: 12px;
-      padding: 18px;
-      margin: 12px 0;
+    .content {
+      padding: 16px;
+      padding-bottom: 80px;
+      overflow-y: auto;
+      height: calc(100vh - 140px);
+    }
+    .plan-card {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .plan-info h3 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+    }
+    .plan-info p {
+      margin: 0;
+      color: #aaa;
+      font-size: 14px;
+    }
+    .price {
+      font-size: 22px;
+      font-weight: 700;
+      color: #00d4ff;
     }
     button {
-      background: #00bfff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .btn-more {
+      background: #333;
+      color: #fff;
+      border: none;
+    }
+    .btn-purchase {
+      background: #2481cc;
       color: white;
       border: none;
-      padding: 14px;
-      width: 100%;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
-      margin-top: 10px;
     }
-    button:active { background: #0099cc; }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      border-top: 1px solid #333;
+    }
+    .nav-item {
+      text-align: center;
+      color: #aaa;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .nav-item.active {
+      color: #00d4ff;
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>#1 Automated Advertising Bot</h1>
+    #1 Automated Advertising Bot
   </div>
 
-  <div class="card">
-    <p>• Automated plan deployments<br>
-       • Unlimited posts on rotation<br>
-       • Automated crypto deposits<br>
-       • Unlimited account ban replacements<br>
-       • Fully insured against plan downtimes</p>
+  <!-- Purchase Page -->
+  <div id="purchase-page" class="content">
+    <h2 style="margin-top:0;">Choose your plan</h2>
+    
+    <div class="plan-card">
+      <div class="plan-info">
+        <h3>STARTER</h3>
+        <p>Up to 1 account</p>
+      </div>
+      <div>
+        <div class="price">$15<span style="font-size:14px;">/mo</span></div>
+        <button class="btn-more" onclick="showMoreInfo(15)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(15)">Purchase</button>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-info">
+        <h3>PREMIUM</h3>
+        <p>Up to 2 accounts</p>
+      </div>
+      <div>
+        <div class="price">$35<span style="font-size:14px;">/mo</span></div>
+        <button class="btn-more" onclick="showMoreInfo(35)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(35)">Purchase</button>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-info">
+        <h3>ADVANCED</h3>
+        <p>Up to 5 accounts</p>
+      </div>
+      <div>
+        <div class="price">$80<span style="font-size:14px;">/mo</span></div>
+        <button class="btn-more" onclick="showMoreInfo(80)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(80)">Purchase</button>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-info">
+        <h3>ULTIMATE</h3>
+        <p>Unlimited accounts</p>
+      </div>
+      <div>
+        <div class="price">$125<span style="font-size:14px;">/mo</span></div>
+        <button class="btn-more" onclick="showMoreInfo(125)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(125)">Purchase</button>
+      </div>
+    </div>
   </div>
 
-  <h2 style="margin: 20px 0 10px;">Choose your plan</h2>
-
-  <div class="plan">
-    <strong>STARTER — $15/mo</strong><br>
-    Up to 1 account
-    <button onclick="buyPlan(15)">Purchase</button>
+  <!-- Services Page -->
+  <div id="services-page" class="content" style="display:none;">
+    <h2>📋 Services</h2>
+    <p>No active services yet.<br>Purchase a plan to get started.</p>
   </div>
 
-  <div class="plan">
-    <strong>PREMIUM — $35/mo</strong><br>
-    Up to 2 accounts
-    <button onclick="buyPlan(35)">Purchase</button>
+  <!-- Referrals Page -->
+  <div id="referrals-page" class="content" style="display:none;">
+    <h2>🔗 Referrals</h2>
+    <p>Invite friends and earn 30% commission on every purchase.</p>
+    <p><strong>Your link:</strong><br><code id="ref-link">https://t.me/yourbot?start=...</code></p>
   </div>
 
-  <div class="plan">
-    <strong>ADVANCED — $80/mo</strong><br>
-    Up to 5 accounts
-    <button onclick="buyPlan(80)">Purchase</button>
+  <!-- Profile Page -->
+  <div id="profile-page" class="content" style="display:none;">
+    <h2>👤 Profile</h2>
+    <p>Balance: $0.00</p>
+    <p>Member Since: Today</p>
   </div>
 
-  <div class="plan">
-    <strong>ULTIMATE — $125/mo</strong><br>
-    Unlimited accounts
-    <button onclick="buyPlan(125)">Purchase</button>
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab(0)">🛒<br>Purchase</div>
+    <div class="nav-item" onclick="switchTab(1)">📋<br>Services</div>
+    <div class="nav-item" onclick="switchTab(2)">🔗<br>Referrals</div>
+    <div class="nav-item" onclick="switchTab(3)">👤<br>Profile</div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.setHeaderColor("#0a0a0a");
+    tg.setHeaderColor("#0f0f0f");
+
+    function switchTab(tab) {
+      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
+      document.getElementById(['purchase-page','services-page','referrals-page','profile-page'][tab]).style.display = 'block';
+      
+      document.querySelectorAll('.nav-item').forEach((el, i) => {
+        el.classList.toggle('active', i === tab);
+      });
+    }
 
     function buyPlan(price) {
-      tg.sendData(JSON.stringify({action: "buy", price: price}));
-      tg.showAlert(`Payment flow for $${price} started!`);
+      tg.sendData(JSON.stringify({ action: "buy_plan", price: price }));
+      tg.showAlert(`Payment for $${price}/month started!`);
     }
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AutoAdverts</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    body {
-      background: #0a0a0a;
-      color: #fff;
-      font-family: 'Inter', system-ui, sans-serif;
-      margin: 0;
-      padding: 16px;
+
+    function showMoreInfo(price) {
+      tg.showAlert(`More info about $${price} plan coming soon.`);
     }
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .card {
-      background: #1a1a1a;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 12px 0;
-    }
-    .plan {
-      background: #1f1f1f;
-      border-radius: 12px;
-      padding: 18px;
-      margin: 12px 0;
-    }
-    button {
-      background: #00bfff;
-      color: white;
-      border: none;
-      padding: 14px;
-      width: 100%;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
-      margin-top: 10px;
-    }
-    button:active { background: #0099cc; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>#1 Automated Advertising Bot</h1>
-  </div>
 
-  <div class="card">
-    <p>• Automated plan deployments<br>
-       • Unlimited posts on rotation<br>
-       • Automated crypto deposits<br>
-       • Unlimited account ban replacements<br>
-       • Fully insured against plan downtimes</p>
-  </div>
-
-  <h2 style="margin: 20px 0 10px;">Choose your plan</h2>
-
-  <div class="plan">
-    <strong>STARTER — $15/mo</strong><br>
-    Up to 1 account
-    <button onclick="buyPlan(15)">Purchase</button>
-  </div>
-
-  <div class="plan">
-    <strong>PREMIUM — $35/mo</strong><br>
-    Up to 2 accounts
-    <button onclick="buyPlan(35)">Purchase</button>
-  </div>
-
-  <div class="plan">
-    <strong>ADVANCED — $80/mo</strong><br>
-    Up to 5 accounts
-    <button onclick="buyPlan(80)">Purchase</button>
-  </div>
-
-  <div class="plan">
-    <strong>ULTIMATE — $125/mo</strong><br>
-    Unlimited accounts
-    <button onclick="buyPlan(125)">Purchase</button>
-  </div>
-
-  <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-    tg.setHeaderColor("#0a0a0a");
-
-    function buyPlan(price) {
-      tg.sendData(JSON.stringify({action: "buy", price: price}));
-      tg.showAlert(`Payment flow for $${price} started!`);
-    }
+    // Default to Purchase tab
+    switchTab(0);
   </script>
 </body>
 </html>
