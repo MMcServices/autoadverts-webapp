@@ -10,7 +10,7 @@
     
     body {
       background: #0f0f0f;
-      color: #fff;
+      color: #ffffff;
       font-family: 'Inter', system-ui, sans-serif;
       margin: 0;
       padding: 0;
@@ -18,57 +18,64 @@
       overflow: hidden;
     }
     .header {
-      padding: 16px;
-      text-align: center;
       background: #1a1a1a;
-      font-size: 18px;
+      padding: 14px 16px;
+      font-size: 17px;
       font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid #333;
     }
     .content {
       padding: 16px;
-      padding-bottom: 80px;
+      padding-bottom: 85px;
       overflow-y: auto;
       height: calc(100vh - 140px);
     }
     .plan-card {
       background: #1a1a1a;
-      border-radius: 14px;
+      border-radius: 12px;
       padding: 16px;
       margin-bottom: 12px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
-    .plan-info h3 {
+    .plan-left h3 {
       margin: 0 0 4px 0;
-      font-size: 18px;
+      font-size: 17px;
     }
-    .plan-info p {
+    .plan-left p {
       margin: 0;
-      color: #aaa;
+      color: #aaaaaa;
       font-size: 14px;
     }
     .price {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 700;
-      color: #00d4ff;
+      color: #00b4ff;
+      text-align: right;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-left: 12px;
     }
     button {
-      padding: 8px 16px;
+      padding: 9px 20px;
       border-radius: 8px;
       font-weight: 600;
       font-size: 14px;
+      border: none;
       cursor: pointer;
     }
-    .btn-more {
-      background: #333;
-      color: #fff;
-      border: none;
+    .btn-info {
+      background: #2a2a2a;
+      color: white;
     }
     .btn-purchase {
       background: #2481cc;
       color: white;
-      border: none;
     }
     .bottom-nav {
       position: fixed;
@@ -78,17 +85,17 @@
       background: #1a1a1a;
       display: flex;
       justify-content: space-around;
-      padding: 8px 0;
+      padding: 10px 0 8px;
       border-top: 1px solid #333;
     }
     .nav-item {
       text-align: center;
-      color: #aaa;
-      font-size: 12px;
+      color: #aaaaaa;
+      font-size: 11px;
       cursor: pointer;
     }
     .nav-item.active {
-      color: #00d4ff;
+      color: #ffffff;
     }
   </style>
 </head>
@@ -97,85 +104,78 @@
     #1 Automated Advertising Bot
   </div>
 
-  <!-- Purchase Page -->
   <div id="purchase-page" class="content">
-    <h2 style="margin-top:0;">Choose your plan</h2>
-    
     <div class="plan-card">
-      <div class="plan-info">
+      <div class="plan-left">
         <h3>STARTER</h3>
         <p>Up to 1 account</p>
       </div>
-      <div>
-        <div class="price">$15<span style="font-size:14px;">/mo</span></div>
-        <button class="btn-more" onclick="showMoreInfo(15)">More Info</button>
+      <div class="price">$15<span style="font-size:14px;">/mo</span></div>
+      <div class="buttons">
+        <button class="btn-info" onclick="showMore(15)">More Info</button>
         <button class="btn-purchase" onclick="buyPlan(15)">Purchase</button>
       </div>
     </div>
 
     <div class="plan-card">
-      <div class="plan-info">
+      <div class="plan-left">
         <h3>PREMIUM</h3>
         <p>Up to 2 accounts</p>
       </div>
-      <div>
-        <div class="price">$35<span style="font-size:14px;">/mo</span></div>
-        <button class="btn-more" onclick="showMoreInfo(35)">More Info</button>
+      <div class="price">$35<span style="font-size:14px;">/mo</span></div>
+      <div class="buttons">
+        <button class="btn-info" onclick="showMore(35)">More Info</button>
         <button class="btn-purchase" onclick="buyPlan(35)">Purchase</button>
       </div>
     </div>
 
     <div class="plan-card">
-      <div class="plan-info">
+      <div class="plan-left">
         <h3>ADVANCED</h3>
         <p>Up to 5 accounts</p>
       </div>
-      <div>
-        <div class="price">$80<span style="font-size:14px;">/mo</span></div>
-        <button class="btn-more" onclick="showMoreInfo(80)">More Info</button>
+      <div class="price">$80<span style="font-size:14px;">/mo</span></div>
+      <div class="buttons">
+        <button class="btn-info" onclick="showMore(80)">More Info</button>
         <button class="btn-purchase" onclick="buyPlan(80)">Purchase</button>
       </div>
     </div>
 
     <div class="plan-card">
-      <div class="plan-info">
-        <h3>ULTIMATE</h3>
-        <p>Unlimited accounts</p>
+      <div class="plan-left">
+        <h3>PREMIUM</h3>
+        <p>Up to 1 account</p>
       </div>
-      <div>
-        <div class="price">$125<span style="font-size:14px;">/mo</span></div>
-        <button class="btn-more" onclick="showMoreInfo(125)">More Info</button>
-        <button class="btn-purchase" onclick="buyPlan(125)">Purchase</button>
+      <div class="price">$50<span style="font-size:14px;">/mo</span></div>
+      <div class="buttons">
+        <button class="btn-info" onclick="showMore(50)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(50)">Purchase</button>
       </div>
     </div>
   </div>
 
-  <!-- Services Page -->
-  <div id="services-page" class="content" style="display:none;">
+  <!-- Other pages (hidden by default) -->
+  <div id="services-page" class="content" style="display: none;">
     <h2>📋 Services</h2>
-    <p>No active services yet.<br>Purchase a plan to get started.</p>
+    <p>No active services yet.</p>
   </div>
 
-  <!-- Referrals Page -->
-  <div id="referrals-page" class="content" style="display:none;">
+  <div id="referrals-page" class="content" style="display: none;">
     <h2>🔗 Referrals</h2>
-    <p>Invite friends and earn 30% commission on every purchase.</p>
-    <p><strong>Your link:</strong><br><code id="ref-link">https://t.me/yourbot?start=...</code></p>
+    <p>Invite friends and earn 30% forever.</p>
   </div>
 
-  <!-- Profile Page -->
-  <div id="profile-page" class="content" style="display:none;">
+  <div id="profile-page" class="content" style="display: none;">
     <h2>👤 Profile</h2>
     <p>Balance: $0.00</p>
-    <p>Member Since: Today</p>
   </div>
 
   <!-- Bottom Navigation -->
   <div class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab(0)">🛒<br>Purchase</div>
-    <div class="nav-item" onclick="switchTab(1)">📋<br>Services</div>
-    <div class="nav-item" onclick="switchTab(2)">🔗<br>Referrals</div>
-    <div class="nav-item" onclick="switchTab(3)">👤<br>Profile</div>
+    <div class="nav-item active" onclick="switchTab(0)">🛒<br><span>Purchase</span></div>
+    <div class="nav-item" onclick="switchTab(1)">📋<br><span>Services</span></div>
+    <div class="nav-item" onclick="switchTab(2)">🔗<br><span>Referrals</span></div>
+    <div class="nav-item" onclick="switchTab(3)">👤<br><span>Profile</span></div>
   </div>
 
   <script>
@@ -184,24 +184,25 @@
     tg.setHeaderColor("#0f0f0f");
 
     function switchTab(tab) {
-      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
-      document.getElementById(['purchase-page','services-page','referrals-page','profile-page'][tab]).style.display = 'block';
-      
-      document.querySelectorAll('.nav-item').forEach((el, i) => {
-        el.classList.toggle('active', i === tab);
+      document.querySelectorAll('.content').forEach(page => page.style.display = 'none');
+      const pages = ['purchase-page', 'services-page', 'referrals-page', 'profile-page'];
+      document.getElementById(pages[tab]).style.display = 'block';
+
+      document.querySelectorAll('.nav-item').forEach((item, index) => {
+        item.classList.toggle('active', index === tab);
       });
     }
 
     function buyPlan(price) {
-      tg.sendData(JSON.stringify({ action: "buy_plan", price: price }));
-      tg.showAlert(`Payment for $${price}/month started!`);
+      tg.sendData(JSON.stringify({action: "buy_plan", price: price}));
+      tg.showAlert(`Opening payment for $${price}/month...`);
     }
 
-    function showMoreInfo(price) {
-      tg.showAlert(`More info about $${price} plan coming soon.`);
+    function showMore(price) {
+      tg.showAlert(`More details for $${price} plan coming soon.`);
     }
 
-    // Default to Purchase tab
+    // Start on Purchase tab
     switchTab(0);
   </script>
 </body>
