@@ -32,7 +32,6 @@
     button { padding: 10px 18px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
     .btn-purchase { background: #2481cc; color: white; }
 
-    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -50,19 +49,31 @@
       padding: 20px;
     }
     .modal-header { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
-    .modal-price { font-size: 28px; font-weight: 700; color: #00d4ff; }
-    ul { list-style: none; padding: 0; }
-    li { margin: 10px 0; display: flex; align-items: center; }
-    li:before { content: "✅"; margin-right: 10px; color: #00ff9d; }
-    .close-btn, .purchase-btn {
+    .option {
+      background: #222;
+      border-radius: 10px;
+      padding: 14px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .purchase-btn {
       width: 100%;
       padding: 14px;
       margin-top: 15px;
       border-radius: 10px;
       font-weight: 600;
+      background: #2481cc;
+      color: white;
     }
-    .close-btn { background: #333; color: white; }
-    .purchase-btn { background: #2481cc; color: white; }
+    .close-btn {
+      width: 100%;
+      padding: 12px;
+      background: #333;
+      color: white;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
@@ -96,75 +107,63 @@
     </div>
   </div>
 
-  <!-- Plan Detail Modal -->
+  <!-- Plan Modal -->
   <div id="plan-modal" class="modal">
     <div class="modal-content">
-      <div class="modal-header" id="modal-title">STARTER</div>
-      <div class="modal-price" id="modal-price">$15/mo</div>
+      <div class="modal-header" id="modal-title">STARTER PLAN</div>
       
-      <ul id="modal-features">
-        <!-- Filled by JS -->
-      </ul>
+      <div onclick="selectOption(15, 'weekly')" class="option" id="weekly-option">
+        <div>Weekly</div>
+        <div class="price">$4.99</div>
+      </div>
 
-      <button class="purchase-btn" onclick="confirmPurchase()">🛒 Purchase Plan</button>
+      <div onclick="selectOption(15, 'monthly')" class="option" id="monthly-option">
+        <div>Monthly</div>
+        <div class="price">$15</div>
+      </div>
+
+      <button class="purchase-btn" onclick="confirmPurchase()">🛒 Purchase Selected</button>
       <button class="close-btn" onclick="closeModal()">Close</button>
     </div>
-  </div>
-
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;">
-    <div onclick="switchTab(0)">🛒 Purchase</div>
-    <div onclick="switchTab(1)">📤 Submit Ad</div>
-    <div onclick="switchTab(2)">📋 Services</div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    let currentPrice = 15;
+    let selectedPrice = 15;
+    let selectedPeriod = "monthly";
 
-    function showPlanModal(price) {
-      currentPrice = price;
-      const title = price === 15 ? "STARTER" : price === 35 ? "PREMIUM" : "ULTIMATE";
-      const accounts = price === 15 ? "20" : price === 35 ? "40" : "100";
-
-      document.getElementById("modal-title").textContent = title;
-      document.getElementById("modal-price").textContent = `$${price}/mo`;
-
-      const features = `
-        <li>${accounts} Forwarding Accounts</li>
-        <li>Premium Group List (~50+ Marketplaces)</li>
-        <li>Forward or Send every hour</li>
-        <li>Automated Message Updates</li>
-        <li>Up to 2 messages on rotation</li>
-        <li>Free Account Customization</li>
-        <li>Free Auto-Responder</li>
-      `;
-      document.getElementById("modal-features").innerHTML = features;
-
+    function showPlanModal(basePrice) {
+      selectedPrice = basePrice;
+      document.getElementById("modal-title").textContent = 
+        basePrice === 15 ? "STARTER PLAN" : basePrice === 35 ? "PREMIUM PLAN" : "ULTIMATE PLAN";
+      
       document.getElementById("plan-modal").style.display = "flex";
+    }
+
+    function selectOption(basePrice, period) {
+      selectedPeriod = period;
+      selectedPrice = period === "weekly" ? (basePrice / 4).toFixed(2) : basePrice;
+      
+      // Highlight selected
+      document.getElementById("weekly-option").style.background = period === "weekly" ? "#2481cc" : "#222";
+      document.getElementById("monthly-option").style.background = period === "monthly" ? "#2481cc" : "#222";
+    }
+
+    function confirmPurchase() {
+      tg.sendData(JSON.stringify({ 
+        action: "buy_plan", 
+        price: selectedPrice,
+        period: selectedPeriod 
+      }));
+      tg.showAlert(`Payment for $${selectedPrice} (${selectedPeriod}) started!`);
+      closeModal();
     }
 
     function closeModal() {
       document.getElementById("plan-modal").style.display = "none";
     }
-
-    function confirmPurchase() {
-      tg.sendData(JSON.stringify({ action: "buy_plan", price: currentPrice }));
-      tg.showAlert(`Payment for $${currentPrice} plan started!`);
-      closeModal();
-    }
-
-    function switchTab(tab) {
-      // You can expand this later for other pages
-      tg.showAlert("Coming soon");
-    }
-
-    // Close modal when clicking outside
-    document.getElementById("plan-modal").addEventListener("click", function(e) {
-      if (e.target === this) closeModal();
-    });
   </script>
 </body>
 </html>
