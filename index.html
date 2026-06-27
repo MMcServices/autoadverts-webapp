@@ -7,7 +7,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    
+   
     body {
       background: #0f0f0f;
       color: #fff;
@@ -56,125 +56,100 @@
       max-width: 380px;
       padding: 20px;
     }
-    .modal-header { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
-    .modal-price { font-size: 28px; font-weight: 700; color: #00d4ff; margin-bottom: 16px; }
-    ul { list-style: none; padding: 0; margin: 16px 0; }
-    li { margin: 10px 0; display: flex; align-items: center; }
-    li:before { content: "✅"; margin-right: 12px; color: #00ff9d; }
-    .purchase-btn, .close-btn {
-      width: 100%;
-      padding: 14px;
-      margin: 8px 0;
-      border-radius: 10px;
-      font-weight: 600;
-    }
-    .purchase-btn { background: #2481cc; color: white; }
-    .close-btn { background: #333; color: white; }
   </style>
 </head>
 <body>
   <div class="header">#1 Automated Advertising Bot</div>
 
-  <div class="content">
-    <!-- PURCHASE PAGE -->
-    <div id="purchase-page" class="content">
-      <h2>Choose your plan</h2>
-      <div class="plan-card">
-        <div>
-          <strong>STARTER</strong><br>
-          <span style="color:#aaa">20 Accounts</span>
-        </div>
-        <div>
-          <button class="btn-info" onclick="showPlanModal(15)">More Info</button>
-          <button class="btn-purchase" onclick="buyPlan(15)">Purchase</button>
-        </div>
-      </div>
-      <div class="plan-card">
-        <div>
-          <strong>PREMIUM</strong><br>
-          <span style="color:#aaa">40 Accounts</span>
-        </div>
-        <div>
-          <button class="btn-info" onclick="showPlanModal(35)">More Info</button>
-          <button class="btn-purchase" onclick="buyPlan(35)">Purchase</button>
-        </div>
-      </div>
-      <div class="plan-card">
-        <div>
-          <strong>ULTIMATE</strong><br>
-          <span style="color:#aaa">100 Accounts</span>
-        </div>
-        <div>
-          <button class="btn-info" onclick="showPlanModal(80)">More Info</button>
-          <button class="btn-purchase" onclick="buyPlan(80)">Purchase</button>
-        </div>
+  <!-- PURCHASE -->
+  <div id="purchase-page" class="content">
+    <h2>Choose your plan</h2>
+    <div class="plan-card">
+      <div><strong>STARTER</strong><br><span style="color:#aaa">20 Accounts</span></div>
+      <div>
+        <button class="btn-info" onclick="showPlanModal(15)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(15)">Purchase</button>
       </div>
     </div>
-
-    <!-- SERVICES PAGE -->
-    <div id="services-page" class="content" style="display:none;">
-      <h2>Your Services</h2>
-      <div class="card" id="services-content">
-        <p><strong>No Active Services</strong></p>
-        <p>You don't have any running subscription plans right now.</p>
-        <button class="btn-purchase" onclick="switchTab(0)">Explore Plans</button>
+    <div class="plan-card">
+      <div><strong>PREMIUM</strong><br><span style="color:#aaa">40 Accounts</span></div>
+      <div>
+        <button class="btn-info" onclick="showPlanModal(35)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(35)">Purchase</button>
       </div>
     </div>
-
-    <!-- PROFILE PAGE -->
-    <div id="profile-page" class="content" style="display:none;">
-      <h2>👤 Profile</h2>
-      <div class="card">
-        <p><strong>Active Services:</strong> 0</p>
-        <p><strong>Wallet Balance:</strong> $0.00</p>
-        <p><strong>Member Since:</strong> Jun 26, 2026</p>
-        <p><strong>Total Spent:</strong> $0.00</p>
-        <button class="btn-purchase" onclick="alert('Add Balance coming soon!')">💰 Add Balance</button>
-      </div>
-    </div>
-
-    <!-- REFERRALS PAGE -->
-    <div id="referrals-page" class="content" style="display:none;">
-      <h2>🔗 Referrals</h2>
-      <div class="card">
-        <p>Invite friends and earn <strong>30% commission</strong> on every purchase they make.</p>
-        <p><strong>Your Referral Link:</strong></p>
-        <p style="background:#222;padding:12px;border-radius:8px;word-break:break-all;" id="ref-link">https://t.me/yourbot?start=yourid</p>
-        <button onclick="copyLink()">Copy Link</button>
+    <div class="plan-card">
+      <div><strong>ULTIMATE</strong><br><span style="color:#aaa">100 Accounts</span></div>
+      <div>
+        <button class="btn-info" onclick="showPlanModal(80)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(80)">Purchase</button>
       </div>
     </div>
   </div>
 
-  <!-- Detailed Modal -->
+  <!-- SERVICES -->
+  <div id="services-page" class="content" style="display:none;">
+    <h2>Your Services</h2>
+    <div class="card">
+      <p><strong>No Active Services</strong></p>
+      <p>You don't have any running subscription plans right now.</p>
+      <button class="btn-purchase" onclick="switchTab(0)">Explore Plans</button>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="profile-page" class="content" style="display:none;">
+    <h2>👤 Profile</h2>
+    <div class="card">
+      <p><strong>Active Services:</strong> 0</p>
+      <p><strong>Wallet Balance:</strong> $0.00</p>
+      <p><strong>Member Since:</strong> Jun 26, 2026</p>
+      <p><strong>Total Spent:</strong> $0.00</p>
+      <button class="btn-purchase" onclick="tg.showAlert('Add Balance coming soon!')">💰 Add Balance</button>
+    </div>
+  </div>
+
+  <!-- REFERRALS -->
+  <div id="referrals-page" class="content" style="display:none;">
+    <h2>🔗 Referrals</h2>
+    <div class="card">
+      <p>Invite friends and earn <strong>30% commission</strong>.</p>
+      <p><strong>Your Referral Link:</strong></p>
+      <p style="background:#222;padding:12px;border-radius:8px;word-break:break-all;" id="ref-link">https://t.me/AutoAdvertsBot?start=yourid</p>
+      <button class="btn-purchase" onclick="copyLink()">Copy Link</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
   <div id="plan-modal" class="modal">
     <div class="modal-content">
       <div class="modal-header" id="modal-title">STARTER</div>
       <div class="modal-price" id="modal-price">$15/mo</div>
       <ul id="modal-features"></ul>
-      <button class="purchase-btn" onclick="confirmPurchase()">🛒 Purchase Plan</button>
-      <button class="close-btn" onclick="closeModal()">Close</button>
+      <button class="btn-purchase" style="width:100%;padding:14px;" onclick="confirmPurchase()">Purchase Plan</button>
+      <button onclick="closeModal()" style="width:100%;padding:14px;background:#333;">Close</button>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
-  <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;">
-    <div onclick="switchTab(0)" style="text-align:center;color:#fff;">🛒<br>Purchase</div>
-    <div onclick="switchTab(1)" style="text-align:center;color:#aaa;">📋<br>Services</div>
-    <div onclick="switchTab(2)" style="text-align:center;color:#aaa;">👤<br>Profile</div>
-    <div onclick="switchTab(3)" style="text-align:center;color:#aaa;">🔗<br>Referrals</div>
+  <!-- Bottom Nav -->
+  <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #333;z-index:100;">
+    <div onclick="switchTab(0)" style="text-align:center;cursor:pointer;">🛒<br><small>Purchase</small></div>
+    <div onclick="switchTab(1)" style="text-align:center;cursor:pointer;">📋<br><small>Services</small></div>
+    <div onclick="switchTab(2)" style="text-align:center;cursor:pointer;">👤<br><small>Profile</small></div>
+    <div onclick="switchTab(3)" style="text-align:center;cursor:pointer;">🔗<br><small>Referrals</small></div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    let hasActivePlan = false;
     let currentPlan = {price: 15, name: "STARTER"};
 
     function switchTab(tab) {
-      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
-      const pages = ['purchase-page', 'services-page', 'profile-page', 'referrals-page'];
-      document.getElementById(pages[tab]).style.display = 'block';
+      document.getElementById('purchase-page').style.display = tab === 0 ? 'block' : 'none';
+      document.getElementById('services-page').style.display = tab === 1 ? 'block' : 'none';
+      document.getElementById('profile-page').style.display = tab === 2 ? 'block' : 'none';
+      document.getElementById('referrals-page').style.display = tab === 3 ? 'block' : 'none';
     }
 
     function showPlanModal(price) {
@@ -182,8 +157,11 @@
       currentPlan.name = price === 15 ? "STARTER" : price === 35 ? "PREMIUM" : "ULTIMATE";
       document.getElementById("modal-title").textContent = currentPlan.name;
       document.getElementById("modal-price").textContent = `$${price}/mo`;
-      let features = `<li>${price === 15 ? "20" : price === 35 ? "40" : "100"} Forwarding Accounts</li><li>Premium Group List</li><li>Automated Forwarding</li>`;
-      document.getElementById("modal-features").innerHTML = features;
+      document.getElementById("modal-features").innerHTML = `
+        <li>${price === 15 ? "20" : price === 35 ? "40" : "100"} Forwarding Accounts</li>
+        <li>Premium Group List</li>
+        <li>Automated Forwarding</li>
+      `;
       document.getElementById("plan-modal").style.display = "flex";
     }
 
@@ -192,15 +170,13 @@
     }
 
     function confirmPurchase() {
-      hasActivePlan = true;
       tg.sendData(JSON.stringify({ action: "buy_plan", price: currentPlan.price }));
-      tg.showAlert(`Payment for ${currentPlan.name} plan started!`);
+      tg.showAlert(`Payment for ${currentPlan.name} started!`);
       closeModal();
       switchTab(1);
     }
 
     function buyPlan(price) {
-      hasActivePlan = true;
       tg.sendData(JSON.stringify({ action: "buy_plan", price: price }));
       tg.showAlert(`Payment for $${price} started!`);
       switchTab(1);
@@ -208,11 +184,10 @@
 
     function copyLink() {
       const link = document.getElementById("ref-link").textContent;
-      navigator.clipboard.writeText(link);
-      tg.showAlert("Referral link copied!");
+      navigator.clipboard.writeText(link).then(() => tg.showAlert("Copied!"));
     }
 
-    // Start on Purchase tab
+    // Start on Purchase
     switchTab(0);
   </script>
 </body>
