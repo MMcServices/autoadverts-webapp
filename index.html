@@ -2,127 +2,168 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AutoAdverts</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    
     body {
       background: #0f0f0f;
       color: #fff;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
       margin: 0;
       padding: 0;
       height: 100vh;
       overflow: hidden;
     }
-    .header {
-      background: #1a1a1a;
-      padding: 16px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .content {
-      padding: 16px;
-      padding-bottom: 100px;
-      overflow-y: auto;
-      height: calc(100vh - 160px);
-    }
-    .card {
+    .header { background: #1a1a1a; padding: 14px; text-align: center; font-size: 17px; font-weight: 600; }
+    .content { padding: 16px; padding-bottom: 90px; overflow-y: auto; height: calc(100vh - 150px); }
+    .plan-card {
       background: #1a1a1a;
       border-radius: 12px;
-      padding: 16px;
+      padding: 18px;
       margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    button {
+    .price { font-size: 26px; font-weight: 700; color: #00d4ff; }
+    button { padding: 10px 18px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
+    .btn-purchase { background: #2481cc; color: white; }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #1a1a1a;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 380px;
+      padding: 20px;
+    }
+    .modal-header { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+    .option {
+      background: #222;
+      border-radius: 10px;
+      padding: 14px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .purchase-btn {
       width: 100%;
       padding: 14px;
-      margin: 8px 0;
-      border: none;
+      margin-top: 15px;
       border-radius: 10px;
-      font-size: 16px;
       font-weight: 600;
+      background: #2481cc;
+      color: white;
     }
-    .btn-purchase { background: #2481cc; color: white; }
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #1a1a1a;
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0;
-      border-top: 1px solid #333;
+    .close-btn {
+      width: 100%;
+      padding: 12px;
+      background: #333;
+      color: white;
+      border-radius: 10px;
     }
-    .nav-item {
-      text-align: center;
-      color: #aaa;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .nav-item.active { color: #00d4ff; }
   </style>
 </head>
 <body>
   <div class="header">#1 Automated Advertising Bot</div>
 
-  <div class="content" id="main-content">
-    <h2 style="text-align:center;">Welcome</h2>
-    <div class="card">
-      <p>Choose a plan to get started with automated advertising.</p>
+  <div class="content">
+    <h2>Choose your plan</h2>
+    
+    <div class="plan-card" onclick="showPlanModal(15)">
+      <div>
+        <strong>STARTER</strong><br>
+        <span style="color:#aaa">20 Accounts</span>
+      </div>
+      <div class="price">$15</div>
+    </div>
+
+    <div class="plan-card" onclick="showPlanModal(35)">
+      <div>
+        <strong>PREMIUM</strong><br>
+        <span style="color:#aaa">40 Accounts</span>
+      </div>
+      <div class="price">$35</div>
+    </div>
+
+    <div class="plan-card" onclick="showPlanModal(80)">
+      <div>
+        <strong>ULTIMATE</strong><br>
+        <span style="color:#aaa">100 Accounts</span>
+      </div>
+      <div class="price">$80</div>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <div class="nav-item active" onclick="showPage(0)">🛒 Purchase</div>
-    <div class="nav-item" onclick="showPage(1)">📤 Submit Ad</div>
-    <div class="nav-item" onclick="showPage(2)">📋 Services</div>
+  <!-- Plan Modal -->
+  <div id="plan-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header" id="modal-title">STARTER PLAN</div>
+      
+      <div onclick="selectOption(15, 'weekly')" class="option" id="weekly-option">
+        <div>Weekly</div>
+        <div class="price">$4.99</div>
+      </div>
+
+      <div onclick="selectOption(15, 'monthly')" class="option" id="monthly-option">
+        <div>Monthly</div>
+        <div class="price">$15</div>
+      </div>
+
+      <button class="purchase-btn" onclick="confirmPurchase()">🛒 Purchase Selected</button>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.setHeaderColor("#0f0f0f");
 
-    function showPage(page) {
-      const content = document.getElementById('main-content');
-      if (page === 0) {
-        content.innerHTML = `
-          <h2>Choose your plan</h2>
-          <div class="card" onclick="buyPlan(15)">STARTER - $15/mo (20 accounts)</div>
-          <div class="card" onclick="buyPlan(35)">PREMIUM - $35/mo (40 accounts)</div>
-          <div class="card" onclick="buyPlan(80)">ULTIMATE - $80/mo (100 accounts)</div>
-        `;
-      } else if (page === 1) {
-        content.innerHTML = `
-          <h2>Submit Ad</h2>
-          <input type="text" id="link" placeholder="Paste ad message link here" style="width:100%;padding:12px;background:#222;color:white;border:none;border-radius:8px;">
-          <button class="btn-purchase" onclick="submitAd()">Submit Ad</button>
-        `;
-      } else {
-        content.innerHTML = `<h2>Services</h2><p>No active services yet.</p>`;
-      }
+    let selectedPrice = 15;
+    let selectedPeriod = "monthly";
+
+    function showPlanModal(basePrice) {
+      selectedPrice = basePrice;
+      document.getElementById("modal-title").textContent = 
+        basePrice === 15 ? "STARTER PLAN" : basePrice === 35 ? "PREMIUM PLAN" : "ULTIMATE PLAN";
+      
+      document.getElementById("plan-modal").style.display = "flex";
     }
 
-    function buyPlan(price) {
-      tg.sendData(JSON.stringify({ action: "buy_plan", price: price }));
-      tg.showAlert(`Payment for $${price} started!`);
+    function selectOption(basePrice, period) {
+      selectedPeriod = period;
+      selectedPrice = period === "weekly" ? (basePrice / 4).toFixed(2) : basePrice;
+      
+      // Highlight selected
+      document.getElementById("weekly-option").style.background = period === "weekly" ? "#2481cc" : "#222";
+      document.getElementById("monthly-option").style.background = period === "monthly" ? "#2481cc" : "#222";
     }
 
-    function submitAd() {
-      const link = document.getElementById('link').value.trim();
-      if (link) {
-        tg.sendData(JSON.stringify({ action: "submit_ad", link: link }));
-        tg.showAlert("Ad submitted successfully!");
-      } else {
-        tg.showAlert("Please paste your ad link");
-      }
+    function confirmPurchase() {
+      tg.sendData(JSON.stringify({ 
+        action: "buy_plan", 
+        price: selectedPrice,
+        period: selectedPeriod 
+      }));
+      tg.showAlert(`Payment for $${selectedPrice} (${selectedPeriod}) started!`);
+      closeModal();
     }
 
-    // Start on Purchase page
-    showPage(0);
+    function closeModal() {
+      document.getElementById("plan-modal").style.display = "none";
+    }
   </script>
 </body>
 </html>
