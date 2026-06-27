@@ -32,6 +32,13 @@
     button { padding: 10px 18px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
     .btn-info { background: #333; color: white; }
     .btn-purchase { background: #2481cc; color: white; }
+    .card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
     /* Modal */
     .modal {
       display: none;
@@ -69,35 +76,48 @@
   <div class="header">#1 Automated Advertising Bot</div>
 
   <div class="content">
-    <h2>Choose your plan</h2>
-    <div class="plan-card">
-      <div>
-        <strong>STARTER</strong><br>
-        <span style="color:#aaa">20 Accounts</span>
+    <!-- PURCHASE PAGE -->
+    <div id="purchase-page">
+      <h2>Choose your plan</h2>
+      <div class="plan-card">
+        <div>
+          <strong>STARTER</strong><br>
+          <span style="color:#aaa">20 Accounts</span>
+        </div>
+        <div>
+          <button class="btn-info" onclick="showPlanModal(15)">More Info</button>
+          <button class="btn-purchase" onclick="buyPlan(15)">Purchase</button>
+        </div>
       </div>
-      <div>
-        <button class="btn-info" onclick="showPlanModal(15)">More Info</button>
-        <button class="btn-purchase" onclick="buyPlan(15)">Purchase</button>
+      <div class="plan-card">
+        <div>
+          <strong>PREMIUM</strong><br>
+          <span style="color:#aaa">40 Accounts</span>
+        </div>
+        <div>
+          <button class="btn-info" onclick="showPlanModal(35)">More Info</button>
+          <button class="btn-purchase" onclick="buyPlan(35)">Purchase</button>
+        </div>
+      </div>
+      <div class="plan-card">
+        <div>
+          <strong>ULTIMATE</strong><br>
+          <span style="color:#aaa">100 Accounts</span>
+        </div>
+        <div>
+          <button class="btn-info" onclick="showPlanModal(80)">More Info</button>
+          <button class="btn-purchase" onclick="buyPlan(80)">Purchase</button>
+        </div>
       </div>
     </div>
-    <div class="plan-card">
-      <div>
-        <strong>PREMIUM</strong><br>
-        <span style="color:#aaa">40 Accounts</span>
-      </div>
-      <div>
-        <button class="btn-info" onclick="showPlanModal(35)">More Info</button>
-        <button class="btn-purchase" onclick="buyPlan(35)">Purchase</button>
-      </div>
-    </div>
-    <div class="plan-card">
-      <div>
-        <strong>ULTIMATE</strong><br>
-        <span style="color:#aaa">100 Accounts</span>
-      </div>
-      <div>
-        <button class="btn-info" onclick="showPlanModal(80)">More Info</button>
-        <button class="btn-purchase" onclick="buyPlan(80)">Purchase</button>
+
+    <!-- SERVICES PAGE -->
+    <div id="services-page" style="display:none;">
+      <h2>Your Services</h2>
+      <div class="card" id="services-content">
+        <p><strong>No Active Services</strong></p>
+        <p>You don't have any running subscription plans right now.</p>
+        <button class="btn-purchase" onclick="switchTab(0)">Explore Plans</button>
       </div>
     </div>
   </div>
@@ -113,11 +133,23 @@
     </div>
   </div>
 
+  <!-- Bottom Navigation -->
+  <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;">
+    <div onclick="switchTab(0)" style="text-align:center;color:#fff;">🛒<br>Purchase</div>
+    <div onclick="switchTab(1)" style="text-align:center;color:#aaa;">📋<br>Services</div>
+  </div>
+
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
+    let hasActivePlan = false;
     let currentPlan = {price: 15, name: "STARTER"};
+
+    function switchTab(tab) {
+      document.getElementById("purchase-page").style.display = tab === 0 ? "block" : "none";
+      document.getElementById("services-page").style.display = tab === 1 ? "block" : "none";
+    }
 
     function showPlanModal(price) {
       currentPlan.price = price;
@@ -134,15 +166,22 @@
     }
 
     function confirmPurchase() {
+      hasActivePlan = true;
       tg.sendData(JSON.stringify({ action: "buy_plan", price: currentPlan.price }));
       tg.showAlert(`Payment for ${currentPlan.name} plan started!`);
       closeModal();
+      switchTab(1);
     }
 
     function buyPlan(price) {
+      hasActivePlan = true;
       tg.sendData(JSON.stringify({ action: "buy_plan", price: price }));
       tg.showAlert(`Payment for $${price} started!`);
+      switchTab(1);
     }
+
+    // Start on Purchase tab
+    switchTab(0);
   </script>
 </body>
 </html>
