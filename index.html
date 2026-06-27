@@ -19,116 +19,150 @@
     }
     .header { background: #1a1a1a; padding: 14px; text-align: center; font-size: 17px; font-weight: 600; }
     .content { padding: 16px; padding-bottom: 90px; overflow-y: auto; height: calc(100vh - 150px); }
-    .card {
+    .plan-card {
       background: #1a1a1a;
       border-radius: 12px;
-      padding: 20px;
+      padding: 16px;
       margin-bottom: 16px;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    button {
+    .price { font-size: 26px; font-weight: 700; color: #00d4ff; }
+    button { padding: 10px 18px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
+    .btn-info { background: #333; color: white; }
+    .btn-purchase { background: #2481cc; color: white; }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #1a1a1a;
+      border-radius: 16px;
+      width: 92%;
+      max-width: 380px;
+      padding: 20px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .modal-header { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+    .modal-price { font-size: 28px; font-weight: 700; color: #00d4ff; margin-bottom: 16px; }
+    ul { list-style: none; padding: 0; margin: 16px 0; }
+    li { margin: 10px 0; display: flex; align-items: center; }
+    li:before { content: "✅"; margin-right: 12px; color: #00ff9d; }
+    .purchase-btn, .close-btn {
       width: 100%;
       padding: 14px;
+      margin: 8px 0;
       border-radius: 10px;
       font-weight: 600;
-      border: none;
-      cursor: pointer;
     }
-    .btn-purchase { background: #2481cc; color: white; }
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #1a1a1a;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      border-top: 1px solid #333;
-    }
-    .nav-item {
-      text-align: center;
-      color: #aaa;
-      font-size: 11px;
-      cursor: pointer;
-    }
-    .nav-item.active { color: #fff; }
+    .purchase-btn { background: #2481cc; color: white; }
+    .close-btn { background: #333; color: white; }
   </style>
 </head>
 <body>
   <div class="header">#1 Automated Advertising Bot</div>
-
   <div class="content">
-    <!-- PURCHASE PAGE -->
-    <div id="purchase-page" class="content">
-      <h2>Choose your plan</h2>
-      <div class="card" onclick="buyPlan(15)">STARTER — $15/mo (20 accounts)</div>
-      <div class="card" onclick="buyPlan(35)">PREMIUM — $35/mo (40 accounts)</div>
-      <div class="card" onclick="buyPlan(80)">ULTIMATE — $80/mo (100 accounts)</div>
-    </div>
-
-    <!-- SERVICES PAGE -->
-    <div id="services-page" class="content" style="display:none;">
-      <h2>Your Services</h2>
-      <div class="card" id="services-content">
-        <p><strong>No Active Services</strong></p>
-        <p>You don't have any running subscription plans right now.</p>
-        <button class="btn-purchase" onclick="switchTab(0)">Explore Plans</button>
+    <h2>Choose your plan</h2>
+   
+    <div class="plan-card">
+      <div>
+        <strong>STARTER</strong><br>
+        <span style="color:#aaa">20 Accounts</span>
+      </div>
+      <div>
+        <button class="btn-info" onclick="showPlanModal(15)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(15)">Purchase</button>
       </div>
     </div>
-
-    <!-- SUBMIT AD PAGE -->
-    <div id="ads-page" class="content" style="display:none;">
-      <h2>Submit New Ad</h2>
-      <div class="card">
-        <input type="text" id="ad-link" placeholder="Paste your ad message link" style="width:100%;padding:12px;background:#222;color:white;border:none;border-radius:8px;margin-bottom:10px;">
-        <button class="btn-purchase" onclick="submitAd()">Submit Ad</button>
+    <div class="plan-card">
+      <div>
+        <strong>PREMIUM</strong><br>
+        <span style="color:#aaa">40 Accounts</span>
+      </div>
+      <div>
+        <button class="btn-info" onclick="showPlanModal(35)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(35)">Purchase</button>
+      </div>
+    </div>
+    <div class="plan-card">
+      <div>
+        <strong>ULTIMATE</strong><br>
+        <span style="color:#aaa">100 Accounts</span>
+      </div>
+      <div>
+        <button class="btn-info" onclick="showPlanModal(80)">More Info</button>
+        <button class="btn-purchase" onclick="buyPlan(80)">Purchase</button>
       </div>
     </div>
   </div>
 
+  <!-- Detailed Modal -->
+  <div id="plan-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header" id="modal-title">STARTER</div>
+      <div class="modal-price" id="modal-price">$15/mo</div>
+     
+      <ul id="modal-features"></ul>
+      <button class="purchase-btn" onclick="confirmPurchase()">🛒 Purchase Plan</button>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
   <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <div class="nav-item" onclick="switchTab(0)">🛒 Purchase</div>
-    <div class="nav-item" onclick="switchTab(1)">📋 Services</div>
-    <div class="nav-item" onclick="switchTab(2)">📤 Submit Ad</div>
+  <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;">
+    <div onclick="switchTab(0)" style="text-align:center;color:#fff;">🛒<br>Purchase</div>
+    <div onclick="switchTab(1)" style="text-align:center;color:#aaa;">📋<br>Services</div>
+    <div onclick="switchTab(2)" style="text-align:center;color:#aaa;">📤<br>Submit Ad</div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
+    let currentPlan = {price: 15, name: "STARTER"};
 
-    let hasActivePlan = false;
+    function showPlanModal(price) {
+      currentPlan.price = price;
+      currentPlan.name = price === 15 ? "STARTER" : price === 35 ? "PREMIUM" : "ULTIMATE";
+      document.getElementById("modal-title").textContent = currentPlan.name;
+      document.getElementById("modal-price").textContent = `$${price}/mo`;
+      let features = `
+        <li>${price === 15 ? "20" : price === 35 ? "40" : "100"} Forwarding Accounts</li>
+        <li>Premium Group List (~50+ Marketplaces)</li>
+        <li>Send a message every 15-45 mins</li>
+        <li>Automated message updates</li>
+        <li>Free account customization</li>
+        <li>Free custom auto-responder</li>
+      `;
+      document.getElementById("modal-features").innerHTML = features;
+      document.getElementById("plan-modal").style.display = "flex";
+    }
 
-    function switchTab(tab) {
-      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
-      const pages = ['purchase-page', 'services-page', 'ads-page'];
-      document.getElementById(pages[tab]).style.display = 'block';
+    function closeModal() {
+      document.getElementById("plan-modal").style.display = "none";
+    }
 
-      document.querySelectorAll('.nav-item').forEach((el, i) => {
-        el.classList.toggle('active', i === tab);
-      });
+    function confirmPurchase() {
+      tg.sendData(JSON.stringify({ action: "buy_plan", price: currentPlan.price }));
+      tg.showAlert(`Payment for ${currentPlan.name} plan started!`);
+      closeModal();
     }
 
     function buyPlan(price) {
       tg.sendData(JSON.stringify({ action: "buy_plan", price: price }));
       tg.showAlert(`Payment for $${price} started!`);
-      hasActivePlan = true;
-      // Switch to Services after purchase
-      switchTab(1);
     }
 
-    function submitAd() {
-      const link = document.getElementById('ad-link').value.trim();
-      if (!link) return tg.showAlert("Paste your ad link first");
-      
-      tg.sendData(JSON.stringify({ action: "submit_ad", link: link }));
-      tg.showAlert("✅ Ad submitted to your accounts!");
-      document.getElementById('ad-link').value = '';
+    function switchTab(tab) {
+      tg.showAlert("Services & Submit Ad coming soon!");
     }
-
-    // Start on Purchase tab
-    switchTab(0);
   </script>
 </body>
 </html>
