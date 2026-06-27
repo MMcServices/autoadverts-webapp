@@ -84,30 +84,35 @@
     .btn-info { background: #2a2a2a; color: #fff; }
     .btn-purchase { background: #2481cc; color: white; }
 
-    /* Bottom Navigation - Matching Screenshot */
+    /* Pill-style Bottom Navigation */
     .bottom-nav {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 12px;
+      left: 16px;
+      right: 16px;
       background: #1a1a1a;
+      border-radius: 9999px;
       display: flex;
       justify-content: space-around;
-      padding: 8px 0 6px;
-      border-top: 1px solid #333;
+      padding: 8px 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
     .nav-item {
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       color: #aaa;
-      font-size: 12px;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
       cursor: pointer;
     }
     .nav-item.active {
+      background: #252525;
       color: #fff;
     }
     .nav-item span {
-      font-size: 22px;
-      display: block;
+      font-size: 20px;
       margin-bottom: 2px;
     }
   </style>
@@ -170,21 +175,21 @@
     </div>
   </div>
 
-  <!-- Other Pages -->
+  <!-- Other pages -->
   <div id="services-page" class="content" style="display:none;">
     <h2>Your Services</h2>
-    <div style="background:#1a1a1a;padding:30px;text-align:center;border-radius:12px;">No Active Services</div>
+    <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">No Active Services</div>
   </div>
   <div id="profile-page" class="content" style="display:none;">
     <h2>👤 Profile</h2>
-    <div style="background:#1a1a1a;padding:30px;text-align:center;border-radius:12px;">Profile</div>
+    <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">Profile</div>
   </div>
   <div id="referrals-page" class="content" style="display:none;">
     <h2>🔗 Referrals</h2>
-    <div style="background:#1a1a1a;padding:30px;text-align:center;border-radius:12px;">Referrals</div>
+    <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">Referrals</div>
   </div>
 
-  <!-- Hamburger Menu -->
+  <!-- Menu Modal -->
   <div id="menu-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:1000;align-items:center;justify-content:center;">
     <div style="background:#1a1a1a;border-radius:16px;width:92%;max-width:380px;padding:24px;">
       <h2>Menu</h2>
@@ -195,7 +200,7 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation - Updated Style -->
+  <!-- Bottom Navigation - Pill Style -->
   <div class="bottom-nav">
     <div class="nav-item active" onclick="switchTab(0)">
       <span>🛒</span>Purchase
@@ -246,7 +251,6 @@
       switchTab(1);
     }
 
-    // Start
     switchTab(0);
   </script>
 </body>
