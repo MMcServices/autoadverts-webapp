@@ -159,6 +159,21 @@
       overscroll-behavior: contain;
       padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px));
     }
+    .sync-banner {
+      margin: 12px 16px 0;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+      border: 1px solid rgba(255, 180, 80, 0.35);
+      background: rgba(255, 160, 60, 0.12);
+      color: #ffd9a0;
+    }
+    .sync-banner.ok {
+      border-color: rgba(80, 200, 120, 0.35);
+      background: rgba(60, 180, 100, 0.12);
+      color: #a8f0c0;
+    }
     .page {
       padding: 20px 16px 8px;
     }
@@ -984,6 +999,54 @@
       fill: none;
       stroke-width: 2;
     }
+    .balance-amount-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .balance-amount-btn {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .balance-amount-btn.selected {
+      border-color: rgba(93, 142, 255, 0.6);
+      background: rgba(93, 142, 255, 0.12);
+    }
+    .balance-custom {
+      margin-bottom: 18px;
+    }
+    .balance-custom label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .balance-custom input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #111;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .balance-custom input:focus {
+      outline: none;
+      border-color: rgba(93, 142, 255, 0.5);
+    }
     .profile-section-label {
       margin: 0 0 12px;
       font-size: 11px;
@@ -1626,6 +1689,7 @@
   </div>
 
   <main class="page-scroll" id="page-scroll">
+  <div id="sync-banner" class="sync-banner" style="display:none;" role="status"></div>
   <div class="page" id="purchase-page">
     <div class="purchase-hero">
       <div class="purchase-eyebrow">Forums</div>
@@ -1744,7 +1808,7 @@
           </svg>
         </div>
         <h3>No active services</h3>
-        <p>You don't have a subscription yet. Purchase a plan to start automating your forum adverts.</p>
+        <p id="services-empty-msg">You don't have a subscription yet. Purchase a plan to start automating your forum adverts.</p>
         <button class="purchase-cta-bar" onclick="switchTab(0)">
           <span>Browse Plans & Purchase</span>
           <span>→</span>
@@ -1809,8 +1873,8 @@
           </div>
           <p class="ad-job-link" id="ad-job-link">—</p>
           <div class="ad-job-stats">
-            <div><span class="ad-job-stat-label">Mirrors</span><strong id="ad-job-mirrors">0</strong></div>
             <div><span class="ad-job-stat-label">Forwards</span><strong id="ad-job-forwards">0</strong></div>
+            <div><span class="ad-job-stat-label">Accounts</span><strong id="ad-job-accounts">—</strong></div>
             <div><span class="ad-job-stat-label">Next run</span><strong id="ad-job-next">—</strong></div>
           </div>
           <p class="ad-job-error" id="ad-job-error" style="display:none;"></p>
@@ -2002,7 +2066,7 @@
           <span>Plan</span>
           <strong id="payment-plan">—</strong>
         </div>
-        <div class="payment-summary-row">
+        <div class="payment-summary-row" id="payment-billing-row">
           <span>Billing</span>
           <strong id="payment-billing">—</strong>
         </div>
@@ -2030,6 +2094,31 @@
         <button class="btn-pay-crypto" onclick="retryPayment()">Try Again</button>
         <button class="btn-payment-secondary" onclick="closePaymentModal()" style="margin-top:10px">Close</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Balance Amount Modal -->
+  <div id="balance-modal" class="modal-overlay" onclick="closeBalanceModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Add Balance</h2>
+          <p class="modal-subtitle">Top up your wallet with crypto via NOWPayments</p>
+        </div>
+        <button class="modal-close" onclick="closeBalanceModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="balance-amount-grid">
+        <button type="button" class="balance-amount-btn" onclick="selectBalanceAmount(10)">$10</button>
+        <button type="button" class="balance-amount-btn" onclick="selectBalanceAmount(25)">$25</button>
+        <button type="button" class="balance-amount-btn" onclick="selectBalanceAmount(50)">$50</button>
+        <button type="button" class="balance-amount-btn" onclick="selectBalanceAmount(100)">$100</button>
+      </div>
+      <div class="balance-custom">
+        <label for="balance-custom-input">Custom amount (USD)</label>
+        <input type="number" id="balance-custom-input" min="5" max="1000" step="1" placeholder="5 – 1000" oninput="clearBalanceSelection()">
+      </div>
+      <button type="button" class="btn-pay-crypto" id="balance-continue-btn" onclick="continueBalancePayment()">Continue to Payment</button>
+      <button type="button" class="btn-payment-secondary" onclick="closeBalanceModal()" style="margin-top:10px">Cancel</button>
     </div>
   </div>
 
@@ -2107,7 +2196,7 @@
   </nav>
 
   <!-- Set your bot API URL when the bot is deployed, e.g. https://your-server.com:8080 -->
-  <script>window.BOT_API_URL = 'https://7a85-31-127-140-141.ngrok-free.app';</script>
+  <script>window.BOT_API_URL = 'https://stadium-titten-career-find.trycloudflare.com';</script>
 
   <script>
     const tg = window.Telegram.WebApp;
@@ -2156,7 +2245,6 @@
 
     const planAccounts = { STARTER: 20, PREMIUM: 40, ULTIMATE: 100 };
     const SUBSCRIPTION_KEY = 'autoadverts_subscription';
-    const WALLET_KEY = 'autoadverts_wallet';
     const SPENT_KEY = 'autoadverts_total_spent';
     const MEMBER_KEY = 'autoadverts_member_since';
     const REF_STATS_KEY = 'autoadverts_ref_stats';
@@ -2165,12 +2253,47 @@
     const BOT_USERNAME = 'MMcAddssBot';
     const REFERRAL_DISCOUNT = 0.2;
 
-    const API_BASE = window.BOT_API_URL || '';
+    function resolveApiBase() {
+      const params = new URLSearchParams(window.location.search);
+      const fromQuery = params.get('api');
+      if (fromQuery) return fromQuery.replace(/\/$/, '');
+      const fromScript = window.BOT_API_URL || '';
+      if (fromScript) return fromScript.replace(/\/$/, '');
+      if (window.location.pathname === '/app' || window.location.pathname.endsWith('/app')) {
+        return window.location.origin;
+      }
+      if (window.location.hostname.includes('trycloudflare.com')) {
+        return window.location.origin;
+      }
+      return '';
+    }
+
+    function detectWrongAppHost() {
+      const host = window.location.hostname;
+      const params = new URLSearchParams(window.location.search);
+      const hasApi = !!(params.get('api') || (window.BOT_API_URL && !window.BOT_API_URL.includes('localhost')));
+      if (host.includes('trycloudflare.com')) {
+        return 'Old tunnel link (Error 1033). Send /dashboard in @MMcAddssBot and tap Open Dashboard.';
+      }
+      if (host.includes('onrender.com') && !hasApi) {
+        return 'Tap /dashboard in @MMcAddssBot — do not open Render directly (needs ?api= link).';
+      }
+      if (host !== 'localhost' && !host.includes('ngrok') && !host.includes('onrender.com') && !hasApi) {
+        return 'Wrong app link (' + host + '). Send /dashboard and tap Open Dashboard.';
+      }
+      return null;
+    }
+
+    const API_BASE = resolveApiBase();
+    const WRONG_HOST_ERROR = detectWrongAppHost();
     let isAdmin = false;
     let serverSubscription = null;
     let subscriptionSynced = false;
+    let apiSyncError = null;
     let activePayment = null;
     let paymentPollTimer = null;
+    let serverWalletBalance = 0;
+    let selectedBalanceAmount = null;
     let monitorPollTimer = null;
     let monitorTab = 'live';
     let lastMonitorData = null;
@@ -2183,7 +2306,7 @@
     const avatarLetter = (tgUser?.first_name || tgUser?.username || 'U').charAt(0).toUpperCase();
 
     function getWallet() {
-      return Number(localStorage.getItem(WALLET_KEY) || 0);
+      return serverWalletBalance;
     }
 
     function getTotalSpent() {
@@ -2231,7 +2354,79 @@
     }
 
     function addBalance() {
-      tg.showAlert('Add balance — payment integration coming soon.');
+      selectedBalanceAmount = null;
+      const input = document.getElementById('balance-custom-input');
+      if (input) input.value = '';
+      document.querySelectorAll('.balance-amount-btn').forEach((btn) => btn.classList.remove('selected'));
+      document.getElementById('balance-modal').classList.add('open');
+    }
+
+    function closeBalanceModal(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('balance-modal').classList.remove('open');
+    }
+
+    function selectBalanceAmount(amount) {
+      selectedBalanceAmount = amount;
+      const input = document.getElementById('balance-custom-input');
+      if (input) input.value = '';
+      document.querySelectorAll('.balance-amount-btn').forEach((btn) => {
+        btn.classList.toggle('selected', Number(btn.textContent.replace('$', '')) === amount);
+      });
+    }
+
+    function clearBalanceSelection() {
+      selectedBalanceAmount = null;
+      document.querySelectorAll('.balance-amount-btn').forEach((btn) => btn.classList.remove('selected'));
+    }
+
+    function resolveBalanceAmount() {
+      if (selectedBalanceAmount) return selectedBalanceAmount;
+      const raw = document.getElementById('balance-custom-input')?.value;
+      const amount = Number(raw);
+      if (!amount || amount < 5) {
+        throw new Error('Enter at least $5 to add balance.');
+      }
+      if (amount > 1000) {
+        throw new Error('Maximum top-up is $1000.');
+      }
+      return Math.round(amount * 100) / 100;
+    }
+
+    async function continueBalancePayment() {
+      const btn = document.getElementById('balance-continue-btn');
+      const originalText = btn.textContent;
+      let amount;
+      try {
+        amount = resolveBalanceAmount();
+      } catch (err) {
+        tg.showAlert(err.message);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Loading…';
+
+      try {
+        const result = await apiRequest('/api/create-balance-payment', {
+          method: 'POST',
+          body: JSON.stringify({ amount })
+        });
+        closeBalanceModal();
+        openPaymentModal({
+          order_id: result.order_id,
+          invoice_url: result.invoice_url,
+          price: result.price,
+          plan: 'balance',
+          billing: 'topup',
+          type: 'balance'
+        });
+      } catch (err) {
+        tg.showAlert(err.message || 'Could not start payment. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
     }
 
     function getRefStats() {
@@ -2323,20 +2518,79 @@
       };
     }
 
+    function apiUrl(path) {
+      const sep = path.includes('?') ? '&' : '?';
+      return API_BASE + path + sep + 'ngrok-skip-browser-warning=1';
+    }
+
+    function renderSyncBanner() {
+      const el = document.getElementById('sync-banner');
+      if (!el) return;
+      if (serverSubscription?.active) {
+        el.className = 'sync-banner ok';
+        el.textContent = 'Connected — ' + (serverSubscription.plan || 'plan') + ' active' + (userId ? ' (ID ' + userId + ')' : '');
+        el.style.display = 'block';
+        return;
+      }
+      if (apiSyncError) {
+        el.className = 'sync-banner';
+        el.textContent = apiSyncError + (userId ? ' (ID ' + userId + ')' : '');
+        el.style.display = 'block';
+        return;
+      }
+      if (subscriptionSynced && !serverSubscription?.active && userId) {
+        el.className = 'sync-banner';
+        el.textContent = 'Connected, but no plan on Telegram ID ' + userId + ' — run /grant while logged into this account.';
+        el.style.display = 'block';
+        return;
+      }
+      if (!subscriptionSynced) {
+        el.className = 'sync-banner';
+        el.textContent = 'Checking subscription…';
+        el.style.display = 'block';
+        return;
+      }
+      el.style.display = 'none';
+    }
+
+    async function checkBotOnline() {
+      if (!API_BASE) return false;
+      try {
+        const res = await fetch(apiUrl('/api/health'), { method: 'GET' });
+        const data = await res.json();
+        return !!(res.ok && data.ok);
+      } catch (_) {
+        return false;
+      }
+    }
+
     async function apiRequest(path, options = {}) {
+      if (WRONG_HOST_ERROR) {
+        throw new Error(WRONG_HOST_ERROR);
+      }
       if (!API_BASE || !tg.initData) {
-        throw new Error('App not connected to payment server. Please reopen from the bot.');
+        throw new Error('App not connected. Send /dashboard to @MMcAddssBot and tap Open Dashboard.');
+      }
+      const online = await checkBotOnline();
+      if (!online) {
+        throw new Error('Bot offline or old link. On your PC run start-all.bat, then /dashboard in Telegram.');
       }
       let res;
       try {
-        res = await fetch(API_BASE + path, {
+        res = await fetch(apiUrl(path), {
           ...options,
           headers: { ...apiHeaders(), ...(options.headers || {}) }
         });
       } catch (_) {
-        throw new Error('Cannot reach payment server. Make sure the bot and ngrok are running on your PC, then close and reopen this app.');
+        throw new Error('Cannot reach bot. Run start-all.bat on your PC, then /dashboard → Open Dashboard.');
       }
-      const data = await res.json().catch(() => ({}));
+      const raw = await res.text();
+      let data = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch (_) {
+        throw new Error('Bot returned bad data — old app link. Run start-all.bat then /dashboard.');
+      }
       if (!res.ok) {
         throw new Error(data.error || 'Request failed');
       }
@@ -2350,26 +2604,62 @@
 
     async function syncUserFromApi() {
       subscriptionSynced = true;
+      apiSyncError = WRONG_HOST_ERROR;
 
-      if (!API_BASE || !tg.initData) {
+      if (apiSyncError) {
         clearLocalSubscription();
+        renderSyncBanner();
+        return null;
+      }
+
+      if (!API_BASE) {
+        apiSyncError = 'No API URL — send /dashboard to @MMcAddssBot and tap Open Dashboard.';
+        clearLocalSubscription();
+        renderSyncBanner();
+        return null;
+      }
+      if (!tg.initData) {
+        apiSyncError = 'Open from Telegram, not a browser.';
+        clearLocalSubscription();
+        renderSyncBanner();
+        return null;
+      }
+
+      const online = await checkBotOnline();
+      if (!online) {
+        apiSyncError = 'Bot offline or stale link. Run start-all.bat, then /dashboard.';
+        clearLocalSubscription();
+        renderSyncBanner();
         return null;
       }
 
       try {
-        const res = await fetch(API_BASE + '/api/me', {
+        const res = await fetch(apiUrl('/api/me'), {
           headers: {
             Authorization: 'tma ' + tg.initData,
             'ngrok-skip-browser-warning': 'true'
           }
         });
 
-        if (!res.ok) {
+        const raw = await res.text();
+        let data = null;
+        try {
+          data = raw ? JSON.parse(raw) : null;
+        } catch (_) {
+          apiSyncError = 'Bad API response. Run start-all.bat, then /dashboard.';
           clearLocalSubscription();
+          renderSyncBanner();
           return null;
         }
 
-        const data = await res.json();
+        if (!res.ok) {
+          apiSyncError = res.status === 401
+            ? 'Auth failed — send /dashboard in Telegram and tap Open Dashboard (do not use the Render link).'
+            : 'Bot API error (' + res.status + '). Run start-all.bat, then /dashboard.';
+          clearLocalSubscription();
+          renderSyncBanner();
+          return null;
+        }
 
         isAdmin = !!data.isAdmin;
         document.body.classList.toggle('is-admin', isAdmin);
@@ -2390,6 +2680,10 @@
         if (typeof data.totalSpent === 'number') {
           localStorage.setItem(SPENT_KEY, String(data.totalSpent));
         }
+        if (typeof data.walletBalance === 'number') {
+          serverWalletBalance = data.walletBalance;
+          updateWalletDisplay();
+        }
 
         if (serverSubscription) {
           saveSubscription({
@@ -2403,9 +2697,12 @@
           clearLocalSubscription();
         }
 
+        renderSyncBanner();
         return data;
       } catch (_) {
+        apiSyncError = 'Cannot reach bot API. Run start-all.bat, then send /dashboard and tap Open Dashboard.';
         clearLocalSubscription();
+        renderSyncBanner();
         return null;
       }
     }
@@ -2500,7 +2797,7 @@
     function formatJobStatus(status) {
       const labels = {
         pending: 'Queued',
-        mirroring: 'Creating mirrors',
+        mirroring: 'Queued',
         running: 'Posting',
         ready: 'Active',
         paused: 'Paused',
@@ -2520,8 +2817,9 @@
       badge.textContent = formatJobStatus(job.status);
       badge.className = 'ad-job-status-badge ' + (job.status || '');
       document.getElementById('ad-job-link').textContent = job.sourceLink || '—';
-      document.getElementById('ad-job-mirrors').textContent = job.mirrorCount || 0;
       document.getElementById('ad-job-forwards').textContent = job.forwardsTotal || 0;
+      const sub = getActiveSubscription();
+      document.getElementById('ad-job-accounts').textContent = sub?.accounts || '—';
       document.getElementById('ad-job-next').textContent = job.nextRunAt
         ? formatDate(job.nextRunAt)
         : 'Soon';
@@ -2552,8 +2850,17 @@
       if (!sub) {
         emptyEl.style.display = 'block';
         activeEl.style.display = 'none';
+        const msgEl = document.getElementById('services-empty-msg');
+        if (msgEl) {
+          const who = userId ? ' (Telegram ID ' + userId + ')' : '';
+          msgEl.textContent = apiSyncError
+            || ("No subscription on this account" + who + ". Use /grant on THIS Telegram account, or open the app from the account that purchased.");
+        }
+        renderSyncBanner();
         return;
       }
+
+      renderSyncBanner();
 
       const expiresAt = sub.expiresAt;
       const purchasedAt = sub.purchasedAt || sub.expiresAt;
@@ -2716,8 +3023,7 @@
             let html = '<div class="monitor-job-card">' +
               '<div class="monitor-job-top"><span class="monitor-job-id">Job #' + j.id + '</span>' +
               '<span class="monitor-job-status ' + j.status + '">' + j.status + '</span></div>' +
-              '<div class="monitor-job-meta">User ' + j.ownerId + ' · ' + j.forwardsTotal + ' forwards · ' +
-              j.mirrorCount + ' mirrors</div>' +
+              '<div class="monitor-job-meta">User ' + j.ownerId + ' · ' + j.forwardsTotal + ' forwards</div>' +
               '<div class="monitor-job-meta">' + (j.sourceLink || '') + '</div>';
             if (j.lastError) html += '<div class="monitor-job-error">' + j.lastError + '</div>';
             return html + '</div>';
@@ -2743,13 +3049,13 @@
     function renderMonitorStats(data) {
       const f = data.forwarder || {};
       const s = data.jobStats || {};
-      const inProgress = (s.mirroring || 0) + (s.running || 0) + (s.pending || 0);
+      const inProgress = (s.running || 0) + (s.pending || 0);
       const statsEl = document.getElementById('monitor-stats');
       statsEl.innerHTML =
         '<div class="monitor-stat"><span class="monitor-stat-label">Poster accounts</span>' +
         '<span class="monitor-stat-value">' + (f.posterAccounts || 0) + '</span></div>' +
-        '<div class="monitor-stat"><span class="monitor-stat-label">Mirror bots</span>' +
-        '<span class="monitor-stat-value">' + (f.mirrorBots || 0) + '</span></div>' +
+        '<div class="monitor-stat"><span class="monitor-stat-label">Proxy pool</span>' +
+        '<span class="monitor-stat-value">' + (f.proxyPool || 0) + '</span></div>' +
         '<div class="monitor-stat"><span class="monitor-stat-label">Jobs in progress</span>' +
         '<span class="monitor-stat-value ' + (inProgress ? 'warn' : '') + '">' + inProgress + '</span></div>' +
         '<div class="monitor-stat"><span class="monitor-stat-label">Failed logs</span>' +
@@ -2760,10 +3066,11 @@
       const statusEl = document.getElementById('monitor-config-status');
       if (f.configured) {
         dot.classList.remove('off');
-        statusEl.textContent = 'Engine configured · staging ' + (f.stagingChannel || '—');
+        statusEl.textContent = 'Engine configured · ' + (f.posterAccounts || 0) + ' poster accounts';
       } else {
         dot.classList.add('off');
-        statusEl.textContent = 'Not fully configured — check STAGING_CHANNEL & accounts/';
+        const issues = (f.issues || []).join(' · ');
+        statusEl.textContent = issues || 'Not configured — add valid accounts to accounts/';
       }
     }
 
@@ -2843,12 +3150,31 @@
 
     function openPaymentModal(payment) {
       activePayment = payment;
-      const planLabel = payment.plan.charAt(0).toUpperCase() + payment.plan.slice(1);
-      document.getElementById('payment-plan').textContent = planLabel;
+      const isBalance = payment.type === 'balance' || payment.plan === 'balance';
+      document.getElementById('payment-subtitle').textContent = isBalance
+        ? 'Pay with crypto to top up your wallet'
+        : 'Pay with crypto to activate your plan';
+      const billingRow = document.getElementById('payment-billing-row');
+      if (billingRow) billingRow.style.display = isBalance ? 'none' : 'flex';
+      document.getElementById('payment-plan').textContent = isBalance
+        ? 'Wallet Top-up'
+        : payment.plan.charAt(0).toUpperCase() + payment.plan.slice(1);
       document.getElementById('payment-billing').textContent =
         payment.billing === 'weekly' ? 'Weekly' : 'Monthly';
-      document.getElementById('payment-amount').textContent = '$' + payment.price.toFixed(2);
+      document.getElementById('payment-amount').textContent = '$' + Number(payment.price).toFixed(2);
       document.getElementById('payment-pay-btn').disabled = !payment.invoice_url;
+      const pendingNote = document.querySelector('#payment-pending .payment-note');
+      if (pendingNote) {
+        pendingNote.textContent = isBalance
+          ? 'Payment opens in Telegram. Return here — your balance updates automatically once confirmed.'
+          : 'Payment opens in Telegram. Return here — your plan activates automatically once confirmed.';
+      }
+      const successNote = document.querySelector('#payment-success .payment-status-text:last-child');
+      if (successNote) {
+        successNote.textContent = isBalance
+          ? 'Your wallet has been topped up. Redirecting to Profile…'
+          : 'Your plan is now active. Redirecting to Services…';
+      }
       setPaymentView('pending');
       document.getElementById('payment-modal').classList.add('open');
     }
@@ -2866,6 +3192,24 @@
     function retryPayment() {
       if (!activePayment) return;
       setPaymentView('pending');
+    }
+
+    function handleBalancePaymentConfirmed(data) {
+      stopPaymentPolling();
+      setPaymentView('success');
+      if (typeof data.walletBalance === 'number') {
+        serverWalletBalance = data.walletBalance;
+        updateWalletDisplay();
+      }
+
+      setTimeout(() => {
+        closePaymentModal();
+        syncUserFromApi().then(() => {
+          renderProfile();
+          updateWalletDisplay();
+          switchTab(3);
+        });
+      }, 2000);
     }
 
     function handlePaymentConfirmed(data) {
@@ -2914,7 +3258,11 @@
 
         try {
           const data = await apiRequest('/api/payment-status?order_id=' + encodeURIComponent(activePayment.order_id));
-          if (data.status === 'finished' || data.subscriptionActive) {
+          const isBalance = data.type === 'balance' || activePayment?.type === 'balance';
+          if (data.status === 'finished') {
+            if (isBalance) handleBalancePaymentConfirmed(data);
+            else handlePaymentConfirmed(data);
+          } else if (!isBalance && data.subscriptionActive) {
             handlePaymentConfirmed(data);
           } else if (data.status === 'failed' || data.status === 'expired' || data.status === 'refunded') {
             stopPaymentPolling();
@@ -2958,7 +3306,8 @@
           invoice_url: result.invoice_url,
           price: result.price,
           plan: result.plan,
-          billing: result.billing
+          billing: result.billing,
+          type: 'plan'
         });
         updateDiscountUI();
       } catch (err) {
@@ -3030,7 +3379,7 @@
           body: JSON.stringify({ link })
         });
         renderAdJob(data.job);
-        tg.showAlert('Ad queued — mirroring your post then posting across ' + data.accounts + ' accounts.');
+        tg.showAlert('Ad queued — posting across ' + data.accounts + ' accounts.');
         input.value = '';
       } catch (err) {
         tg.showAlert(err.message || 'Could not submit ad.');
@@ -3045,12 +3394,14 @@
     initReferralFromUrl();
     initUser();
     clearLocalSubscription();
+    renderSyncBanner();
     syncUserFromApi().then(() => {
       renderServices();
       renderProfile();
       renderReferrals();
       updateDiscountUI();
       fetchAdJobs();
+      renderSyncBanner();
     });
     switchTab(0);
   </script>
