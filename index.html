@@ -966,6 +966,197 @@
     .app-footer span {
       color: #666;
     }
+
+    /* Referrals Tab */
+    .ref-promo {
+      background: linear-gradient(135deg, rgba(93, 142, 255, 0.18), rgba(155, 123, 255, 0.12));
+      border: 1px solid rgba(93, 142, 255, 0.28);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .ref-promo-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(93, 142, 255, 0.2);
+      color: #7aa6ff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .ref-promo h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .ref-promo p {
+      margin: 0;
+      color: #aaa;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .ref-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .ref-stat {
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .ref-stat-val {
+      display: block;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .ref-stat-lbl {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #666;
+    }
+    .ref-link-box {
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .ref-link-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    .ref-link-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .ref-link-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 12px;
+      color: #ccc;
+      font-size: 12px;
+      font-family: inherit;
+      outline: none;
+      min-width: 0;
+    }
+    .ref-copy-btn {
+      flex-shrink: 0;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #5d8eff, #7aa6ff);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      margin-top: 0;
+      width: auto;
+    }
+    .ref-share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #ddd;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+      margin-top: 0;
+    }
+    .ref-share-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+    }
+    .ref-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .ref-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+    }
+    .ref-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(93, 142, 255, 0.15);
+      color: #7aa6ff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ref-step-text {
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.45;
+      padding-top: 4px;
+    }
+    .ref-step-text strong {
+      color: #fff;
+    }
+    .discount-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, rgba(93, 142, 255, 0.15), rgba(0, 212, 255, 0.08));
+      border: 1px solid rgba(93, 142, 255, 0.25);
+      border-radius: 14px;
+      font-size: 13px;
+      color: #bbb;
+    }
+    .discount-banner.visible {
+      display: flex;
+    }
+    .discount-banner strong {
+      color: #7aa6ff;
+    }
+    .price-original {
+      text-decoration: line-through;
+      color: #555;
+      font-size: 14px;
+      font-weight: 500;
+      margin-right: 6px;
+    }
   </style>
 </head>
 <body>
@@ -995,6 +1186,11 @@
       <div class="purchase-eyebrow">Forums</div>
       <h1 class="purchase-title">Choose your plan</h1>
       <p class="purchase-subtitle">Scale your advert accounts with flexible billing.</p>
+    </div>
+
+    <div class="discount-banner" id="discount-banner">
+      <span>🎉</span>
+      <span id="discount-banner-text"><strong>20% off</strong> applied to your next purchase!</span>
     </div>
 
     <div class="plans-list">
@@ -1157,16 +1353,57 @@
   <div id="referrals-page" class="page" style="display:none;">
     <div class="services-hero">
       <h1 class="services-title">Referrals</h1>
-      <p class="services-subtitle">Invite friends and earn rewards.</p>
+      <p class="services-subtitle">Share your link and earn rewards together.</p>
     </div>
-    <div class="services-empty">
-      <div class="services-empty-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M10 13a5 5 0 0 1 7 0"/><path d="M14 11l3-3"/><path d="M8 8h8a4 4 0 0 1 4 4v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a4 4 0 0 1 4-4z"/>
-        </svg>
+
+    <div class="ref-promo">
+      <div class="ref-promo-badge">20% off for everyone</div>
+      <h2>Give 20%, Get 20%</h2>
+      <p>Friends get <strong>20% off</strong> their first plan. You earn <strong>20% off</strong> when they purchase.</p>
+    </div>
+
+    <div class="ref-stats">
+      <div class="ref-stat">
+        <span class="ref-stat-val" id="ref-count">0</span>
+        <span class="ref-stat-lbl">Referrals</span>
       </div>
-      <h3>Coming soon</h3>
-      <p>Your referral link and earnings will appear here.</p>
+      <div class="ref-stat">
+        <span class="ref-stat-val" id="ref-earned">0</span>
+        <span class="ref-stat-lbl">Earned</span>
+      </div>
+      <div class="ref-stat">
+        <span class="ref-stat-val" id="ref-credits">0</span>
+        <span class="ref-stat-lbl">Credits</span>
+      </div>
+    </div>
+
+    <div class="ref-link-box">
+      <span class="ref-link-label">Your referral link</span>
+      <div class="ref-link-row">
+        <input class="ref-link-input" id="ref-link" type="text" readonly>
+        <button class="ref-copy-btn" onclick="copyReferralLink()">Copy</button>
+      </div>
+    </div>
+
+    <button class="ref-share-btn" onclick="shareReferralLink()">
+      <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      Share on Telegram
+    </button>
+
+    <p class="profile-section-label">How it works</p>
+    <div class="ref-steps">
+      <div class="ref-step">
+        <span class="ref-step-num">1</span>
+        <span class="ref-step-text"><strong>Share your link</strong> with friends who need forum advert automation.</span>
+      </div>
+      <div class="ref-step">
+        <span class="ref-step-num">2</span>
+        <span class="ref-step-text">They get <strong>20% off</strong> their first plan when they sign up through your link.</span>
+      </div>
+      <div class="ref-step">
+        <span class="ref-step-num">3</span>
+        <span class="ref-step-text">When they purchase, you earn a <strong>20% discount credit</strong> on your next plan.</span>
+      </div>
     </div>
   </div>
 
@@ -1365,8 +1602,14 @@
     const WALLET_KEY = 'autoadverts_wallet';
     const SPENT_KEY = 'autoadverts_total_spent';
     const MEMBER_KEY = 'autoadverts_member_since';
+    const REF_STATS_KEY = 'autoadverts_ref_stats';
+    const REFERRED_BY_KEY = 'autoadverts_referred_by';
+    const REF_DISCOUNT_USED_KEY = 'autoadverts_ref_discount_used';
+    const BOT_USERNAME = 'autoadvertspot';
+    const REFERRAL_DISCOUNT = 0.2;
 
     const tgUser = tg.initDataUnsafe?.user;
+    const userId = tgUser?.id;
     const displayName = tgUser?.username
       ? '@' + tgUser.username
       : tgUser?.first_name || '@user';
@@ -1422,6 +1665,170 @@
 
     function addBalance() {
       tg.showAlert('Add balance — payment integration coming soon.');
+    }
+
+    function getRefStats() {
+      try {
+        return JSON.parse(localStorage.getItem(REF_STATS_KEY)) || { count: 0, earned: 0, credits: 0 };
+      } catch {
+        return { count: 0, earned: 0, credits: 0 };
+      }
+    }
+
+    function saveRefStats(stats) {
+      localStorage.setItem(REF_STATS_KEY, JSON.stringify(stats));
+    }
+
+    function getReferralLink() {
+      const id = userId || 'guest';
+      return 'https://t.me/' + BOT_USERNAME + '?start=ref_' + id;
+    }
+
+    function initReferralFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      let ref = params.get('ref') || tg.initDataUnsafe?.start_param || '';
+      if (ref.startsWith('ref_')) ref = ref.replace('ref_', '');
+      if (!ref || !userId || String(ref) === String(userId)) return;
+      if (!localStorage.getItem(REFERRED_BY_KEY)) {
+        localStorage.setItem(REFERRED_BY_KEY, ref);
+      }
+    }
+
+    function hasReferralDiscount() {
+      const stats = getRefStats();
+      if (stats.credits > 0) return true;
+      const referredBy = localStorage.getItem(REFERRED_BY_KEY);
+      const used = localStorage.getItem(REF_DISCOUNT_USED_KEY);
+      return referredBy && !used;
+    }
+
+    function applyDiscount(price) {
+      if (!hasReferralDiscount()) return price;
+      return Math.round(price * (1 - REFERRAL_DISCOUNT));
+    }
+
+    function getDiscountReason() {
+      const stats = getRefStats();
+      if (stats.credits > 0) return 'referral credit';
+      if (localStorage.getItem(REFERRED_BY_KEY) && !localStorage.getItem(REF_DISCOUNT_USED_KEY)) {
+        return 'welcome referral';
+      }
+      return '';
+    }
+
+    function consumeReferralDiscount() {
+      const stats = getRefStats();
+      if (stats.credits > 0) {
+        stats.credits -= 1;
+        saveRefStats(stats);
+        return { type: 'credit' };
+      }
+      const referredBy = localStorage.getItem(REFERRED_BY_KEY);
+      if (referredBy && !localStorage.getItem(REF_DISCOUNT_USED_KEY)) {
+        localStorage.setItem(REF_DISCOUNT_USED_KEY, '1');
+        return { type: 'welcome', referrerId: referredBy };
+      }
+      return null;
+    }
+
+    function creditReferrer(referrerId) {
+      const key = 'autoadverts_ref_stats_' + referrerId;
+      let stats;
+      try {
+        stats = JSON.parse(localStorage.getItem(key)) || { count: 0, earned: 0, credits: 0 };
+      } catch {
+        stats = { count: 0, earned: 0, credits: 0 };
+      }
+      stats.count += 1;
+      stats.earned += 1;
+      stats.credits += 1;
+      localStorage.setItem(key, JSON.stringify(stats));
+      if (String(referrerId) === String(userId)) {
+        saveRefStats(stats);
+      }
+    }
+
+    async function syncReferralsFromApi() {
+      const API_BASE = window.BOT_API_URL || '';
+      if (!API_BASE || !tg.initData) return;
+      try {
+        const res = await fetch(API_BASE + '/api/me', {
+          headers: { Authorization: 'tma ' + tg.initData }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        saveRefStats({
+          count: data.referralCount || 0,
+          earned: data.purchasedReferrals || 0,
+          credits: data.discountCredits || 0
+        });
+        if (data.referredBy && !localStorage.getItem(REFERRED_BY_KEY)) {
+          localStorage.setItem(REFERRED_BY_KEY, String(data.referredBy));
+        }
+        if (data.hasWelcomeDiscount) {
+          localStorage.removeItem(REF_DISCOUNT_USED_KEY);
+        }
+      } catch (_) {}
+    }
+
+    async function renderReferrals() {
+      await syncReferralsFromApi();
+      const stats = getRefStats();
+      document.getElementById('ref-count').textContent = stats.count;
+      document.getElementById('ref-earned').textContent = stats.earned;
+      document.getElementById('ref-credits').textContent = stats.credits;
+      document.getElementById('ref-link').value = getReferralLink();
+      updateDiscountUI();
+    }
+
+    function updateDiscountUI() {
+      const banner = document.getElementById('discount-banner');
+      const eligible = hasReferralDiscount();
+      banner.classList.toggle('visible', eligible);
+      if (eligible) {
+        const reason = getDiscountReason();
+        document.getElementById('discount-banner-text').innerHTML =
+          '<strong>20% off</strong> applied — ' + (reason === 'referral credit' ? 'referral reward' : 'welcome via referral link') + '!';
+      }
+      document.querySelectorAll('.plan-card').forEach(updatePlanCardPrice);
+    }
+
+    function updatePlanCardPrice(card) {
+      const isWeekly = card.querySelector('.billing-btn:last-child').classList.contains('active');
+      const base = Number(isWeekly ? card.dataset.weekly : card.dataset.monthly);
+      const discounted = applyDiscount(base);
+      const priceEl = card.querySelector('.price-value');
+      const wrap = card.querySelector('.plan-price-wrap');
+
+      let origEl = wrap.querySelector('.price-original');
+      if (discounted < base) {
+        if (!origEl) {
+          origEl = document.createElement('span');
+          origEl.className = 'price-original';
+          wrap.insertBefore(origEl, wrap.firstChild);
+        }
+        origEl.textContent = '$' + base;
+        priceEl.textContent = discounted;
+      } else {
+        if (origEl) origEl.remove();
+        priceEl.textContent = base;
+      }
+    }
+
+    function copyReferralLink() {
+      const link = getReferralLink();
+      navigator.clipboard.writeText(link).then(() => {
+        tg.showAlert('Referral link copied!');
+      }).catch(() => {
+        document.getElementById('ref-link').select();
+        tg.showAlert('Link ready — long press to copy.');
+      });
+    }
+
+    function shareReferralLink() {
+      const link = getReferralLink();
+      const text = encodeURIComponent('Join AutoAdverts and get 20% off your first plan! ' + link);
+      tg.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + text);
     }
 
     function saveSubscription(data) {
@@ -1514,6 +1921,7 @@
       updateNavGlow(tab);
       document.getElementById('page-scroll').scrollTop = 0;
       if (tab === 1) renderServices();
+      if (tab === 2) renderReferrals();
       if (tab === 3) renderProfile();
     }
 
@@ -1525,10 +1933,8 @@
       parent.querySelectorAll('.billing-btn').forEach(b => b.classList.remove('active'));
       el.classList.add('active');
 
-      card.querySelector('.price-value').textContent = isWeekly
-        ? card.dataset.weekly
-        : card.dataset.monthly;
       card.querySelector('.price-period').textContent = isWeekly ? 'wk' : 'mo';
+      updatePlanCardPrice(card);
     }
 
     function openPlanInfo(btn) {
@@ -1573,7 +1979,10 @@
       const name = card.dataset.plan;
       const isWeekly = card.querySelector('.billing-btn:last-child').classList.contains('active');
       const billing = isWeekly ? 'weekly' : 'monthly';
-      const price = Number(isWeekly ? card.dataset.weekly : card.dataset.monthly);
+      const basePrice = Number(isWeekly ? card.dataset.weekly : card.dataset.monthly);
+      const price = applyDiscount(basePrice);
+      const hadDiscount = price < basePrice;
+      const discountInfo = hadDiscount ? consumeReferralDiscount() : null;
       const purchasedAt = new Date();
       const expiresAt = new Date(purchasedAt);
       expiresAt.setDate(expiresAt.getDate() + (isWeekly ? 7 : 30));
@@ -1583,20 +1992,41 @@
         accounts: planAccounts[name],
         billing,
         price,
+        basePrice,
+        discountApplied: hadDiscount,
         purchasedAt: purchasedAt.toISOString(),
         expiresAt: expiresAt.toISOString()
       });
 
       localStorage.setItem(SPENT_KEY, String(getTotalSpent() + price));
 
-      tg.sendData(JSON.stringify({ action: 'buy_plan', price, plan: name, billing }));
-      tg.showAlert(`Payment for ${name} started!`);
+      const referredBy = localStorage.getItem(REFERRED_BY_KEY);
+      tg.sendData(JSON.stringify({
+        action: 'buy_plan',
+        price,
+        basePrice,
+        plan: name,
+        billing,
+        discountApplied: hadDiscount,
+        referrerId: discountInfo?.referrerId || referredBy || null
+      }));
+
+      if (discountInfo?.type === 'welcome' && discountInfo.referrerId && String(discountInfo.referrerId) !== String(userId)) {
+        creditReferrer(discountInfo.referrerId);
+      }
+
+      const discountMsg = hadDiscount ? ` (20% off — $${price})` : '';
+      tg.showAlert(`Payment for ${name} started!${discountMsg}`);
+      updateDiscountUI();
       switchTab(1);
     }
 
+    initReferralFromUrl();
     initUser();
     renderServices();
     renderProfile();
+    renderReferrals();
+    updateDiscountUI();
     switchTab(0);
   </script>
 </body>
