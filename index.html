@@ -1628,7 +1628,7 @@
   </nav>
 
   <!-- Set your bot API URL when the bot is deployed, e.g. https://your-server.com:8080 -->
-  <script>window.BOT_API_URL = '';</script>
+  <script>window.BOT_API_URL = 'https://bebb-31-127-140-141.ngrok-free.app';</script>
 
   <script>
     const tg = window.Telegram.WebApp;
@@ -1834,7 +1834,10 @@
       if (!API_BASE || !tg.initData) return null;
       try {
         const res = await fetch(API_BASE + '/api/me', {
-          headers: { Authorization: 'tma ' + tg.initData }
+          headers: {
+            Authorization: 'tma ' + tg.initData,
+            'ngrok-skip-browser-warning': 'true'
+          }
         });
         if (!res.ok) return null;
         const data = await res.json();
