@@ -2105,7 +2105,7 @@
   </nav>
 
   <!-- Set your bot API URL when the bot is deployed, e.g. https://your-server.com:8080 -->
-  <script>window.BOT_API_URL = 'https://b83d-31-127-140-141.ngrok-free.app';</script>
+  <script>window.BOT_API_URL = 'https://011c-31-127-140-141.ngrok-free.app';</script>
 
   <script>
     const tg = window.Telegram.WebApp;
@@ -2341,8 +2341,19 @@
       return data;
     }
 
+    function clearLocalSubscription() {
+      localStorage.removeItem(SUBSCRIPTION_KEY);
+      serverSubscription = null;
+    }
+
     async function syncUserFromApi() {
-      if (!API_BASE || !tg.initData) return null;
+      subscriptionSynced = true;
+
+      if (!API_BASE || !tg.initData) {
+        clearLocalSubscription();
+        return null;
+      }
+
       try {
         const res = await fetch(API_BASE + '/api/me', {
           headers: {
@@ -2350,13 +2361,17 @@
             'ngrok-skip-browser-warning': 'true'
           }
         });
-        if (!res.ok) return null;
+
+        if (!res.ok) {
+          clearLocalSubscription();
+          return null;
+        }
+
         const data = await res.json();
 
         isAdmin = !!data.isAdmin;
         document.body.classList.toggle('is-admin', isAdmin);
-        subscriptionSynced = true;
-        serverSubscription = data.subscription || null;
+        serverSubscription = data.subscription?.active ? data.subscription : null;
 
         saveRefStats({
           count: data.referralCount || 0,
@@ -2383,11 +2398,12 @@
             isAdminTest: serverSubscription.isAdminTest
           });
         } else {
-          localStorage.removeItem(SUBSCRIPTION_KEY);
+          clearLocalSubscription();
         }
 
         return data;
       } catch (_) {
+        clearLocalSubscription();
         return null;
       }
     }
@@ -2475,11 +2491,8 @@
     }
 
     function getActiveSubscription() {
-      if (subscriptionSynced) {
-        return serverSubscription?.active ? serverSubscription : null;
-      }
-      const local = getSubscription();
-      return isSubscriptionActive(local) ? local : null;
+      if (!subscriptionSynced) return null;
+      return serverSubscription?.active ? serverSubscription : null;
     }
 
     function formatJobStatus(status) {
@@ -3017,6 +3030,7 @@
 
     initReferralFromUrl();
     initUser();
+    clearLocalSubscription();
     syncUserFromApi().then(() => {
       renderServices();
       renderProfile();
