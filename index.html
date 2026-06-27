@@ -330,6 +330,136 @@
       transform: scale(1.12);
       filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.4));
     }
+
+    /* Plan Info Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-sheet {
+      width: 100%;
+      max-width: 420px;
+      max-height: 85vh;
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 22px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .modal-title {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .modal-subtitle {
+      margin: 0;
+      color: #888;
+      font-size: 13px;
+    }
+    .modal-close {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      color: #aaa;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      margin-top: 0;
+    }
+    .modal-desc {
+      margin: 0 0 16px;
+      color: #bbb;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .modal-section-title {
+      margin: 0 0 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #00d4ff;
+    }
+    .modal-features {
+      list-style: none;
+      margin: 0 0 18px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .modal-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: #ccc;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .modal-features li::before {
+      content: '✓';
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(0, 212, 255, 0.12);
+      color: #00d4ff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .modal-pricing {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .modal-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: #aaa;
+    }
+    .modal-price-row + .modal-price-row {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .modal-price-row strong {
+      color: #fff;
+      font-size: 15px;
+    }
+    .modal-purchase-btn {
+      margin-top: 0;
+    }
   </style>
 </head>
 <body>
@@ -376,7 +506,7 @@
           </div>
         </div>
         <div class="plan-actions">
-          <button class="btn-info">More Info</button>
+          <button class="btn-info" onclick="openPlanInfo(this)">More Info</button>
           <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
         </div>
       </article>
@@ -404,7 +534,7 @@
           </div>
         </div>
         <div class="plan-actions">
-          <button class="btn-info">More Info</button>
+          <button class="btn-info" onclick="openPlanInfo(this)">More Info</button>
           <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
         </div>
       </article>
@@ -432,7 +562,7 @@
           </div>
         </div>
         <div class="plan-actions">
-          <button class="btn-info">More Info</button>
+          <button class="btn-info" onclick="openPlanInfo(this)">More Info</button>
           <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
         </div>
       </article>
@@ -453,6 +583,34 @@
     <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">Referrals</div>
   </div>
   </main>
+
+  <!-- Plan Info Modal -->
+  <div id="info-modal" class="modal-overlay" onclick="closePlanInfo(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="info-title">Plan Info</h2>
+          <p class="modal-subtitle" id="info-subtitle"></p>
+        </div>
+        <button class="modal-close" onclick="closePlanInfo()" aria-label="Close">&times;</button>
+      </div>
+      <p class="modal-desc" id="info-desc"></p>
+      <p class="modal-section-title">What's included</p>
+      <ul class="modal-features" id="info-features"></ul>
+      <p class="modal-section-title">Pricing</p>
+      <div class="modal-pricing">
+        <div class="modal-price-row">
+          <span>Weekly</span>
+          <strong id="info-weekly"></strong>
+        </div>
+        <div class="modal-price-row">
+          <span>Monthly</span>
+          <strong id="info-monthly"></strong>
+        </div>
+      </div>
+      <button class="btn-purchase modal-purchase-btn" id="info-purchase-btn">Purchase Plan</button>
+    </div>
+  </div>
 
   <!-- Menu Modal -->
   <div id="menu-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:1000;align-items:center;justify-content:center;">
@@ -500,6 +658,47 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
+    const planInfo = {
+      STARTER: {
+        title: 'Starter Plan',
+        subtitle: 'Up to 20 forum accounts',
+        desc: 'Get started with automated forum advertising. Your ads are posted and re-posted across your account network on a 24-hour cycle.',
+        features: [
+          'Up to 20 forum accounts',
+          'Automated ad posting every 24 hours',
+          'Submit ad links from the dashboard',
+          'Forum network distribution',
+          'Standard support'
+        ]
+      },
+      PREMIUM: {
+        title: 'Premium Plan',
+        subtitle: 'Up to 40 forum accounts',
+        desc: 'Scale your reach with double the accounts. Ideal for users running multiple campaigns who need faster distribution and priority handling.',
+        features: [
+          'Up to 40 forum accounts',
+          'Everything in Starter',
+          'Priority ad queue',
+          'Faster distribution across forums',
+          'Priority support'
+        ]
+      },
+      ULTIMATE: {
+        title: 'Ultimate Plan',
+        subtitle: 'Up to 100 forum accounts',
+        desc: 'Maximum capacity for high-volume advertisers. Run large-scale forum campaigns with the full account network at your disposal.',
+        features: [
+          'Up to 100 forum accounts',
+          'Everything in Premium',
+          'Maximum posting capacity',
+          'Best for high-volume campaigns',
+          'Top priority support'
+        ]
+      }
+    };
+
+    let activeInfoCard = null;
+
     function updateNavIndicator(tab) {
       const indicator = document.getElementById('nav-indicator');
       indicator.style.transform = `translateX(${tab * 100}%)`;
@@ -533,6 +732,35 @@
         ? card.dataset.weekly
         : card.dataset.monthly;
       card.querySelector('.price-period').textContent = isWeekly ? 'wk' : 'mo';
+    }
+
+    function openPlanInfo(btn) {
+      const card = btn.closest('.plan-card');
+      const plan = card.dataset.plan;
+      const info = planInfo[plan];
+      activeInfoCard = card;
+
+      document.getElementById('info-title').textContent = info.title;
+      document.getElementById('info-subtitle').textContent = info.subtitle;
+      document.getElementById('info-desc').textContent = info.desc;
+      document.getElementById('info-weekly').textContent = '$' + card.dataset.weekly + '/wk';
+      document.getElementById('info-monthly').textContent = '$' + card.dataset.monthly + '/mo';
+
+      const featuresEl = document.getElementById('info-features');
+      featuresEl.innerHTML = info.features.map(f => '<li>' + f + '</li>').join('');
+
+      document.getElementById('info-purchase-btn').onclick = function() {
+        closePlanInfo();
+        buyPlan(card.querySelector('.btn-purchase'));
+      };
+
+      document.getElementById('info-modal').classList.add('open');
+    }
+
+    function closePlanInfo(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('info-modal').classList.remove('open');
+      activeInfoCard = null;
     }
 
     function openMenu() {
