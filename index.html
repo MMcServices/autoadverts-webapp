@@ -77,7 +77,7 @@
 
   <div class="content">
     <!-- PURCHASE PAGE -->
-    <div id="purchase-page" class="content">
+    <div id="purchase-page">
       <h2>Choose your plan</h2>
       <div class="plan-card">
         <div>
@@ -112,7 +112,7 @@
     </div>
 
     <!-- SERVICES PAGE -->
-    <div id="services-page" class="content" style="display:none;">
+    <div id="services-page" style="display:none;">
       <h2>Your Services</h2>
       <div class="card" id="services-content">
         <p><strong>No Active Services</strong></p>
@@ -147,9 +147,8 @@
     let currentPlan = {price: 15, name: "STARTER"};
 
     function switchTab(tab) {
-      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
-      const pages = ['purchase-page', 'services-page'];
-      document.getElementById(pages[tab]).style.display = 'block';
+      document.getElementById("purchase-page").style.display = tab === 0 ? "block" : "none";
+      document.getElementById("services-page").style.display = tab === 1 ? "block" : "none";
     }
 
     function showPlanModal(price) {
