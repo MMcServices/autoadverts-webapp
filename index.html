@@ -596,6 +596,100 @@
       margin-top: 0;
     }
 
+    /* Payment Modal */
+    .payment-summary {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .payment-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: #aaa;
+    }
+    .payment-summary-row + .payment-summary-row {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .payment-summary-row strong {
+      color: #fff;
+      font-size: 16px;
+    }
+    .payment-summary-row.total strong {
+      color: #00d4ff;
+      font-size: 20px;
+    }
+    .payment-status {
+      text-align: center;
+      padding: 20px 0 8px;
+    }
+    .payment-spinner {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 14px;
+      border: 3px solid rgba(0, 212, 255, 0.15);
+      border-top-color: #00d4ff;
+      border-radius: 50%;
+      animation: payment-spin 0.8s linear infinite;
+    }
+    @keyframes payment-spin {
+      to { transform: rotate(360deg); }
+    }
+    .payment-status-text {
+      margin: 0;
+      color: #bbb;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .payment-status-text.success {
+      color: #4ade80;
+    }
+    .payment-status-text.error {
+      color: #f87171;
+    }
+    .payment-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-pay-crypto {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+      color: #000;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-pay-crypto:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-payment-secondary {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: transparent;
+      color: #888;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .payment-note {
+      margin: 14px 0 0;
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
     /* Services Tab */
     .services-hero {
       margin-bottom: 20px;
@@ -1589,6 +1683,52 @@
     </div>
   </div>
 
+  <!-- Payment Modal -->
+  <div id="payment-modal" class="modal-overlay" onclick="closePaymentModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Complete Payment</h2>
+          <p class="modal-subtitle" id="payment-subtitle">Pay with crypto to activate your plan</p>
+        </div>
+        <button class="modal-close" onclick="closePaymentModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="payment-summary">
+        <div class="payment-summary-row">
+          <span>Plan</span>
+          <strong id="payment-plan">—</strong>
+        </div>
+        <div class="payment-summary-row">
+          <span>Billing</span>
+          <strong id="payment-billing">—</strong>
+        </div>
+        <div class="payment-summary-row total">
+          <span>Total</span>
+          <strong id="payment-amount">—</strong>
+        </div>
+      </div>
+      <div id="payment-pending" class="payment-actions">
+        <button class="btn-pay-crypto" id="payment-pay-btn" onclick="openPaymentLink()">Pay with Crypto</button>
+        <button class="btn-payment-secondary" onclick="closePaymentModal()">Cancel</button>
+        <p class="payment-note">Payment opens in Telegram. Return here — your plan activates automatically once confirmed.</p>
+      </div>
+      <div id="payment-waiting" class="payment-status" style="display:none">
+        <div class="payment-spinner"></div>
+        <p class="payment-status-text">Waiting for payment confirmation…</p>
+        <p class="payment-note">This usually takes 1–5 minutes after you pay.</p>
+      </div>
+      <div id="payment-success" class="payment-status" style="display:none">
+        <p class="payment-status-text success" style="font-size:18px;font-weight:700;margin-bottom:8px">Payment confirmed!</p>
+        <p class="payment-status-text">Your plan is now active. Redirecting to Services…</p>
+      </div>
+      <div id="payment-failed" class="payment-status" style="display:none">
+        <p class="payment-status-text error" style="font-size:16px;font-weight:600;margin-bottom:12px">Payment failed or expired</p>
+        <button class="btn-pay-crypto" onclick="retryPayment()">Try Again</button>
+        <button class="btn-payment-secondary" onclick="closePaymentModal()" style="margin-top:10px">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Menu Modal -->
   <div id="menu-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:1000;align-items:center;justify-content:center;">
     <div style="background:#1a1a1a;border-radius:16px;width:92%;max-width:380px;padding:24px;">
@@ -1689,6 +1829,8 @@
     const API_BASE = window.BOT_API_URL || '';
     let isAdmin = false;
     let serverSubscription = null;
+    let activePayment = null;
+    let paymentPollTimer = null;
 
     const tgUser = tg.initDataUnsafe?.user;
     const userId = tgUser?.id;
@@ -1828,6 +1970,29 @@
       if (String(referrerId) === String(userId)) {
         saveRefStats(stats);
       }
+    }
+
+    function apiHeaders() {
+      return {
+        Authorization: 'tma ' + tg.initData,
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      };
+    }
+
+    async function apiRequest(path, options = {}) {
+      if (!API_BASE || !tg.initData) {
+        throw new Error('App not connected to payment server. Please reopen from the bot.');
+      }
+      const res = await fetch(API_BASE + path, {
+        ...options,
+        headers: { ...apiHeaders(), ...(options.headers || {}) }
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || 'Request failed');
+      }
+      return data;
     }
 
     async function syncUserFromApi() {
@@ -2097,7 +2262,112 @@
       document.getElementById('menu-modal').style.display = 'none';
     }
 
-    function buyPlan(btn) {
+    function setPaymentView(view) {
+      document.getElementById('payment-pending').style.display = view === 'pending' ? 'flex' : 'none';
+      document.getElementById('payment-waiting').style.display = view === 'waiting' ? 'block' : 'none';
+      document.getElementById('payment-success').style.display = view === 'success' ? 'block' : 'none';
+      document.getElementById('payment-failed').style.display = view === 'failed' ? 'block' : 'none';
+    }
+
+    function stopPaymentPolling() {
+      if (paymentPollTimer) {
+        clearInterval(paymentPollTimer);
+        paymentPollTimer = null;
+      }
+    }
+
+    function closePaymentModal(event) {
+      if (event && event.target !== event.currentTarget) return;
+      stopPaymentPolling();
+      document.getElementById('payment-modal').classList.remove('open');
+    }
+
+    function openPaymentModal(payment) {
+      activePayment = payment;
+      const planLabel = payment.plan.charAt(0).toUpperCase() + payment.plan.slice(1);
+      document.getElementById('payment-plan').textContent = planLabel;
+      document.getElementById('payment-billing').textContent =
+        payment.billing === 'weekly' ? 'Weekly' : 'Monthly';
+      document.getElementById('payment-amount').textContent = '$' + payment.price.toFixed(2);
+      document.getElementById('payment-pay-btn').disabled = !payment.invoice_url;
+      setPaymentView('pending');
+      document.getElementById('payment-modal').classList.add('open');
+    }
+
+    function openPaymentLink() {
+      if (!activePayment?.invoice_url) {
+        tg.showAlert('Payment link not ready. Please try again.');
+        return;
+      }
+      setPaymentView('waiting');
+      tg.openLink(activePayment.invoice_url);
+      startPaymentPolling();
+    }
+
+    function retryPayment() {
+      if (!activePayment) return;
+      setPaymentView('pending');
+    }
+
+    function handlePaymentConfirmed(data) {
+      stopPaymentPolling();
+      setPaymentView('success');
+      updateDiscountUI();
+
+      if (data.subscription) {
+        saveSubscription({
+          plan: data.subscription.plan,
+          accounts: data.subscription.accounts,
+          expiresAt: data.subscription.expiresAt,
+          purchasedAt: new Date().toISOString(),
+          billing: activePayment?.billing,
+          price: activePayment?.price,
+          isAdminTest: data.subscription.isAdminTest
+        });
+        serverSubscription = data.subscription;
+      }
+
+      setTimeout(() => {
+        closePaymentModal();
+        syncUserFromApi().then(() => {
+          renderServices();
+          renderProfile();
+          renderReferrals();
+          switchTab(1);
+        });
+      }, 2000);
+    }
+
+    function startPaymentPolling() {
+      stopPaymentPolling();
+      if (!activePayment?.order_id) return;
+
+      let attempts = 0;
+      const maxAttempts = 120;
+
+      paymentPollTimer = setInterval(async () => {
+        attempts += 1;
+        if (attempts > maxAttempts) {
+          stopPaymentPolling();
+          setPaymentView('failed');
+          return;
+        }
+
+        try {
+          const data = await apiRequest('/api/payment-status?order_id=' + encodeURIComponent(activePayment.order_id));
+          if (data.status === 'finished' || data.subscriptionActive) {
+            handlePaymentConfirmed(data);
+          } else if (data.status === 'failed' || data.status === 'expired' || data.status === 'refunded') {
+            stopPaymentPolling();
+            setPaymentView('failed');
+          }
+        } catch (_) {
+          /* keep polling on transient errors */
+        }
+      }, 3000);
+    }
+
+    async function buyPlan(btn) {
       const card = btn.closest('.plan-card');
       const name = card.dataset.plan;
       const isWeekly = card.querySelector('.billing-btn:last-child').classList.contains('active');
@@ -2107,41 +2377,80 @@
       const hadDiscount = price < basePrice;
       const referredBy = localStorage.getItem(REFERRED_BY_KEY);
 
-      tg.sendData(JSON.stringify({
-        action: 'create_payment',
-        price,
-        basePrice,
-        plan: name,
-        billing,
-        discountApplied: hadDiscount,
-        referrerId: referredBy || null
-      }));
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Loading…';
 
-      const discountMsg = hadDiscount ? ` ($${price} after 20% off)` : ` ($${price})`;
-      tg.showAlert('Check Telegram for your payment link' + discountMsg);
-      updateDiscountUI();
+      try {
+        const result = await apiRequest('/api/create-payment', {
+          method: 'POST',
+          body: JSON.stringify({
+            price,
+            basePrice,
+            plan: name,
+            billing,
+            discountApplied: hadDiscount,
+            referrerId: referredBy || null
+          })
+        });
+
+        openPaymentModal({
+          order_id: result.order_id,
+          invoice_url: result.invoice_url,
+          price: result.price,
+          plan: result.plan,
+          billing: result.billing
+        });
+        updateDiscountUI();
+      } catch (err) {
+        tg.showAlert(err.message || 'Could not start payment. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
     }
 
-    function adminActivate(btn) {
+    async function adminActivate(btn) {
       const card = btn.closest('.plan-card');
       const name = card.dataset.plan;
       const isWeekly = card.querySelector('.billing-btn:last-child').classList.contains('active');
       const billing = isWeekly ? 'weekly' : 'monthly';
 
-      tg.sendData(JSON.stringify({
-        action: 'admin_activate',
-        plan: name,
-        billing
-      }));
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Activating…';
 
-      tg.showAlert('Admin test plan activating — check Telegram, then open Services.');
-      setTimeout(() => syncUserFromApi().then(() => {
+      try {
+        const data = await apiRequest('/api/admin-activate', {
+          method: 'POST',
+          body: JSON.stringify({ plan: name, billing })
+        });
+
+        if (data.subscription) {
+          saveSubscription({
+            plan: data.subscription.plan,
+            accounts: data.subscription.accounts,
+            expiresAt: data.subscription.expiresAt,
+            purchasedAt: new Date().toISOString(),
+            billing,
+            isAdminTest: true
+          });
+          serverSubscription = data.subscription;
+        }
+
+        tg.showAlert(data.plan + ' test plan activated!');
+        await syncUserFromApi();
         renderServices();
         switchTab(1);
-      }), 2000);
+      } catch (err) {
+        tg.showAlert(err.message || 'Activation failed.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
     }
 
-    function submitAd() {
+    async function submitAd() {
       const input = document.getElementById('ad-link-input');
       const link = (input.value || '').trim();
       if (!link) {
@@ -2149,9 +2458,28 @@
         return;
       }
 
-      tg.sendData(JSON.stringify({ action: 'submit_ad', link }));
-      tg.showAlert('Ad submitted — check Telegram for confirmation.');
-      input.value = '';
+      const btn = document.querySelector('.submit-ad-btn');
+      const originalText = btn?.textContent;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Submitting…';
+      }
+
+      try {
+        const data = await apiRequest('/api/submit-ad', {
+          method: 'POST',
+          body: JSON.stringify({ link })
+        });
+        tg.showAlert('Ad job #' + data.jobId + ' queued across ' + data.accounts + ' accounts!');
+        input.value = '';
+      } catch (err) {
+        tg.showAlert(err.message || 'Could not submit ad.');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      }
     }
 
     initReferralFromUrl();
