@@ -13,9 +13,9 @@
       overflow: hidden;
     }
     body {
-      background: #0f0f0f;
+      background: #111111;
       color: #fff;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       margin: 0;
       padding: 0;
       height: 100vh;
@@ -25,12 +25,130 @@
     }
     .top-bar {
       flex-shrink: 0;
-      background: #1a1a1a;
-      padding: 10px 16px;
+      background: #111111;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .top-bar-left {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #333;
+      gap: 8px;
+      justify-self: start;
+    }
+    .top-bar-center {
+      justify-self: center;
+    }
+    .top-bar-right {
+      justify-self: end;
+    }
+    .menu-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #1a1a1a;
+      color: #ccc;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      margin-top: 0;
+      width: 40px;
+      padding: 0;
+    }
+    .account-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px 6px 6px;
+      border-radius: 999px;
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      font-weight: 500;
+      color: #ddd;
+      max-width: 110px;
+    }
+    .account-pill-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #5d8eff, #9b7bff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .account-pill span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #5d8eff 0%, #7aa6ff 45%, #9b7bff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 24px rgba(93, 142, 255, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .brand-logo::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-radius: 4px;
+      transform: rotate(45deg);
+    }
+    .brand-logo::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 2px;
+      transform: rotate(45deg);
+    }
+    .wallet-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 6px 6px 12px;
+      border-radius: 999px;
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 0;
+      width: auto;
+    }
+    .wallet-plus {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #5d8eff, #7aa6ff);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
     }
     .page-scroll {
       flex: 1;
@@ -39,7 +157,7 @@
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
-      padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px));
     }
     .page {
       padding: 20px 16px 8px;
@@ -259,8 +377,8 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 12px 20px calc(16px + env(safe-area-inset-bottom, 0px));
-      background: linear-gradient(to top, rgba(15, 15, 15, 0.98) 70%, transparent);
+      padding: 10px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(to top, rgba(17, 17, 17, 0.98) 75%, transparent);
       z-index: 100;
       pointer-events: none;
     }
@@ -268,44 +386,48 @@
       position: relative;
       display: flex;
       align-items: center;
-      max-width: 420px;
+      max-width: 440px;
       margin: 0 auto;
-      padding: 6px;
-      background: rgba(26, 26, 26, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 22px;
+      padding: 8px 6px;
+      background: rgba(26, 26, 26, 0.72);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
       box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 0 20px rgba(93, 142, 255, 0.04);
       pointer-events: auto;
     }
-    .nav-indicator {
+    .nav-glow {
       position: absolute;
-      top: 6px;
-      bottom: 6px;
+      top: 50%;
       left: 6px;
-      width: calc((100% - 12px) / 4);
-      background: linear-gradient(135deg, rgba(36, 129, 204, 0.35), rgba(0, 212, 255, 0.18));
-      border: 1px solid rgba(0, 212, 255, 0.25);
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
-      transition: transform 0.32s cubic-bezier(0.34, 1.4, 0.64, 1);
+      width: calc((100% - 12px) / 5);
+      height: 52px;
+      transform: translateX(0%) translateY(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(93, 142, 255, 0.45) 0%, rgba(93, 142, 255, 0.12) 55%, transparent 72%);
+      box-shadow: 0 0 28px rgba(93, 142, 255, 0.35);
+      transition: transform 0.34s cubic-bezier(0.34, 1.4, 0.64, 1);
       pointer-events: none;
+      opacity: 0;
+    }
+    .nav-glow.visible {
+      opacity: 1;
     }
     .nav-item {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       color: #666;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 500;
       letter-spacing: 0.02em;
-      padding: 10px 4px 8px;
-      border-radius: 16px;
+      padding: 6px 2px 4px;
       cursor: pointer;
       position: relative;
       z-index: 1;
@@ -314,11 +436,24 @@
       user-select: none;
     }
     .nav-item.active {
-      color: #00d4ff;
+      color: #7aa6ff;
+    }
+    .nav-icon-wrap {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.25s ease, box-shadow 0.25s ease;
+    }
+    .nav-item.active .nav-icon-wrap {
+      background: rgba(93, 142, 255, 0.14);
+      box-shadow: 0 0 20px rgba(93, 142, 255, 0.25);
     }
     .nav-icon {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       stroke: currentColor;
       fill: none;
       stroke-width: 1.75;
@@ -327,8 +462,8 @@
       transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
     }
     .nav-item.active .nav-icon {
-      transform: scale(1.12);
-      filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.4));
+      transform: scale(1.08);
+      filter: drop-shadow(0 0 8px rgba(122, 166, 255, 0.5));
     }
 
     /* Plan Info Modal */
@@ -642,17 +777,215 @@
     .service-actions button {
       margin-top: 0;
     }
+
+    /* Profile Tab */
+    .profile-page {
+      padding-bottom: 24px;
+    }
+    .profile-hero {
+      text-align: center;
+      padding: 12px 0 28px;
+    }
+    .profile-avatar {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #5d8eff, #7aa6ff, #4a6fd9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 40px rgba(93, 142, 255, 0.35);
+    }
+    .profile-avatar svg {
+      width: 44px;
+      height: 44px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 1.5;
+    }
+    .profile-username-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .profile-username {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .profile-refresh {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      color: #888;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0;
+      width: 28px;
+      padding: 0;
+    }
+    .profile-refresh svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+    .stat-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    .btn-add-balance {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #5d8eff, #7aa6ff);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(93, 142, 255, 0.4);
+      margin-bottom: 28px;
+      margin-top: 0;
+    }
+    .btn-add-balance svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+    .profile-section-label {
+      margin: 0 0 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #555;
+    }
+    .profile-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .profile-nav-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .profile-nav-card:active {
+      background: #222;
+    }
+    .profile-nav-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: rgba(93, 142, 255, 0.1);
+      border: 1px solid rgba(93, 142, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7aa6ff;
+      flex-shrink: 0;
+    }
+    .profile-nav-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+    }
+    .profile-nav-text {
+      flex: 1;
+    }
+    .profile-nav-title {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    .profile-nav-desc {
+      display: block;
+      font-size: 12px;
+      color: #666;
+    }
+    .profile-nav-arrow {
+      color: #444;
+      font-size: 18px;
+    }
+    .app-footer {
+      text-align: center;
+      padding: 20px 16px 8px;
+      color: #444;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .app-footer span {
+      color: #666;
+    }
   </style>
 </head>
 <body>
   <!-- Top Bar -->
   <div class="top-bar">
-    <div onclick="openMenu()" style="font-size:24px;cursor:pointer;">☰</div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <span>@mmcs_s</span>
+    <div class="top-bar-left">
+      <button class="menu-btn" onclick="openMenu()" aria-label="Menu">☰</button>
+      <div class="account-pill">
+        <div class="account-pill-avatar" id="top-avatar">U</div>
+        <span id="top-username">@user</span>
+      </div>
     </div>
-    <div style="background:#252525;padding:4px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;cursor:pointer;">
-      $0.00 <span style="background:#00aaff;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:14px;">+</span>
+    <div class="top-bar-center">
+      <div class="brand-logo" aria-label="AutoAdverts"></div>
+    </div>
+    <div class="top-bar-right">
+      <button class="wallet-pill" onclick="addBalance()" aria-label="Add balance">
+        <span id="top-wallet">$0.00</span>
+        <span class="wallet-plus">+</span>
+      </button>
     </div>
   </div>
 
@@ -821,13 +1154,98 @@
       </div>
     </div>
   </div>
-  <div id="profile-page" class="page" style="display:none;">
-    <h2>👤 Profile</h2>
-    <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">Profile</div>
-  </div>
   <div id="referrals-page" class="page" style="display:none;">
-    <h2>🔗 Referrals</h2>
-    <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">Referrals</div>
+    <div class="services-hero">
+      <h1 class="services-title">Referrals</h1>
+      <p class="services-subtitle">Invite friends and earn rewards.</p>
+    </div>
+    <div class="services-empty">
+      <div class="services-empty-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 13a5 5 0 0 1 7 0"/><path d="M14 11l3-3"/><path d="M8 8h8a4 4 0 0 1 4 4v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a4 4 0 0 1 4-4z"/>
+        </svg>
+      </div>
+      <h3>Coming soon</h3>
+      <p>Your referral link and earnings will appear here.</p>
+    </div>
+  </div>
+
+  <div id="profile-page" class="page profile-page" style="display:none;">
+    <div class="profile-hero">
+      <div class="profile-avatar">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+      </div>
+      <div class="profile-username-row">
+        <h1 class="profile-username" id="profile-username">@user</h1>
+        <button class="profile-refresh" onclick="renderProfile()" aria-label="Refresh">
+          <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Active Services</span>
+        <span class="stat-value" id="stat-services">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Wallet Balance</span>
+        <span class="stat-value" id="stat-wallet">$0.00</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Member Since</span>
+        <span class="stat-value" id="stat-member" style="font-size:16px;">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Total Spent</span>
+        <span class="stat-value" id="stat-spent">$0.00</span>
+      </div>
+    </div>
+
+    <button class="btn-add-balance" onclick="addBalance()">
+      <svg viewBox="0 0 24 24"><path d="M12 2v20M17 7H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Add Balance
+    </button>
+
+    <p class="profile-section-label">Navigation</p>
+    <div class="profile-nav-list">
+      <div class="profile-nav-card" onclick="tg.showAlert('Contact our support team for help.')">
+        <div class="profile-nav-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 2-3 4"/><path d="M12 17h.01"/></svg>
+        </div>
+        <div class="profile-nav-text">
+          <span class="profile-nav-title">Support</span>
+          <span class="profile-nav-desc">Get help with your account</span>
+        </div>
+        <span class="profile-nav-arrow">›</span>
+      </div>
+      <div class="profile-nav-card" onclick="tg.showAlert('Join our Telegram channel for updates.')">
+        <div class="profile-nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </div>
+        <div class="profile-nav-text">
+          <span class="profile-nav-title">Telegram</span>
+          <span class="profile-nav-desc">News, updates & announcements</span>
+        </div>
+        <span class="profile-nav-arrow">›</span>
+      </div>
+      <div class="profile-nav-card" onclick="openMenu()">
+        <div class="profile-nav-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div class="profile-nav-text">
+          <span class="profile-nav-title">More</span>
+          <span class="profile-nav-desc">FAQ, channel & settings</span>
+        </div>
+        <span class="profile-nav-arrow">›</span>
+      </div>
+    </div>
+
+    <div class="app-footer">
+      <span>@autoadvertspot</span>
+    </div>
   </div>
   </main>
 
@@ -873,30 +1291,26 @@
   <!-- Bottom Navigation - Glass Dock -->
   <nav class="bottom-nav" aria-label="Main navigation">
     <div class="bottom-nav-inner">
-      <div class="nav-indicator" id="nav-indicator"></div>
-      <div class="nav-item active" onclick="switchTab(0)" role="tab" aria-selected="true">
-        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6l-2-2H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>
-        </svg>
+      <div class="nav-glow visible" id="nav-glow"></div>
+      <div class="nav-item active" data-tab="0" onclick="switchTab(0)" role="tab" aria-selected="true">
+        <div class="nav-icon-wrap"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6l-2-2H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg></div>
         Purchase
       </div>
-      <div class="nav-item" onclick="switchTab(1)" role="tab" aria-selected="false">
-        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-        </svg>
+      <div class="nav-item" data-tab="1" onclick="switchTab(1)" role="tab" aria-selected="false">
+        <div class="nav-icon-wrap"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
         Services
       </div>
-      <div class="nav-item" onclick="switchTab(2)" role="tab" aria-selected="false">
-        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-        </svg>
+      <div class="nav-item" data-tab="2" onclick="switchTab(2)" role="tab" aria-selected="false">
+        <div class="nav-icon-wrap"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 1 7 0"/><path d="M14 11l3-3"/><path d="M8 8h8a4 4 0 0 1 4 4v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a4 4 0 0 1 4-4z"/></svg></div>
+        Referrals
+      </div>
+      <div class="nav-item" data-tab="3" onclick="switchTab(3)" role="tab" aria-selected="false">
+        <div class="nav-icon-wrap"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
         Profile
       </div>
-      <div class="nav-item" onclick="switchTab(3)" role="tab" aria-selected="false">
-        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M10 13a5 5 0 0 1 7 0"/><path d="M14 11l3-3"/><path d="M8 8h8a4 4 0 0 1 4 4v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a4 4 0 0 1 4-4z"/>
-        </svg>
-        Referrals
+      <div class="nav-item" onclick="openMenu()" role="button" aria-label="Menu">
+        <div class="nav-icon-wrap"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></div>
+        Menu
       </div>
     </div>
   </nav>
@@ -948,6 +1362,67 @@
 
     const planAccounts = { STARTER: 20, PREMIUM: 40, ULTIMATE: 100 };
     const SUBSCRIPTION_KEY = 'autoadverts_subscription';
+    const WALLET_KEY = 'autoadverts_wallet';
+    const SPENT_KEY = 'autoadverts_total_spent';
+    const MEMBER_KEY = 'autoadverts_member_since';
+
+    const tgUser = tg.initDataUnsafe?.user;
+    const displayName = tgUser?.username
+      ? '@' + tgUser.username
+      : tgUser?.first_name || '@user';
+    const avatarLetter = (tgUser?.first_name || tgUser?.username || 'U').charAt(0).toUpperCase();
+
+    function getWallet() {
+      return Number(localStorage.getItem(WALLET_KEY) || 0);
+    }
+
+    function getTotalSpent() {
+      return Number(localStorage.getItem(SPENT_KEY) || 0);
+    }
+
+    function getMemberSince() {
+      let date = localStorage.getItem(MEMBER_KEY);
+      if (!date) {
+        date = new Date().toISOString();
+        localStorage.setItem(MEMBER_KEY, date);
+      }
+      return date;
+    }
+
+    function formatMoney(amount) {
+      return '$' + amount.toFixed(2);
+    }
+
+    function initUser() {
+      document.getElementById('top-username').textContent = displayName;
+      document.getElementById('top-avatar').textContent = avatarLetter;
+      document.getElementById('profile-username').textContent = displayName;
+      updateWalletDisplay();
+    }
+
+    function updateWalletDisplay() {
+      const balance = formatMoney(getWallet());
+      document.getElementById('top-wallet').textContent = balance;
+      const statWallet = document.getElementById('stat-wallet');
+      if (statWallet) statWallet.textContent = balance;
+    }
+
+    function renderProfile() {
+      const sub = getSubscription();
+      const activeServices = sub && isSubscriptionActive(sub) ? 1 : 0;
+      const memberDate = new Date(getMemberSince());
+
+      document.getElementById('stat-services').textContent = activeServices;
+      document.getElementById('stat-spent').textContent = formatMoney(getTotalSpent());
+      document.getElementById('stat-member').textContent = memberDate.toLocaleDateString('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric'
+      });
+      updateWalletDisplay();
+    }
+
+    function addBalance() {
+      tg.showAlert('Add balance — payment integration coming soon.');
+    }
 
     function saveSubscription(data) {
       localStorage.setItem(SUBSCRIPTION_KEY, JSON.stringify(data));
@@ -1017,26 +1492,29 @@
       }
     }
 
-    function updateNavIndicator(tab) {
-      const indicator = document.getElementById('nav-indicator');
-      indicator.style.transform = `translateX(${tab * 100}%)`;
+    function updateNavGlow(tab) {
+      const glow = document.getElementById('nav-glow');
+      glow.style.transform = `translateX(${tab * 100}%) translateY(-50%)`;
+      glow.classList.add('visible');
     }
 
     function switchTab(tab) {
       document.getElementById('purchase-page').style.display = tab === 0 ? 'block' : 'none';
       document.getElementById('services-page').style.display = tab === 1 ? 'block' : 'none';
-      document.getElementById('profile-page').style.display = tab === 2 ? 'block' : 'none';
-      document.getElementById('referrals-page').style.display = tab === 3 ? 'block' : 'none';
+      document.getElementById('referrals-page').style.display = tab === 2 ? 'block' : 'none';
+      document.getElementById('profile-page').style.display = tab === 3 ? 'block' : 'none';
 
-      document.querySelectorAll('.nav-item').forEach((item, i) => {
-        const isActive = i === tab;
+      document.querySelectorAll('.nav-item[data-tab]').forEach((item) => {
+        const tabIndex = Number(item.dataset.tab);
+        const isActive = tabIndex === tab;
         item.classList.toggle('active', isActive);
         item.setAttribute('aria-selected', isActive);
       });
 
-      updateNavIndicator(tab);
+      updateNavGlow(tab);
       document.getElementById('page-scroll').scrollTop = 0;
       if (tab === 1) renderServices();
+      if (tab === 3) renderProfile();
     }
 
     function toggleBilling(el) {
@@ -1109,12 +1587,16 @@
         expiresAt: expiresAt.toISOString()
       });
 
+      localStorage.setItem(SPENT_KEY, String(getTotalSpent() + price));
+
       tg.sendData(JSON.stringify({ action: 'buy_plan', price, plan: name, billing }));
       tg.showAlert(`Payment for ${name} started!`);
       switchTab(1);
     }
 
+    initUser();
     renderServices();
+    renderProfile();
     switchTab(0);
   </script>
 </body>
