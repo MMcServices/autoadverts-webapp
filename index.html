@@ -2,50 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AutoAdverts</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    
     body {
       background: #0f0f0f;
       color: #fff;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
       margin: 0;
       padding: 0;
       height: 100vh;
       overflow: hidden;
     }
-    .header { background: #1a1a1a; padding: 14px; text-align: center; font-size: 17px; font-weight: 600; }
-    .content { padding: 16px; padding-bottom: 90px; overflow-y: auto; height: calc(100vh - 150px); }
-    .plan-card {
+    .header {
       background: #1a1a1a;
-      border-radius: 12px;
-      padding: 18px;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 16px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
     }
-    .price { font-size: 26px; font-weight: 700; color: #00d4ff; }
-    button { padding: 10px 18px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
-    .btn-purchase { background: #2481cc; color: white; }
-    .form-card {
+    .content {
+      padding: 16px;
+      padding-bottom: 100px;
+      overflow-y: auto;
+      height: calc(100vh - 160px);
+    }
+    .card {
       background: #1a1a1a;
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 16px;
     }
-    input {
+    button {
       width: 100%;
-      background: #222;
-      border: none;
-      border-radius: 8px;
       padding: 14px;
-      color: white;
-      margin: 10px 0;
+      margin: 8px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
     }
+    .btn-purchase { background: #2481cc; color: white; }
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -54,111 +52,77 @@
       background: #1a1a1a;
       display: flex;
       justify-content: space-around;
-      padding: 10px 0;
+      padding: 12px 0;
       border-top: 1px solid #333;
     }
     .nav-item {
       text-align: center;
       color: #aaa;
-      font-size: 11px;
+      font-size: 12px;
       cursor: pointer;
     }
-    .nav-item.active { color: #fff; }
-    .locked { color: #666; pointer-events: none; }
+    .nav-item.active { color: #00d4ff; }
   </style>
 </head>
 <body>
   <div class="header">#1 Automated Advertising Bot</div>
 
-  <div class="content">
-    <!-- Purchase Page -->
-    <div id="purchase-page" class="content">
-      <h2>Choose your plan</h2>
-      <div class="plan-card" onclick="showPlanModal(15)">
-        <div><strong>STARTER</strong><br><span style="color:#aaa">20 Accounts</span></div>
-        <div class="price">$15</div>
-      </div>
-      <div class="plan-card" onclick="showPlanModal(35)">
-        <div><strong>PREMIUM</strong><br><span style="color:#aaa">40 Accounts</span></div>
-        <div class="price">$35</div>
-      </div>
-      <div class="plan-card" onclick="showPlanModal(80)">
-        <div><strong>ULTIMATE</strong><br><span style="color:#aaa">100 Accounts</span></div>
-        <div class="price">$80</div>
-      </div>
-    </div>
-
-    <!-- Submit Ad Page (hidden until subscribed) -->
-    <div id="ads-page" class="content" style="display:none;">
-      <h2>📤 Submit New Ad</h2>
-      <div class="form-card">
-        <p>Paste your ad message link:</p>
-        <input type="text" id="ad-link" placeholder="https://t.me/c/123456789/42" />
-        <button class="btn-purchase" onclick="submitAd()">Submit to All Accounts</button>
-      </div>
-    </div>
-
-    <!-- Services Page -->
-    <div id="services-page" class="content" style="display:none;">
-      <h2>📋 My Services</h2>
-      <p id="services-text">No active plan. Purchase one above.</p>
+  <div class="content" id="main-content">
+    <h2 style="text-align:center;">Welcome</h2>
+    <div class="card">
+      <p>Choose a plan to get started with automated advertising.</p>
     </div>
   </div>
 
   <!-- Bottom Navigation -->
   <div class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab(0)">🛒 Purchase</div>
-    <div class="nav-item" id="submit-tab" onclick="switchTab(1)">📤 Submit Ad</div>
-    <div class="nav-item" onclick="switchTab(2)">📋 Services</div>
+    <div class="nav-item active" onclick="showPage(0)">🛒 Purchase</div>
+    <div class="nav-item" onclick="showPage(1)">📤 Submit Ad</div>
+    <div class="nav-item" onclick="showPage(2)">📋 Services</div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
+    tg.setHeaderColor("#0f0f0f");
 
-    let hasSubscription = false;
-
-    function switchTab(tab) {
-      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
-      const pages = ['purchase-page', 'ads-page', 'services-page'];
-      document.getElementById(pages[tab]).style.display = 'block';
-
-      document.querySelectorAll('.nav-item').forEach((el, i) => {
-        el.classList.toggle('active', i === tab);
-      });
-
-      if (tab === 1 && !hasSubscription) {
-        tg.showAlert("You need an active subscription to submit ads!");
-        switchTab(0);
+    function showPage(page) {
+      const content = document.getElementById('main-content');
+      if (page === 0) {
+        content.innerHTML = `
+          <h2>Choose your plan</h2>
+          <div class="card" onclick="buyPlan(15)">STARTER - $15/mo (20 accounts)</div>
+          <div class="card" onclick="buyPlan(35)">PREMIUM - $35/mo (40 accounts)</div>
+          <div class="card" onclick="buyPlan(80)">ULTIMATE - $80/mo (100 accounts)</div>
+        `;
+      } else if (page === 1) {
+        content.innerHTML = `
+          <h2>Submit Ad</h2>
+          <input type="text" id="link" placeholder="Paste ad message link here" style="width:100%;padding:12px;background:#222;color:white;border:none;border-radius:8px;">
+          <button class="btn-purchase" onclick="submitAd()">Submit Ad</button>
+        `;
+      } else {
+        content.innerHTML = `<h2>Services</h2><p>No active services yet.</p>`;
       }
     }
 
-    function showPlanModal(price) {
-      const planName = price === 15 ? "STARTER" : price === 35 ? "PREMIUM" : "ULTIMATE";
-      const accounts = price === 15 ? 20 : price === 35 ? 40 : 100;
-
-      if (confirm(`Purchase ${planName} Plan (${accounts} accounts) for $${price}/mo?`)) {
-        hasSubscription = true;
-        tg.sendData(JSON.stringify({ action: "buy_plan", price: price, accounts: accounts }));
-        tg.showAlert(`✅ ${planName} Plan Activated!`);
-        
-        // Unlock Submit Ad
-        document.getElementById("submit-tab").classList.remove("locked");
-        switchTab(1);  // Go to Submit Ad
-      }
+    function buyPlan(price) {
+      tg.sendData(JSON.stringify({ action: "buy_plan", price: price }));
+      tg.showAlert(`Payment for $${price} started!`);
     }
 
     function submitAd() {
-      const link = document.getElementById('ad-link').value.trim();
-      if (!link) return tg.showAlert("Please paste your ad link");
-      
-      tg.sendData(JSON.stringify({ action: "submit_ad", link: link }));
-      tg.showAlert("✅ Ad submitted to all your accounts!");
-      document.getElementById('ad-link').value = '';
+      const link = document.getElementById('link').value.trim();
+      if (link) {
+        tg.sendData(JSON.stringify({ action: "submit_ad", link: link }));
+        tg.showAlert("Ad submitted successfully!");
+      } else {
+        tg.showAlert("Please paste your ad link");
+      }
     }
 
-    // Start on Purchase tab
-    switchTab(0);
+    // Start on Purchase page
+    showPage(0);
   </script>
 </body>
 </html>
