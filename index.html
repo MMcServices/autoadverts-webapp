@@ -32,6 +32,13 @@
     button { padding: 10px 18px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
     .btn-info { background: #333; color: white; }
     .btn-purchase { background: #2481cc; color: white; }
+    .card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
     /* Modal */
     .modal {
       display: none;
@@ -143,15 +150,6 @@
       document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
       const pages = ['purchase-page', 'services-page'];
       document.getElementById(pages[tab]).style.display = 'block';
-
-      if (tab === 1) updateServices();
-    }
-
-    function updateServices() {
-      const content = document.getElementById("services-content");
-      if (hasActivePlan) {
-        content.innerHTML = `<p><strong>Active: ${currentPlan.name}</strong></p><p>Accounts: ${currentPlan.price === 15 ? 20 : currentPlan.price === 35 ? 40 : 100}</p>`;
-      }
     }
 
     function showPlanModal(price) {
