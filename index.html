@@ -54,6 +54,21 @@
       font-weight: 700; 
       color: #00d4ff; 
     }
+    .billing-toggle {
+      display: flex;
+      background: #252525;
+      border-radius: 8px;
+      padding: 4px;
+      width: fit-content;
+      margin: 12px 0;
+    }
+    .billing-btn {
+      padding: 6px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .billing-btn.active { background: #2481cc; color: white; }
     button { 
       padding: 12px; 
       border-radius: 8px; 
@@ -63,14 +78,8 @@
       width: 100%;
       margin-top: 10px;
     }
-    .btn-info { 
-      background: #2a2a2a; 
-      color: #fff; 
-    }
-    .btn-purchase { 
-      background: #2481cc; 
-      color: white; 
-    }
+    .btn-info { background: #2a2a2a; color: #fff; }
+    .btn-purchase { background: #2481cc; color: white; }
     .card {
       background: #1a1a1a;
       border-radius: 12px;
@@ -78,7 +87,8 @@
       margin-bottom: 16px;
       text-align: center;
     }
-    .modal {
+    /* Menu Modal */
+    .menu-modal {
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -87,30 +97,38 @@
       align-items: center;
       justify-content: center;
     }
-    .modal-content {
+    .menu-content {
       background: #1a1a1a;
       border-radius: 16px;
       width: 92%;
       max-width: 380px;
-      padding: 24px;
+      padding: 20px;
+    }
+    .menu-item {
+      background: #252525;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <!-- Top Bar -->
   <div class="top-bar">
+    <div onclick="openMenu()" style="font-size:24px;cursor:pointer;">☰</div>
     <div style="display:flex;align-items:center;gap:12px;">
-      <span style="font-size:20px;">☰</span>
       <span>@mmcs_s</span>
     </div>
-    <div style="font-size:22px;font-weight:700;">AutoAdverts</div>
     <div style="background:#252525;padding:6px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;">
       $0.00 <span style="background:#00d4ff;color:#000;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;">+</span>
     </div>
   </div>
 
-  <div class="content">
-    <!-- Purchase Section -->
+  <div class="content" id="purchase-page">
     <div class="section-header">FORUMS</div>
 
     <!-- STARTER -->
@@ -119,7 +137,11 @@
         <div><strong>STARTER</strong></div>
         <div style="color:#aaa;font-size:14px;">Up to 20 accounts</div>
       </div>
-      <div class="price">$15/mo</div>
+      <div class="billing-toggle" id="toggle-0">
+        <div class="billing-btn active" onclick="toggleBilling(0)">Monthly</div>
+        <div class="billing-btn" onclick="toggleBilling(0)">Weekly</div>
+      </div>
+      <div class="price" id="price-0">$15/mo</div>
       <button class="btn-info" onclick="showPlanModal(15, 'STARTER')">More Info</button>
       <button class="btn-purchase" onclick="buyPlan(15, 'STARTER')">Purchase</button>
     </div>
@@ -130,7 +152,11 @@
         <div><strong>PREMIUM</strong></div>
         <div style="color:#aaa;font-size:14px;">Up to 40 accounts</div>
       </div>
-      <div class="price">$35/mo</div>
+      <div class="billing-toggle" id="toggle-1">
+        <div class="billing-btn active" onclick="toggleBilling(1)">Monthly</div>
+        <div class="billing-btn" onclick="toggleBilling(1)">Weekly</div>
+      </div>
+      <div class="price" id="price-1">$35/mo</div>
       <button class="btn-info" onclick="showPlanModal(35, 'PREMIUM')">More Info</button>
       <button class="btn-purchase" onclick="buyPlan(35, 'PREMIUM')">Purchase</button>
     </div>
@@ -141,56 +167,63 @@
         <div><strong>ULTIMATE</strong></div>
         <div style="color:#aaa;font-size:14px;">Up to 100 accounts</div>
       </div>
-      <div class="price">$80/mo</div>
+      <div class="billing-toggle" id="toggle-2">
+        <div class="billing-btn active" onclick="toggleBilling(2)">Monthly</div>
+        <div class="billing-btn" onclick="toggleBilling(2)">Weekly</div>
+      </div>
+      <div class="price" id="price-2">$80/mo</div>
       <button class="btn-info" onclick="showPlanModal(80, 'ULTIMATE')">More Info</button>
       <button class="btn-purchase" onclick="buyPlan(80, 'ULTIMATE')">Purchase</button>
     </div>
-
-    <!-- Extra space for future links -->
-    <div style="margin-top:30px;color:#aaa;font-size:14px;">
-      <div onclick="tg.showAlert('Support coming soon!')" style="padding:12px;background:#1a1a1a;border-radius:8px;margin-bottom:8px;">Support</div>
-      <div onclick="tg.showAlert('Channel coming soon!')" style="padding:12px;background:#1a1a1a;border-radius:8px;margin-bottom:8px;">Channel</div>
-      <div onclick="tg.showAlert('FAQ coming soon!')" style="padding:12px;background:#1a1a1a;border-radius:8px;">FAQ</div>
-    </div>
   </div>
 
-  <!-- Services, Profile, Referrals (hidden) -->
+  <!-- Other pages -->
   <div id="services-page" class="content" style="display:none;">
     <h2>Your Services</h2>
-    <div class="card">
-      <p><strong>No Active Services</strong></p>
-      <button class="btn-purchase" onclick="switchTab(0)">Explore Plans</button>
-    </div>
+    <div class="card"><p><strong>No Active Services</strong></p></div>
   </div>
-
   <div id="profile-page" class="content" style="display:none;">
     <h2>👤 Profile</h2>
-    <div class="card">
-      <p><strong>Active Services:</strong> 0</p>
-      <p><strong>Wallet Balance:</strong> $0.00</p>
-      <p><strong>Member Since:</strong> Jun 26, 2026</p>
-      <p><strong>Total Spent:</strong> $0.00</p>
-      <button class="btn-purchase">Add Balance</button>
-    </div>
+    <div class="card">Profile content here</div>
   </div>
-
   <div id="referrals-page" class="content" style="display:none;">
     <h2>🔗 Referrals</h2>
-    <div class="card">
-      <p>Earn 30% on every purchase made with your link.</p>
-      <p style="background:#222;padding:12px;border-radius:8px;word-break:break-all;" id="ref-link">https://t.me/AutoAdvertsBot?start=yourid</p>
-      <button class="btn-purchase" onclick="copyLink()">Copy Referral Link</button>
-    </div>
+    <div class="card">Referrals content here</div>
   </div>
 
-  <!-- Modal -->
-  <div id="plan-modal" class="modal">
-    <div class="modal-content">
-      <h3 id="modal-title">STARTER</h3>
-      <div id="modal-price" style="font-size:32px;color:#00d4ff;margin:12px 0;">$15/mo</div>
-      <ul id="modal-features" style="padding-left:0;"></ul>
-      <button class="btn-purchase" onclick="confirmPurchase()" style="margin-top:20px;">Purchase Plan</button>
-      <button onclick="closeModal()" style="background:#333;width:100%;padding:12px;margin-top:8px;">Close</button>
+  <!-- Menu Modal -->
+  <div id="menu-modal" class="menu-modal">
+    <div class="menu-content">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2>Menu</h2>
+        <span onclick="closeMenu()" style="font-size:28px;cursor:pointer;">×</span>
+      </div>
+      
+      <div class="menu-item" onclick="tg.showAlert('Support opened')">
+        <span style="font-size:24px;">🛟</span>
+        <div>
+          <strong>Support</strong><br>
+          <small>Get help from our team</small>
+        </div>
+      </div>
+      
+      <div class="menu-item" onclick="tg.showAlert('Channel opened')">
+        <span style="font-size:24px;">📢</span>
+        <div>
+          <strong>Channel</strong><br>
+          <small>Join our community channel</small>
+        </div>
+      </div>
+      
+      <div class="menu-item" onclick="tg.showAlert('FAQ opened')">
+        <span style="font-size:24px;">❓</span>
+        <div>
+          <strong>Frequently Asked Questions</strong><br>
+          <small>Browse common questions</small>
+        </div>
+      </div>
+
+      <button onclick="closeMenu()" style="background:#333;width:100%;padding:14px;border-radius:10px;margin-top:20px;">Close</button>
     </div>
   </div>
 
@@ -213,38 +246,38 @@
       document.getElementById('referrals-page').style.display = tab === 3 ? 'block' : 'none';
     }
 
+    function toggleBilling(planIndex) {
+      const toggle = document.getElementById(`toggle-${planIndex}`);
+      const buttons = toggle.querySelectorAll('.billing-btn');
+      buttons.forEach(b => b.classList.toggle('active'));
+      
+      const priceEl = document.getElementById(`price-${planIndex}`);
+      if (priceEl.textContent.includes('/mo')) {
+        priceEl.textContent = priceEl.textContent.replace('/mo', '/week');
+      } else {
+        priceEl.textContent = priceEl.textContent.replace('/week', '/mo');
+      }
+    }
+
+    function openMenu() {
+      document.getElementById('menu-modal').style.display = 'flex';
+    }
+
+    function closeMenu() {
+      document.getElementById('menu-modal').style.display = 'none';
+    }
+
     function showPlanModal(price, name) {
-      document.getElementById("modal-title").textContent = name;
-      document.getElementById("modal-price").textContent = `$${price}/mo`;
-      document.getElementById("modal-features").innerHTML = `
-        <li>${name === "STARTER" ? "20" : name === "PREMIUM" ? "40" : "100"} Forwarding Accounts</li>
-        <li>Premium Group List</li>
-        <li>Automated Forwarding</li>
-      `;
-      document.getElementById("plan-modal").style.display = "flex";
-    }
-
-    function closeModal() {
-      document.getElementById("plan-modal").style.display = "none";
-    }
-
-    function confirmPurchase() {
-      tg.showAlert("Payment flow started!");
-      closeModal();
-      switchTab(1);
+      tg.showAlert(`More info for ${name} plan`);
     }
 
     function buyPlan(price, name) {
       tg.sendData(JSON.stringify({ action: "buy_plan", price: price, plan: name }));
-      tg.showAlert(`Starting payment for ${name} plan...`);
+      tg.showAlert(`Starting payment for ${name}...`);
       switchTab(1);
     }
 
-    function copyLink() {
-      tg.showAlert("Referral link copied!");
-    }
-
-    // Start on Purchase tab
+    // Start on purchase tab
     switchTab(0);
   </script>
 </body>
