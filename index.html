@@ -1984,10 +1984,15 @@
       if (!API_BASE || !tg.initData) {
         throw new Error('App not connected to payment server. Please reopen from the bot.');
       }
-      const res = await fetch(API_BASE + path, {
-        ...options,
-        headers: { ...apiHeaders(), ...(options.headers || {}) }
-      });
+      let res;
+      try {
+        res = await fetch(API_BASE + path, {
+          ...options,
+          headers: { ...apiHeaders(), ...(options.headers || {}) }
+        });
+      } catch (_) {
+        throw new Error('Cannot reach payment server. Make sure the bot and ngrok are running on your PC, then close and reopen this app.');
+      }
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(data.error || 'Request failed');
