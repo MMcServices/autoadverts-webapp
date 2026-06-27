@@ -17,19 +17,25 @@
       height: 100vh;
       overflow: hidden;
     }
-    .header {
+    .top-bar {
       background: #1a1a1a;
-      padding: 12px 16px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-weight: 600;
+      border-bottom: 1px solid #333;
     }
     .content { 
       padding: 16px; 
       padding-bottom: 100px; 
       overflow-y: auto; 
       height: calc(100vh - 170px); 
+    }
+    .section-header {
+      color: #aaa;
+      font-size: 15px;
+      margin: 20px 0 12px;
+      font-weight: 500;
     }
     .plan-card {
       background: #1a1a1a;
@@ -40,42 +46,31 @@
     .plan-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
     }
     .price { 
-      font-size: 28px; 
+      font-size: 32px; 
       font-weight: 700; 
       color: #00d4ff; 
     }
-    .billing-toggle {
-      display: flex;
-      background: #252525;
-      border-radius: 8px;
-      padding: 4px;
-      width: fit-content;
-      margin-bottom: 12px;
-    }
-    .billing-btn {
-      padding: 6px 16px;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .billing-btn.active {
-      background: #2481cc;
-    }
     button { 
-      padding: 12px 20px; 
+      padding: 12px; 
       border-radius: 8px; 
       font-weight: 600; 
       border: none; 
       cursor: pointer; 
       width: 100%;
-      margin-top: 8px;
+      margin-top: 10px;
     }
-    .btn-info { background: #333; color: white; }
-    .btn-purchase { background: #2481cc; color: white; }
+    .btn-info { 
+      background: #2a2a2a; 
+      color: #fff; 
+    }
+    .btn-purchase { 
+      background: #2481cc; 
+      color: white; 
+    }
     .card {
       background: #1a1a1a;
       border-radius: 12px;
@@ -97,65 +92,69 @@
       border-radius: 16px;
       width: 92%;
       max-width: 380px;
-      padding: 20px;
+      padding: 24px;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div>#1 Automated Advertising Bot</div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <span>@mmcs_e</span>
-      <span style="background:#1f1f1f;padding:4px 10px;border-radius:20px;">$0.00</span>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:20px;">☰</span>
+      <span>@mmcs_s</span>
+    </div>
+    <div style="font-size:22px;font-weight:700;">AutoAdverts</div>
+    <div style="background:#252525;padding:6px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;">
+      $0.00 <span style="background:#00d4ff;color:#000;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;">+</span>
     </div>
   </div>
 
-  <!-- PURCHASE PAGE -->
-  <div id="purchase-page" class="content">
+  <div class="content">
+    <!-- Purchase Section -->
+    <div class="section-header">FORUMS</div>
+
+    <!-- STARTER -->
     <div class="plan-card">
       <div class="plan-header">
-        <strong>STARTER</strong>
-        <span>Up to 20 accounts</span>
+        <div><strong>STARTER</strong></div>
+        <div style="color:#aaa;font-size:14px;">Up to 20 accounts</div>
       </div>
-      <div class="billing-toggle" id="toggle-starter">
-        <div class="billing-btn active" onclick="setBilling(0, 'starter')">Monthly</div>
-        <div class="billing-btn" onclick="setBilling(0, 'starter')">Weekly</div>
-      </div>
-      <div class="price" id="price-starter">$15</div>
+      <div class="price">$15/mo</div>
       <button class="btn-info" onclick="showPlanModal(15, 'STARTER')">More Info</button>
       <button class="btn-purchase" onclick="buyPlan(15, 'STARTER')">Purchase</button>
     </div>
 
+    <!-- PREMIUM -->
     <div class="plan-card">
       <div class="plan-header">
-        <strong>PREMIUM</strong>
-        <span>Up to 40 accounts</span>
+        <div><strong>PREMIUM</strong></div>
+        <div style="color:#aaa;font-size:14px;">Up to 40 accounts</div>
       </div>
-      <div class="billing-toggle" id="toggle-premium">
-        <div class="billing-btn active" onclick="setBilling(1, 'premium')">Monthly</div>
-        <div class="billing-btn" onclick="setBilling(1, 'premium')">Weekly</div>
-      </div>
-      <div class="price" id="price-premium">$35</div>
+      <div class="price">$35/mo</div>
       <button class="btn-info" onclick="showPlanModal(35, 'PREMIUM')">More Info</button>
       <button class="btn-purchase" onclick="buyPlan(35, 'PREMIUM')">Purchase</button>
     </div>
 
+    <!-- ULTIMATE -->
     <div class="plan-card">
       <div class="plan-header">
-        <strong>ULTIMATE</strong>
-        <span>Up to 100 accounts</span>
+        <div><strong>ULTIMATE</strong></div>
+        <div style="color:#aaa;font-size:14px;">Up to 100 accounts</div>
       </div>
-      <div class="billing-toggle" id="toggle-ultimate">
-        <div class="billing-btn active" onclick="setBilling(2, 'ultimate')">Monthly</div>
-        <div class="billing-btn" onclick="setBilling(2, 'ultimate')">Weekly</div>
-      </div>
-      <div class="price" id="price-ultimate">$80</div>
+      <div class="price">$80/mo</div>
       <button class="btn-info" onclick="showPlanModal(80, 'ULTIMATE')">More Info</button>
       <button class="btn-purchase" onclick="buyPlan(80, 'ULTIMATE')">Purchase</button>
     </div>
+
+    <!-- Extra space for future links -->
+    <div style="margin-top:30px;color:#aaa;font-size:14px;">
+      <div onclick="tg.showAlert('Support coming soon!')" style="padding:12px;background:#1a1a1a;border-radius:8px;margin-bottom:8px;">Support</div>
+      <div onclick="tg.showAlert('Channel coming soon!')" style="padding:12px;background:#1a1a1a;border-radius:8px;margin-bottom:8px;">Channel</div>
+      <div onclick="tg.showAlert('FAQ coming soon!')" style="padding:12px;background:#1a1a1a;border-radius:8px;">FAQ</div>
+    </div>
   </div>
 
-  <!-- SERVICES, PROFILE, REFERRALS pages same as before -->
+  <!-- Services, Profile, Referrals (hidden) -->
   <div id="services-page" class="content" style="display:none;">
     <h2>Your Services</h2>
     <div class="card">
@@ -171,17 +170,16 @@
       <p><strong>Wallet Balance:</strong> $0.00</p>
       <p><strong>Member Since:</strong> Jun 26, 2026</p>
       <p><strong>Total Spent:</strong> $0.00</p>
-      <button class="btn-purchase" onclick="tg.showAlert('Add Balance coming soon!')">Add Balance</button>
+      <button class="btn-purchase">Add Balance</button>
     </div>
   </div>
 
   <div id="referrals-page" class="content" style="display:none;">
     <h2>🔗 Referrals</h2>
     <div class="card">
-      <p>Earn 30% commission on every referral purchase.</p>
-      <p><strong>Your Link:</strong></p>
-      <p style="background:#222;padding:12px;border-radius:8px;" id="ref-link">https://t.me/AutoAdvertsBot?start=yourid</p>
-      <button class="btn-purchase" onclick="copyLink()">Copy Link</button>
+      <p>Earn 30% on every purchase made with your link.</p>
+      <p style="background:#222;padding:12px;border-radius:8px;word-break:break-all;" id="ref-link">https://t.me/AutoAdvertsBot?start=yourid</p>
+      <button class="btn-purchase" onclick="copyLink()">Copy Referral Link</button>
     </div>
   </div>
 
@@ -189,26 +187,24 @@
   <div id="plan-modal" class="modal">
     <div class="modal-content">
       <h3 id="modal-title">STARTER</h3>
-      <div id="modal-price" style="font-size:28px;color:#00d4ff;margin:12px 0;">$15/mo</div>
-      <ul id="modal-features" style="text-align:left;"></ul>
-      <button class="btn-purchase" onclick="confirmPurchase()">Purchase Plan</button>
+      <div id="modal-price" style="font-size:32px;color:#00d4ff;margin:12px 0;">$15/mo</div>
+      <ul id="modal-features" style="padding-left:0;"></ul>
+      <button class="btn-purchase" onclick="confirmPurchase()" style="margin-top:20px;">Purchase Plan</button>
       <button onclick="closeModal()" style="background:#333;width:100%;padding:12px;margin-top:8px;">Close</button>
     </div>
   </div>
 
   <!-- Bottom Navigation -->
-  <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;">
-    <div onclick="switchTab(0)" style="text-align:center;cursor:pointer;color:#fff;">🛒<br><small>Purchase</small></div>
-    <div onclick="switchTab(1)" style="text-align:center;cursor:pointer;color:#aaa;">📋<br><small>Services</small></div>
-    <div onclick="switchTab(2)" style="text-align:center;cursor:pointer;color:#aaa;">👤<br><small>Profile</small></div>
-    <div onclick="switchTab(3)" style="text-align:center;cursor:pointer;color:#aaa;">🔗<br><small>Referrals</small></div>
+  <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #333;">
+    <div onclick="switchTab(0)" style="text-align:center;color:#fff;">🛒<br><small>Purchase</small></div>
+    <div onclick="switchTab(1)" style="text-align:center;color:#aaa;">📋<br><small>Services</small></div>
+    <div onclick="switchTab(2)" style="text-align:center;color:#aaa;">👤<br><small>Profile</small></div>
+    <div onclick="switchTab(3)" style="text-align:center;color:#aaa;">🔗<br><small>Referrals</small></div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-
-    let currentPlan = {price: 15, name: "STARTER", billing: "Monthly"};
 
     function switchTab(tab) {
       document.getElementById('purchase-page').style.display = tab === 0 ? 'block' : 'none';
@@ -217,29 +213,13 @@
       document.getElementById('referrals-page').style.display = tab === 3 ? 'block' : 'none';
     }
 
-    function setBilling(planIndex, planType) {
-      // Simple toggle for now
-      const toggles = document.querySelectorAll('.billing-toggle');
-      toggles[planIndex].querySelectorAll('.billing-btn').forEach(btn => btn.classList.toggle('active'));
-      
-      // Update price (demo)
-      const priceEl = document.getElementById(`price-${planType}`);
-      if (priceEl.textContent.includes('/mo')) {
-        priceEl.textContent = priceEl.textContent.replace('/mo', '/week');
-      } else {
-        priceEl.textContent = priceEl.textContent.replace('/week', '/mo');
-      }
-    }
-
     function showPlanModal(price, name) {
-      currentPlan = {price, name, billing: "Monthly"};
       document.getElementById("modal-title").textContent = name;
       document.getElementById("modal-price").textContent = `$${price}/mo`;
       document.getElementById("modal-features").innerHTML = `
         <li>${name === "STARTER" ? "20" : name === "PREMIUM" ? "40" : "100"} Forwarding Accounts</li>
-        <li>Premium Marketplace Groups</li>
+        <li>Premium Group List</li>
         <li>Automated Forwarding</li>
-        <li>Custom Auto-Responder</li>
       `;
       document.getElementById("plan-modal").style.display = "flex";
     }
@@ -249,24 +229,22 @@
     }
 
     function confirmPurchase() {
-      tg.sendData(JSON.stringify({ action: "buy_plan", price: currentPlan.price, billing: currentPlan.billing }));
-      tg.showAlert(`Payment for ${currentPlan.name} (${currentPlan.billing}) started!`);
+      tg.showAlert("Payment flow started!");
       closeModal();
       switchTab(1);
     }
 
     function buyPlan(price, name) {
-      currentPlan = {price, name, billing: "Monthly"};
-      tg.sendData(JSON.stringify({ action: "buy_plan", price, billing: "Monthly" }));
-      tg.showAlert(`Payment for ${name} started!`);
+      tg.sendData(JSON.stringify({ action: "buy_plan", price: price, plan: name }));
+      tg.showAlert(`Starting payment for ${name} plan...`);
       switchTab(1);
     }
 
     function copyLink() {
-      navigator.clipboard.writeText(document.getElementById("ref-link").textContent);
       tg.showAlert("Referral link copied!");
     }
 
+    // Start on Purchase tab
     switchTab(0);
   </script>
 </body>
