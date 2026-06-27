@@ -83,37 +83,50 @@
     }
     .btn-info { background: #2a2a2a; color: #fff; }
     .btn-purchase { background: #2481cc; color: white; }
-    .menu-modal {
-      display: none;
+
+    /* Bottom Navigation - Matching Screenshot */
+    .bottom-nav {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.95);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 6px;
+      border-top: 1px solid #333;
+    }
+    .nav-item {
+      text-align: center;
+      color: #aaa;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .nav-item.active {
+      color: #fff;
+    }
+    .nav-item span {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 2px;
     }
   </style>
 </head>
 <body>
-  <!-- Top Bar - Matching Screenshot -->
+  <!-- Top Bar -->
   <div class="top-bar">
     <div onclick="openMenu()" style="font-size:24px;cursor:pointer;">☰</div>
-    
     <div style="display:flex;align-items:center;gap:8px;">
       <span>@mmcs_s</span>
     </div>
-    
-    <div onclick="tg.showAlert('Add balance coming soon')" 
-         style="background:#252525;padding:4px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;cursor:pointer;">
-      <span>$0.00</span>
-      <span style="background:#00aaff;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;">+</span>
+    <div style="background:#252525;padding:4px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;cursor:pointer;">
+      $0.00 <span style="background:#00aaff;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:14px;">+</span>
     </div>
   </div>
 
   <div class="content" id="purchase-page">
     <div class="section-header">FORUMS</div>
 
-    <!-- STARTER -->
     <div class="plan-card">
       <div class="plan-header">
         <strong>STARTER</strong>
@@ -128,7 +141,6 @@
       <button class="btn-purchase" onclick="buyPlan(15, 'STARTER')">Purchase</button>
     </div>
 
-    <!-- PREMIUM -->
     <div class="plan-card">
       <div class="plan-header">
         <strong>PREMIUM</strong>
@@ -143,7 +155,6 @@
       <button class="btn-purchase" onclick="buyPlan(35, 'PREMIUM')">Purchase</button>
     </div>
 
-    <!-- ULTIMATE -->
     <div class="plan-card">
       <div class="plan-header">
         <strong>ULTIMATE</strong>
@@ -159,7 +170,7 @@
     </div>
   </div>
 
-  <!-- Other pages -->
+  <!-- Other Pages -->
   <div id="services-page" class="content" style="display:none;">
     <h2>Your Services</h2>
     <div style="background:#1a1a1a;padding:30px;text-align:center;border-radius:12px;">No Active Services</div>
@@ -173,23 +184,31 @@
     <div style="background:#1a1a1a;padding:30px;text-align:center;border-radius:12px;">Referrals</div>
   </div>
 
-  <!-- Menu Modal -->
-  <div id="menu-modal" class="menu-modal">
+  <!-- Hamburger Menu -->
+  <div id="menu-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:1000;align-items:center;justify-content:center;">
     <div style="background:#1a1a1a;border-radius:16px;width:92%;max-width:380px;padding:24px;">
       <h2>Menu</h2>
-      <div onclick="tg.showAlert('Support')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;display:flex;align-items:center;gap:12px;cursor:pointer;">🛟 Support</div>
-      <div onclick="tg.showAlert('Channel')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;display:flex;align-items:center;gap:12px;cursor:pointer;">📢 Channel</div>
-      <div onclick="tg.showAlert('FAQ')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;display:flex;align-items:center;gap:12px;cursor:pointer;">❓ FAQ</div>
+      <div onclick="tg.showAlert('Support')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;cursor:pointer;">🛟 Support</div>
+      <div onclick="tg.showAlert('Channel')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;cursor:pointer;">📢 Channel</div>
+      <div onclick="tg.showAlert('FAQ')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;cursor:pointer;">❓ FAQ</div>
       <button onclick="closeMenu()" style="width:100%;padding:14px;background:#333;border-radius:10px;margin-top:20px;">Close</button>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
-  <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;">
-    <div onclick="switchTab(0)" style="text-align:center;color:#fff;">🛒<br><small>Purchase</small></div>
-    <div onclick="switchTab(1)" style="text-align:center;color:#aaa;">📋<br><small>Services</small></div>
-    <div onclick="switchTab(2)" style="text-align:center;color:#aaa;">👤<br><small>Profile</small></div>
-    <div onclick="switchTab(3)" style="text-align:center;color:#aaa;">🔗<br><small>Referrals</small></div>
+  <!-- Bottom Navigation - Updated Style -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab(0)">
+      <span>🛒</span>Purchase
+    </div>
+    <div class="nav-item" onclick="switchTab(1)">
+      <span>📄</span>Services
+    </div>
+    <div class="nav-item" onclick="switchTab(2)">
+      <span>👤</span>Profile
+    </div>
+    <div class="nav-item" onclick="switchTab(3)">
+      <span>🔗</span>Referrals
+    </div>
   </div>
 
   <script>
@@ -201,6 +220,10 @@
       document.getElementById('services-page').style.display = tab === 1 ? 'block' : 'none';
       document.getElementById('profile-page').style.display = tab === 2 ? 'block' : 'none';
       document.getElementById('referrals-page').style.display = tab === 3 ? 'block' : 'none';
+
+      document.querySelectorAll('.nav-item').forEach((item, i) => {
+        item.classList.toggle('active', i === tab);
+      });
     }
 
     function toggleBilling(el) {
@@ -223,6 +246,7 @@
       switchTab(1);
     }
 
+    // Start
     switchTab(0);
   </script>
 </body>
