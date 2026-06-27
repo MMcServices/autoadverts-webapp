@@ -2166,6 +2166,7 @@
     const API_BASE = window.BOT_API_URL || '';
     let isAdmin = false;
     let serverSubscription = null;
+    let subscriptionSynced = false;
     let activePayment = null;
     let paymentPollTimer = null;
     let monitorPollTimer = null;
@@ -2354,6 +2355,7 @@
 
         isAdmin = !!data.isAdmin;
         document.body.classList.toggle('is-admin', isAdmin);
+        subscriptionSynced = true;
         serverSubscription = data.subscription || null;
 
         saveRefStats({
@@ -2380,6 +2382,8 @@
             purchasedAt: serverSubscription.expiresAt,
             isAdminTest: serverSubscription.isAdminTest
           });
+        } else {
+          localStorage.removeItem(SUBSCRIPTION_KEY);
         }
 
         return data;
@@ -2471,7 +2475,9 @@
     }
 
     function getActiveSubscription() {
-      if (serverSubscription?.active) return serverSubscription;
+      if (subscriptionSynced) {
+        return serverSubscription?.active ? serverSubscription : null;
+      }
       const local = getSubscription();
       return isSubscriptionActive(local) ? local : null;
     }
