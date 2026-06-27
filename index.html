@@ -31,139 +31,134 @@
     .price { font-size: 26px; font-weight: 700; color: #00d4ff; }
     button { padding: 10px 18px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
     .btn-purchase { background: #2481cc; color: white; }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.9);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-content {
+    .form-card {
       background: #1a1a1a;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 380px;
-      padding: 20px;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
     }
-    .modal-header { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
-    .option {
+    input {
+      width: 100%;
       background: #222;
-      border-radius: 10px;
+      border: none;
+      border-radius: 8px;
       padding: 14px;
+      color: white;
       margin: 10px 0;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 1px solid #333;
     }
-    .purchase-btn {
-      width: 100%;
-      padding: 14px;
-      margin-top: 15px;
-      border-radius: 10px;
-      font-weight: 600;
-      background: #2481cc;
-      color: white;
+    .nav-item {
+      text-align: center;
+      color: #aaa;
+      font-size: 11px;
+      cursor: pointer;
     }
-    .close-btn {
-      width: 100%;
-      padding: 12px;
-      background: #333;
-      color: white;
-      border-radius: 10px;
-    }
+    .nav-item.active { color: #fff; }
+    .locked { color: #666; pointer-events: none; }
   </style>
 </head>
 <body>
   <div class="header">#1 Automated Advertising Bot</div>
 
   <div class="content">
-    <h2>Choose your plan</h2>
-    
-    <div class="plan-card" onclick="showPlanModal(15)">
-      <div>
-        <strong>STARTER</strong><br>
-        <span style="color:#aaa">20 Accounts</span>
+    <!-- Purchase Page -->
+    <div id="purchase-page" class="content">
+      <h2>Choose your plan</h2>
+      <div class="plan-card" onclick="showPlanModal(15)">
+        <div><strong>STARTER</strong><br><span style="color:#aaa">20 Accounts</span></div>
+        <div class="price">$15</div>
       </div>
-      <div class="price">$15</div>
+      <div class="plan-card" onclick="showPlanModal(35)">
+        <div><strong>PREMIUM</strong><br><span style="color:#aaa">40 Accounts</span></div>
+        <div class="price">$35</div>
+      </div>
+      <div class="plan-card" onclick="showPlanModal(80)">
+        <div><strong>ULTIMATE</strong><br><span style="color:#aaa">100 Accounts</span></div>
+        <div class="price">$80</div>
+      </div>
     </div>
 
-    <div class="plan-card" onclick="showPlanModal(35)">
-      <div>
-        <strong>PREMIUM</strong><br>
-        <span style="color:#aaa">40 Accounts</span>
+    <!-- Submit Ad Page (hidden until subscribed) -->
+    <div id="ads-page" class="content" style="display:none;">
+      <h2>📤 Submit New Ad</h2>
+      <div class="form-card">
+        <p>Paste your ad message link:</p>
+        <input type="text" id="ad-link" placeholder="https://t.me/c/123456789/42" />
+        <button class="btn-purchase" onclick="submitAd()">Submit to All Accounts</button>
       </div>
-      <div class="price">$35</div>
     </div>
 
-    <div class="plan-card" onclick="showPlanModal(80)">
-      <div>
-        <strong>ULTIMATE</strong><br>
-        <span style="color:#aaa">100 Accounts</span>
-      </div>
-      <div class="price">$80</div>
+    <!-- Services Page -->
+    <div id="services-page" class="content" style="display:none;">
+      <h2>📋 My Services</h2>
+      <p id="services-text">No active plan. Purchase one above.</p>
     </div>
   </div>
 
-  <!-- Plan Modal -->
-  <div id="plan-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header" id="modal-title">STARTER PLAN</div>
-      
-      <div onclick="selectOption(15, 'weekly')" class="option" id="weekly-option">
-        <div>Weekly</div>
-        <div class="price">$4.99</div>
-      </div>
-
-      <div onclick="selectOption(15, 'monthly')" class="option" id="monthly-option">
-        <div>Monthly</div>
-        <div class="price">$15</div>
-      </div>
-
-      <button class="purchase-btn" onclick="confirmPurchase()">🛒 Purchase Selected</button>
-      <button class="close-btn" onclick="closeModal()">Close</button>
-    </div>
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab(0)">🛒 Purchase</div>
+    <div class="nav-item" id="submit-tab" onclick="switchTab(1)">📤 Submit Ad</div>
+    <div class="nav-item" onclick="switchTab(2)">📋 Services</div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    let selectedPrice = 15;
-    let selectedPeriod = "monthly";
+    let hasSubscription = false;
 
-    function showPlanModal(basePrice) {
-      selectedPrice = basePrice;
-      document.getElementById("modal-title").textContent = 
-        basePrice === 15 ? "STARTER PLAN" : basePrice === 35 ? "PREMIUM PLAN" : "ULTIMATE PLAN";
+    function switchTab(tab) {
+      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
+      const pages = ['purchase-page', 'ads-page', 'services-page'];
+      document.getElementById(pages[tab]).style.display = 'block';
+
+      document.querySelectorAll('.nav-item').forEach((el, i) => {
+        el.classList.toggle('active', i === tab);
+      });
+
+      if (tab === 1 && !hasSubscription) {
+        tg.showAlert("You need an active subscription to submit ads!");
+        switchTab(0);
+      }
+    }
+
+    function showPlanModal(price) {
+      const planName = price === 15 ? "STARTER" : price === 35 ? "PREMIUM" : "ULTIMATE";
+      const accounts = price === 15 ? 20 : price === 35 ? 40 : 100;
+
+      if (confirm(`Purchase ${planName} Plan (${accounts} accounts) for $${price}/mo?`)) {
+        hasSubscription = true;
+        tg.sendData(JSON.stringify({ action: "buy_plan", price: price, accounts: accounts }));
+        tg.showAlert(`✅ ${planName} Plan Activated!`);
+        
+        // Unlock Submit Ad
+        document.getElementById("submit-tab").classList.remove("locked");
+        switchTab(1);  // Go to Submit Ad
+      }
+    }
+
+    function submitAd() {
+      const link = document.getElementById('ad-link').value.trim();
+      if (!link) return tg.showAlert("Please paste your ad link");
       
-      document.getElementById("plan-modal").style.display = "flex";
+      tg.sendData(JSON.stringify({ action: "submit_ad", link: link }));
+      tg.showAlert("✅ Ad submitted to all your accounts!");
+      document.getElementById('ad-link').value = '';
     }
 
-    function selectOption(basePrice, period) {
-      selectedPeriod = period;
-      selectedPrice = period === "weekly" ? (basePrice / 4).toFixed(2) : basePrice;
-      
-      // Highlight selected
-      document.getElementById("weekly-option").style.background = period === "weekly" ? "#2481cc" : "#222";
-      document.getElementById("monthly-option").style.background = period === "monthly" ? "#2481cc" : "#222";
-    }
-
-    function confirmPurchase() {
-      tg.sendData(JSON.stringify({ 
-        action: "buy_plan", 
-        price: selectedPrice,
-        period: selectedPeriod 
-      }));
-      tg.showAlert(`Payment for $${selectedPrice} (${selectedPeriod}) started!`);
-      closeModal();
-    }
-
-    function closeModal() {
-      document.getElementById("plan-modal").style.display = "none";
-    }
+    // Start on Purchase tab
+    switchTab(0);
   </script>
 </body>
 </html>
