@@ -120,17 +120,6 @@
         <button class="btn-purchase" onclick="switchTab(0)">Explore Plans</button>
       </div>
     </div>
-
-    <!-- REFERRALS PAGE -->
-    <div id="referrals-page" class="content" style="display:none;">
-      <h2>🔗 Referrals</h2>
-      <div class="card">
-        <p>Invite friends and earn <strong>30% commission</strong> on every purchase they make.</p>
-        <p><strong>Your Referral Link:</strong></p>
-        <p style="background:#222;padding:12px;border-radius:8px;word-break:break-all;" id="ref-link">https://t.me/yourbot?start=yourid</p>
-        <button onclick="copyLink()">Copy Link</button>
-      </div>
-    </div>
   </div>
 
   <!-- Detailed Modal -->
@@ -148,7 +137,6 @@
   <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;">
     <div onclick="switchTab(0)" style="text-align:center;color:#fff;">🛒<br>Purchase</div>
     <div onclick="switchTab(1)" style="text-align:center;color:#aaa;">📋<br>Services</div>
-    <div onclick="switchTab(2)" style="text-align:center;color:#aaa;">🔗<br>Referrals</div>
   </div>
 
   <script>
@@ -160,7 +148,7 @@
 
     function switchTab(tab) {
       document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
-      const pages = ['purchase-page', 'services-page', 'referrals-page'];
+      const pages = ['purchase-page', 'services-page'];
       document.getElementById(pages[tab]).style.display = 'block';
     }
 
@@ -191,12 +179,6 @@
       tg.sendData(JSON.stringify({ action: "buy_plan", price: price }));
       tg.showAlert(`Payment for $${price} started!`);
       switchTab(1);
-    }
-
-    function copyLink() {
-      const link = document.getElementById("ref-link").textContent;
-      navigator.clipboard.writeText(link);
-      tg.showAlert("Referral link copied!");
     }
 
     // Start on Purchase tab
