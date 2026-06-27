@@ -460,6 +460,188 @@
     .modal-purchase-btn {
       margin-top: 0;
     }
+
+    /* Services Tab */
+    .services-hero {
+      margin-bottom: 20px;
+    }
+    .services-title {
+      margin: 0 0 6px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .services-subtitle {
+      margin: 0;
+      color: #888;
+      font-size: 14px;
+    }
+    .services-empty {
+      text-align: center;
+      padding: 36px 20px;
+      background: rgba(26, 26, 26, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+    }
+    .services-empty-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+    }
+    .services-empty-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+    }
+    .services-empty h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .services-empty p {
+      margin: 0 0 20px;
+      color: #888;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .purchase-cta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2481cc, #1a6eb0);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(36, 129, 204, 0.35);
+      margin-top: 0;
+    }
+    .purchase-cta-bar span:last-child {
+      opacity: 0.85;
+      font-size: 18px;
+    }
+    .service-card {
+      background: rgba(26, 26, 26, 0.82);
+      border: 1px solid rgba(0, 212, 255, 0.22);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.06), 0 12px 40px rgba(0, 212, 255, 0.06);
+    }
+    .service-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .service-plan-name {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .service-plan-type {
+      margin: 0;
+      color: #888;
+      font-size: 13px;
+    }
+    .service-status {
+      flex-shrink: 0;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .service-status--active {
+      background: rgba(0, 212, 255, 0.12);
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      color: #00d4ff;
+    }
+    .service-status--expired {
+      background: rgba(255, 80, 80, 0.12);
+      border: 1px solid rgba(255, 80, 80, 0.25);
+      color: #ff6b6b;
+    }
+    .service-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .service-detail {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .service-detail-label {
+      display: block;
+      color: #666;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .service-detail-value {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .service-expiry-block {
+      margin-bottom: 16px;
+    }
+    .service-expiry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #aaa;
+    }
+    .service-expiry-header strong {
+      color: #fff;
+      font-weight: 600;
+    }
+    .service-progress {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .service-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2481cc, #00d4ff);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+    .service-progress-fill.expired {
+      background: #ff6b6b;
+      width: 0% !important;
+    }
+    .service-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .service-actions button {
+      margin-top: 0;
+    }
   </style>
 </head>
 <body>
@@ -571,8 +753,73 @@
 
   <!-- Other pages -->
   <div id="services-page" class="page" style="display:none;">
-    <h2>Your Services</h2>
-    <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">No Active Services</div>
+    <div class="services-hero">
+      <h1 class="services-title">Your Services</h1>
+      <p class="services-subtitle">Manage your active forum advert subscriptions.</p>
+    </div>
+
+    <div id="services-empty">
+      <div class="services-empty">
+        <div class="services-empty-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+        </div>
+        <h3>No active services</h3>
+        <p>You don't have a subscription yet. Purchase a plan to start automating your forum adverts.</p>
+        <button class="purchase-cta-bar" onclick="switchTab(0)">
+          <span>Browse Plans & Purchase</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="services-active" style="display:none;">
+      <div class="service-card">
+        <div class="service-card-top">
+          <div>
+            <h2 class="service-plan-name" id="service-plan-name">Starter</h2>
+            <p class="service-plan-type" id="service-plan-type">Forum Advert Automation</p>
+          </div>
+          <span class="service-status service-status--active" id="service-status">Active</span>
+        </div>
+
+        <div class="service-details">
+          <div class="service-detail">
+            <span class="service-detail-label">Accounts</span>
+            <span class="service-detail-value" id="service-accounts">20</span>
+          </div>
+          <div class="service-detail">
+            <span class="service-detail-label">Billing</span>
+            <span class="service-detail-value" id="service-billing">Monthly</span>
+          </div>
+          <div class="service-detail">
+            <span class="service-detail-label">Started</span>
+            <span class="service-detail-value" id="service-started">—</span>
+          </div>
+          <div class="service-detail">
+            <span class="service-detail-label">Price paid</span>
+            <span class="service-detail-value" id="service-price">—</span>
+          </div>
+        </div>
+
+        <div class="service-expiry-block">
+          <div class="service-expiry-header">
+            <span>Expires <strong id="service-expires">—</strong></span>
+            <span id="service-days-left">—</span>
+          </div>
+          <div class="service-progress">
+            <div class="service-progress-fill" id="service-progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="service-actions">
+          <button class="btn-info" onclick="switchTab(0)">Renew Plan</button>
+          <button class="btn-purchase" onclick="switchTab(0)">Upgrade</button>
+        </div>
+      </div>
+    </div>
   </div>
   <div id="profile-page" class="page" style="display:none;">
     <h2>👤 Profile</h2>
@@ -699,6 +946,77 @@
 
     let activeInfoCard = null;
 
+    const planAccounts = { STARTER: 20, PREMIUM: 40, ULTIMATE: 100 };
+    const SUBSCRIPTION_KEY = 'autoadverts_subscription';
+
+    function saveSubscription(data) {
+      localStorage.setItem(SUBSCRIPTION_KEY, JSON.stringify(data));
+    }
+
+    function getSubscription() {
+      try {
+        return JSON.parse(localStorage.getItem(SUBSCRIPTION_KEY));
+      } catch {
+        return null;
+      }
+    }
+
+    function isSubscriptionActive(sub) {
+      return sub && new Date(sub.expiresAt) > new Date();
+    }
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('en-GB', {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+    }
+
+    function renderServices() {
+      const sub = getSubscription();
+      const emptyEl = document.getElementById('services-empty');
+      const activeEl = document.getElementById('services-active');
+
+      if (!sub) {
+        emptyEl.style.display = 'block';
+        activeEl.style.display = 'none';
+        return;
+      }
+
+      const active = isSubscriptionActive(sub);
+      emptyEl.style.display = 'none';
+      activeEl.style.display = 'block';
+
+      const totalMs = new Date(sub.expiresAt) - new Date(sub.purchasedAt);
+      const remainingMs = new Date(sub.expiresAt) - new Date();
+      const progress = Math.max(0, Math.min(100, (remainingMs / totalMs) * 100));
+      const daysLeft = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
+
+      document.getElementById('service-plan-name').textContent = sub.plan.charAt(0) + sub.plan.slice(1).toLowerCase();
+      document.getElementById('service-accounts').textContent = sub.accounts;
+      document.getElementById('service-billing').textContent = sub.billing === 'weekly' ? 'Weekly' : 'Monthly';
+      document.getElementById('service-started').textContent = formatDate(sub.purchasedAt);
+      document.getElementById('service-price').textContent = '$' + sub.price + (sub.billing === 'weekly' ? '/wk' : '/mo');
+      document.getElementById('service-expires').textContent = formatDate(sub.expiresAt);
+
+      const statusEl = document.getElementById('service-status');
+      const progressEl = document.getElementById('service-progress-fill');
+      const daysEl = document.getElementById('service-days-left');
+
+      if (active) {
+        statusEl.textContent = 'Active';
+        statusEl.className = 'service-status service-status--active';
+        daysEl.textContent = daysLeft + (daysLeft === 1 ? ' day left' : ' days left');
+        progressEl.classList.remove('expired');
+        progressEl.style.width = progress + '%';
+      } else {
+        statusEl.textContent = 'Expired';
+        statusEl.className = 'service-status service-status--expired';
+        daysEl.textContent = 'Expired';
+        progressEl.classList.add('expired');
+        progressEl.style.width = '0%';
+      }
+    }
+
     function updateNavIndicator(tab) {
       const indicator = document.getElementById('nav-indicator');
       indicator.style.transform = `translateX(${tab * 100}%)`;
@@ -718,6 +1036,7 @@
 
       updateNavIndicator(tab);
       document.getElementById('page-scroll').scrollTop = 0;
+      if (tab === 1) renderServices();
     }
 
     function toggleBilling(el) {
@@ -775,13 +1094,27 @@
       const card = btn.closest('.plan-card');
       const name = card.dataset.plan;
       const isWeekly = card.querySelector('.billing-btn:last-child').classList.contains('active');
+      const billing = isWeekly ? 'weekly' : 'monthly';
       const price = Number(isWeekly ? card.dataset.weekly : card.dataset.monthly);
+      const purchasedAt = new Date();
+      const expiresAt = new Date(purchasedAt);
+      expiresAt.setDate(expiresAt.getDate() + (isWeekly ? 7 : 30));
 
-      tg.sendData(JSON.stringify({ action: 'buy_plan', price, plan: name }));
+      saveSubscription({
+        plan: name,
+        accounts: planAccounts[name],
+        billing,
+        price,
+        purchasedAt: purchasedAt.toISOString(),
+        expiresAt: expiresAt.toISOString()
+      });
+
+      tg.sendData(JSON.stringify({ action: 'buy_plan', price, plan: name, billing }));
       tg.showAlert(`Payment for ${name} started!`);
       switchTab(1);
     }
 
+    renderServices();
     switchTab(0);
   </script>
 </body>
