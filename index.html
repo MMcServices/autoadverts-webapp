@@ -77,7 +77,7 @@
 
   <div class="content">
     <!-- PURCHASE PAGE -->
-    <div id="purchase-page">
+    <div id="purchase-page" class="content">
       <h2>Choose your plan</h2>
       <div class="plan-card">
         <div>
@@ -112,12 +112,24 @@
     </div>
 
     <!-- SERVICES PAGE -->
-    <div id="services-page" style="display:none;">
+    <div id="services-page" class="content" style="display:none;">
       <h2>Your Services</h2>
       <div class="card" id="services-content">
         <p><strong>No Active Services</strong></p>
         <p>You don't have any running subscription plans right now.</p>
         <button class="btn-purchase" onclick="switchTab(0)">Explore Plans</button>
+      </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div id="profile-page" class="content" style="display:none;">
+      <h2>👤 Profile</h2>
+      <div class="card">
+        <p><strong>Active Services:</strong> 0</p>
+        <p><strong>Wallet Balance:</strong> $0.00</p>
+        <p><strong>Member Since:</strong> Today</p>
+        <p><strong>Total Spent:</strong> $0.00</p>
+        <button class="btn-purchase" onclick="alert('Add Balance coming soon!')">💰 Add Balance</button>
       </div>
     </div>
   </div>
@@ -137,6 +149,7 @@
   <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;">
     <div onclick="switchTab(0)" style="text-align:center;color:#fff;">🛒<br>Purchase</div>
     <div onclick="switchTab(1)" style="text-align:center;color:#aaa;">📋<br>Services</div>
+    <div onclick="switchTab(2)" style="text-align:center;color:#aaa;">👤<br>Profile</div>
   </div>
 
   <script>
@@ -147,8 +160,9 @@
     let currentPlan = {price: 15, name: "STARTER"};
 
     function switchTab(tab) {
-      document.getElementById("purchase-page").style.display = tab === 0 ? "block" : "none";
-      document.getElementById("services-page").style.display = tab === 1 ? "block" : "none";
+      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
+      const pages = ['purchase-page', 'services-page', 'profile-page'];
+      document.getElementById(pages[tab]).style.display = 'block';
     }
 
     function showPlanModal(price) {
