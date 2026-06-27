@@ -6,7 +6,7 @@
   <title>AutoAdverts</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
    
     body {
       background: #0f0f0f;
@@ -25,64 +25,220 @@
       justify-content: space-between;
       border-bottom: 1px solid #333;
     }
-    .content { 
-      padding: 16px; 
-      padding-bottom: 100px; 
-      overflow-y: auto; 
-      height: calc(100vh - 170px); 
+    .content {
+      padding: 20px 16px 110px;
+      overflow-y: auto;
+      height: calc(100vh - 56px);
+      -webkit-overflow-scrolling: touch;
     }
-    .section-header {
-      color: #aaa;
-      font-size: 15px;
-      margin: 20px 0 12px;
-      font-weight: 500;
+
+    /* Purchase Tab */
+    .purchase-hero {
+      margin-bottom: 20px;
+    }
+    .purchase-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.18);
+      color: #00d4ff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .purchase-title {
+      margin: 0 0 6px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .purchase-subtitle {
+      margin: 0;
+      color: #888;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .plans-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
     .plan-card {
-      background: #1a1a1a;
-      border-radius: 12px;
+      position: relative;
+      background: rgba(26, 26, 26, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
       padding: 18px;
-      margin-bottom: 16px;
+      overflow: hidden;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
     }
-    .plan-header {
+    .plan-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 55%);
+      pointer-events: none;
+    }
+    .plan-card--featured {
+      border-color: rgba(0, 212, 255, 0.28);
+      box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.08), 0 12px 40px rgba(0, 212, 255, 0.08);
+    }
+    .plan-card-top {
       display: flex;
+      align-items: flex-start;
       justify-content: space-between;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .plan-name {
+      margin: 0 0 4px;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .plan-limit {
+      margin: 0;
+      color: #888;
+      font-size: 13px;
+    }
+    .plan-badge {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #aaa;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .plan-badge--popular {
+      background: linear-gradient(135deg, rgba(36, 129, 204, 0.35), rgba(0, 212, 255, 0.2));
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      color: #00d4ff;
+    }
+    .plan-features {
+      list-style: none;
+      margin: 0 0 16px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .plan-features li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #bbb;
+      font-size: 13px;
+    }
+    .plan-features li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00d4ff;
+      box-shadow: 0 0 8px rgba(0, 212, 255, 0.45);
+      flex-shrink: 0;
+    }
+    .plan-pricing {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .plan-price-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .plan-price {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #fff;
+      line-height: 1;
+    }
+    .plan-price span {
+      color: #00d4ff;
+    }
+    .plan-period {
+      color: #666;
+      font-size: 14px;
+      font-weight: 500;
     }
     .billing-toggle {
       display: flex;
-      background: #252525;
-      border-radius: 8px;
-      padding: 4px;
-      width: fit-content;
-      margin-bottom: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 3px;
+      flex-shrink: 0;
     }
     .billing-btn {
-      padding: 6px 18px;
-      border-radius: 6px;
-      font-size: 14px;
+      padding: 7px 12px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #777;
       cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      user-select: none;
     }
     .billing-btn.active {
-      background: #2481cc;
-      color: white;
+      background: linear-gradient(135deg, #2481cc, #1a6eb0);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(36, 129, 204, 0.35);
     }
-    .price {
-      font-size: 32px;
-      font-weight: 700;
-      color: #00d4ff;
-      margin-bottom: 12px;
+    .plan-actions {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .plan-actions button {
+      margin-top: 0;
     }
     button {
-      padding: 12px;
-      border-radius: 8px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
       font-weight: 600;
       border: none;
       cursor: pointer;
       width: 100%;
-      margin-top: 8px;
+      transition: transform 0.15s ease, opacity 0.15s ease;
     }
-    .btn-info { background: #2a2a2a; color: #fff; }
-    .btn-purchase { background: #2481cc; color: white; }
+    button:active {
+      transform: scale(0.98);
+    }
+    .btn-info {
+      background: rgba(255, 255, 255, 0.05);
+      color: #ccc;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .btn-purchase {
+      background: linear-gradient(135deg, #2481cc, #1a6eb0);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(36, 129, 204, 0.3);
+    }
+    .plan-card--featured .btn-purchase {
+      background: linear-gradient(135deg, #2a9fd6, #00b8e6);
+      box-shadow: 0 6px 24px rgba(0, 212, 255, 0.25);
+    }
 
     /* Glass Dock Bottom Navigation */
     .bottom-nav {
@@ -176,48 +332,96 @@
   </div>
 
   <div class="content" id="purchase-page">
-    <div class="section-header">FORUMS</div>
-
-    <div class="plan-card">
-      <div class="plan-header">
-        <strong>STARTER</strong>
-        <span style="color:#aaa">Up to 20 accounts</span>
-      </div>
-      <div class="billing-toggle">
-        <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
-        <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
-      </div>
-      <div class="price">$15/mo</div>
-      <button class="btn-info">More Info</button>
-      <button class="btn-purchase" onclick="buyPlan(15, 'STARTER')">Purchase</button>
+    <div class="purchase-hero">
+      <div class="purchase-eyebrow">Forums</div>
+      <h1 class="purchase-title">Choose your plan</h1>
+      <p class="purchase-subtitle">Scale your advert accounts with flexible billing.</p>
     </div>
 
-    <div class="plan-card">
-      <div class="plan-header">
-        <strong>PREMIUM</strong>
-        <span style="color:#aaa">Up to 40 accounts</span>
-      </div>
-      <div class="billing-toggle">
-        <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
-        <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
-      </div>
-      <div class="price">$35/mo</div>
-      <button class="btn-info">More Info</button>
-      <button class="btn-purchase" onclick="buyPlan(35, 'PREMIUM')">Purchase</button>
-    </div>
+    <div class="plans-list">
+      <article class="plan-card" data-plan="STARTER" data-monthly="15" data-weekly="5">
+        <div class="plan-card-top">
+          <div>
+            <h2 class="plan-name">Starter</h2>
+            <p class="plan-limit">Up to 20 accounts</p>
+          </div>
+          <span class="plan-badge">Basic</span>
+        </div>
+        <ul class="plan-features">
+          <li>Forum advert automation</li>
+          <li>Standard support</li>
+        </ul>
+        <div class="plan-pricing">
+          <div class="plan-price-wrap">
+            <div class="plan-price">$<span class="price-value">15</span></div>
+            <div class="plan-period">/<span class="price-period">mo</span></div>
+          </div>
+          <div class="billing-toggle">
+            <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
+            <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
+          </div>
+        </div>
+        <div class="plan-actions">
+          <button class="btn-info">More Info</button>
+          <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
+        </div>
+      </article>
 
-    <div class="plan-card">
-      <div class="plan-header">
-        <strong>ULTIMATE</strong>
-        <span style="color:#aaa">Up to 100 accounts</span>
-      </div>
-      <div class="billing-toggle">
-        <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
-        <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
-      </div>
-      <div class="price">$80/mo</div>
-      <button class="btn-info">More Info</button>
-      <button class="btn-purchase" onclick="buyPlan(80, 'ULTIMATE')">Purchase</button>
+      <article class="plan-card plan-card--featured" data-plan="PREMIUM" data-monthly="35" data-weekly="12">
+        <div class="plan-card-top">
+          <div>
+            <h2 class="plan-name">Premium</h2>
+            <p class="plan-limit">Up to 40 accounts</p>
+          </div>
+          <span class="plan-badge plan-badge--popular">Popular</span>
+        </div>
+        <ul class="plan-features">
+          <li>Everything in Starter</li>
+          <li>Priority queue & support</li>
+        </ul>
+        <div class="plan-pricing">
+          <div class="plan-price-wrap">
+            <div class="plan-price">$<span class="price-value">35</span></div>
+            <div class="plan-period">/<span class="price-period">mo</span></div>
+          </div>
+          <div class="billing-toggle">
+            <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
+            <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
+          </div>
+        </div>
+        <div class="plan-actions">
+          <button class="btn-info">More Info</button>
+          <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
+        </div>
+      </article>
+
+      <article class="plan-card" data-plan="ULTIMATE" data-monthly="80" data-weekly="25">
+        <div class="plan-card-top">
+          <div>
+            <h2 class="plan-name">Ultimate</h2>
+            <p class="plan-limit">Up to 100 accounts</p>
+          </div>
+          <span class="plan-badge">Pro</span>
+        </div>
+        <ul class="plan-features">
+          <li>Everything in Premium</li>
+          <li>Maximum account capacity</li>
+        </ul>
+        <div class="plan-pricing">
+          <div class="plan-price-wrap">
+            <div class="plan-price">$<span class="price-value">80</span></div>
+            <div class="plan-period">/<span class="price-period">mo</span></div>
+          </div>
+          <div class="billing-toggle">
+            <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
+            <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
+          </div>
+        </div>
+        <div class="plan-actions">
+          <button class="btn-info">More Info</button>
+          <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
+        </div>
+      </article>
     </div>
   </div>
 
@@ -302,9 +506,17 @@
     }
 
     function toggleBilling(el) {
+      const card = el.closest('.plan-card');
       const parent = el.parentElement;
+      const isWeekly = el.textContent.trim() === 'Weekly';
+
       parent.querySelectorAll('.billing-btn').forEach(b => b.classList.remove('active'));
       el.classList.add('active');
+
+      card.querySelector('.price-value').textContent = isWeekly
+        ? card.dataset.weekly
+        : card.dataset.monthly;
+      card.querySelector('.price-period').textContent = isWeekly ? 'wk' : 'mo';
     }
 
     function openMenu() {
@@ -315,8 +527,13 @@
       document.getElementById('menu-modal').style.display = 'none';
     }
 
-    function buyPlan(price, name) {
-      tg.sendData(JSON.stringify({action:"buy_plan", price, plan:name}));
+    function buyPlan(btn) {
+      const card = btn.closest('.plan-card');
+      const name = card.dataset.plan;
+      const isWeekly = card.querySelector('.billing-btn:last-child').classList.contains('active');
+      const price = Number(isWeekly ? card.dataset.weekly : card.dataset.monthly);
+
+      tg.sendData(JSON.stringify({ action: 'buy_plan', price, plan: name }));
       tg.showAlert(`Payment for ${name} started!`);
       switchTab(1);
     }
