@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoAdverts</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+   
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .top-bar {
+      background: #1a1a1a;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #333;
+    }
+    .content { 
+      padding: 16px; 
+      padding-bottom: 100px; 
+      overflow-y: auto; 
+      height: calc(100vh - 170px); 
+    }
+    .section-header {
+      color: #aaa;
+      font-size: 15px;
+      margin: 20px 0 12px;
+      font-weight: 500;
+    }
+    .plan-card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .plan-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .billing-toggle {
+      display: flex;
+      background: #252525;
+      border-radius: 8px;
+      padding: 4px;
+      width: fit-content;
+      margin-bottom: 12px;
+    }
+    .billing-btn {
+      padding: 6px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .billing-btn.active {
+      background: #2481cc;
+      color: white;
+    }
+    .price {
+      font-size: 32px;
+      font-weight: 700;
+      color: #00d4ff;
+      margin-bottom: 12px;
+    }
+    button {
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .btn-info { background: #2a2a2a; color: #fff; }
+    .btn-purchase { background: #2481cc; color: white; }
+
+    /* Glass Dock Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(to top, rgba(15, 15, 15, 0.98) 60%, transparent);
+      z-index: 100;
+      pointer-events: none;
+    }
+    .bottom-nav-inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 6px;
+      background: rgba(26, 26, 26, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 22px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      pointer-events: auto;
+    }
+    .nav-indicator {
+      position: absolute;
+      top: 6px;
+      bottom: 6px;
+      left: 6px;
+      width: calc((100% - 12px) / 4);
+      background: linear-gradient(135deg, rgba(36, 129, 204, 0.35), rgba(0, 212, 255, 0.18));
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+      transition: transform 0.32s cubic-bezier(0.34, 1.4, 0.64, 1);
+      pointer-events: none;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #666;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 10px 4px 8px;
+      border-radius: 16px;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+      transition: color 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .nav-item.active {
+      color: #00d4ff;
+    }
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+    .nav-item.active .nav-icon {
+      transform: scale(1.12);
+      filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.4));
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div onclick="openMenu()" style="font-size:24px;cursor:pointer;">☰</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span>@mmcs_s</span>
+    </div>
+    <div style="background:#252525;padding:4px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;cursor:pointer;">
+      $0.00 <span style="background:#00aaff;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:14px;">+</span>
+    </div>
+  </div>
+
+  <div class="content" id="purchase-page">
+    <div class="section-header">FORUMS</div>
+
+    <div class="plan-card">
+      <div class="plan-header">
+        <strong>STARTER</strong>
+        <span style="color:#aaa">Up to 20 accounts</span>
+      </div>
+      <div class="billing-toggle">
+        <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
+        <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
+      </div>
+      <div class="price">$15/mo</div>
+      <button class="btn-info">More Info</button>
+      <button class="btn-purchase" onclick="buyPlan(15, 'STARTER')">Purchase</button>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-header">
+        <strong>PREMIUM</strong>
+        <span style="color:#aaa">Up to 40 accounts</span>
+      </div>
+      <div class="billing-toggle">
+        <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
+        <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
+      </div>
+      <div class="price">$35/mo</div>
+      <button class="btn-info">More Info</button>
+      <button class="btn-purchase" onclick="buyPlan(35, 'PREMIUM')">Purchase</button>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-header">
+        <strong>ULTIMATE</strong>
+        <span style="color:#aaa">Up to 100 accounts</span>
+      </div>
+      <div class="billing-toggle">
+        <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
+        <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
+      </div>
+      <div class="price">$80/mo</div>
+      <button class="btn-info">More Info</button>
+      <button class="btn-purchase" onclick="buyPlan(80, 'ULTIMATE')">Purchase</button>
+    </div>
+  </div>
+
+  <!-- Other pages -->
+  <div id="services-page" class="content" style="display:none;">
+    <h2>Your Services</h2>
+    <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">No Active Services</div>
+  </div>
+  <div id="profile-page" class="content" style="display:none;">
+    <h2>👤 Profile</h2>
+    <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">Profile</div>
+  </div>
+  <div id="referrals-page" class="content" style="display:none;">
+    <h2>🔗 Referrals</h2>
+    <div style="background:#1a1a1a;padding:40px;text-align:center;border-radius:12px;">Referrals</div>
+  </div>
+
+  <!-- Menu Modal -->
+  <div id="menu-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:1000;align-items:center;justify-content:center;">
+    <div style="background:#1a1a1a;border-radius:16px;width:92%;max-width:380px;padding:24px;">
+      <h2>Menu</h2>
+      <div onclick="tg.showAlert('Support')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;cursor:pointer;">🛟 Support</div>
+      <div onclick="tg.showAlert('Channel')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;cursor:pointer;">📢 Channel</div>
+      <div onclick="tg.showAlert('FAQ')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;cursor:pointer;">❓ FAQ</div>
+      <button onclick="closeMenu()" style="width:100%;padding:14px;background:#333;border-radius:10px;margin-top:20px;">Close</button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation - Glass Dock -->
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <div class="bottom-nav-inner">
+      <div class="nav-indicator" id="nav-indicator"></div>
+      <div class="nav-item active" onclick="switchTab(0)" role="tab" aria-selected="true">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6l-2-2H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>
+        </svg>
+        Purchase
+      </div>
+      <div class="nav-item" onclick="switchTab(1)" role="tab" aria-selected="false">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Services
+      </div>
+      <div class="nav-item" onclick="switchTab(2)" role="tab" aria-selected="false">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        Profile
+      </div>
+      <div class="nav-item" onclick="switchTab(3)" role="tab" aria-selected="false">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 13a5 5 0 0 1 7 0"/><path d="M14 11l3-3"/><path d="M8 8h8a4 4 0 0 1 4 4v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a4 4 0 0 1 4-4z"/>
+        </svg>
+        Referrals
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    function updateNavIndicator(tab) {
+      const indicator = document.getElementById('nav-indicator');
+      indicator.style.transform = `translateX(${tab * 100}%)`;
+    }
+
+    function switchTab(tab) {
+      document.getElementById('purchase-page').style.display = tab === 0 ? 'block' : 'none';
+      document.getElementById('services-page').style.display = tab === 1 ? 'block' : 'none';
+      document.getElementById('profile-page').style.display = tab === 2 ? 'block' : 'none';
+      document.getElementById('referrals-page').style.display = tab === 3 ? 'block' : 'none';
+
+      document.querySelectorAll('.nav-item').forEach((item, i) => {
+        const isActive = i === tab;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-selected', isActive);
+      });
+
+      updateNavIndicator(tab);
+    }
+
+    function toggleBilling(el) {
+      const parent = el.parentElement;
+      parent.querySelectorAll('.billing-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function openMenu() {
+      document.getElementById('menu-modal').style.display = 'flex';
+    }
+
+    function closeMenu() {
+      document.getElementById('menu-modal').style.display = 'none';
+    }
+
+    function buyPlan(price, name) {
+      tg.sendData(JSON.stringify({action:"buy_plan", price, plan:name}));
+      tg.showAlert(`Payment for ${name} started!`);
+      switchTab(1);
+    }
+
+    switchTab(0);
+  </script>
+</body>
+</html>
