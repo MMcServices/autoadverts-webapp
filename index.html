@@ -1278,6 +1278,90 @@
       color: #666;
       margin-bottom: 10px;
     }
+    .submit-ad-hint {
+      margin: 0 0 10px;
+      font-size: 12px;
+      color: #777;
+      line-height: 1.45;
+    }
+    .submit-ad-hint code {
+      color: #00d4ff;
+      font-size: 11px;
+    }
+    .ad-job-status {
+      margin-top: 14px;
+      padding: 14px;
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.12);
+      border-radius: 14px;
+    }
+    .ad-job-status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .ad-job-status-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #888;
+    }
+    .ad-job-status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(0, 212, 255, 0.15);
+      color: #00d4ff;
+      text-transform: capitalize;
+    }
+    .ad-job-status-badge.running,
+    .ad-job-status-badge.mirroring {
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+    }
+    .ad-job-status-badge.ready {
+      background: rgba(74, 222, 128, 0.15);
+      color: #4ade80;
+    }
+    .ad-job-status-badge.failed {
+      background: rgba(248, 113, 113, 0.15);
+      color: #f87171;
+    }
+    .ad-job-link {
+      margin: 0 0 12px;
+      font-size: 12px;
+      color: #aaa;
+      word-break: break-all;
+    }
+    .ad-job-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .ad-job-stats div {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 8px;
+      text-align: center;
+    }
+    .ad-job-stat-label {
+      display: block;
+      font-size: 10px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .ad-job-stats strong {
+      font-size: 14px;
+      color: #fff;
+    }
+    .ad-job-error {
+      margin: 10px 0 0;
+      font-size: 12px;
+      color: #f87171;
+    }
     .submit-ad-row {
       display: flex;
       gap: 8px;
@@ -1505,11 +1589,26 @@
         <div id="admin-test-badge" class="admin-test-badge" style="display:none;">Admin test mode</div>
 
         <div class="submit-ad-block">
-          <span class="submit-ad-label">Submit advert link</span>
+          <span class="submit-ad-label">Submit Telegram ad message</span>
+          <p class="submit-ad-hint">Paste your channel post link — e.g. <code>https://t.me/mmcadds/206</code></p>
           <div class="submit-ad-row">
-            <input class="submit-ad-input" id="ad-link-input" type="url" placeholder="https://forum.example.com/thread/...">
+            <input class="submit-ad-input" id="ad-link-input" type="url" placeholder="https://t.me/yourchannel/123">
             <button class="btn-purchase submit-ad-btn" onclick="submitAd()">Submit</button>
           </div>
+        </div>
+
+        <div id="ad-job-status" class="ad-job-status" style="display:none;">
+          <div class="ad-job-status-header">
+            <span class="ad-job-status-label">Current ad campaign</span>
+            <span class="ad-job-status-badge" id="ad-job-badge">Pending</span>
+          </div>
+          <p class="ad-job-link" id="ad-job-link">—</p>
+          <div class="ad-job-stats">
+            <div><span class="ad-job-stat-label">Mirrors</span><strong id="ad-job-mirrors">0</strong></div>
+            <div><span class="ad-job-stat-label">Forwards</span><strong id="ad-job-forwards">0</strong></div>
+            <div><span class="ad-job-stat-label">Next run</span><strong id="ad-job-next">—</strong></div>
+          </div>
+          <p class="ad-job-error" id="ad-job-error" style="display:none;"></p>
         </div>
 
         <div class="service-actions">
@@ -2136,6 +2235,53 @@
       return isSubscriptionActive(local) ? local : null;
     }
 
+    function formatJobStatus(status) {
+      const labels = {
+        pending: 'Queued',
+        mirroring: 'Creating mirrors',
+        running: 'Posting',
+        ready: 'Active',
+        paused: 'Paused',
+        failed: 'Failed'
+      };
+      return labels[status] || status;
+    }
+
+    function renderAdJob(job) {
+      const block = document.getElementById('ad-job-status');
+      if (!job) {
+        block.style.display = 'none';
+        return;
+      }
+      block.style.display = 'block';
+      const badge = document.getElementById('ad-job-badge');
+      badge.textContent = formatJobStatus(job.status);
+      badge.className = 'ad-job-status-badge ' + (job.status || '');
+      document.getElementById('ad-job-link').textContent = job.sourceLink || '—';
+      document.getElementById('ad-job-mirrors').textContent = job.mirrorCount || 0;
+      document.getElementById('ad-job-forwards').textContent = job.forwardsTotal || 0;
+      document.getElementById('ad-job-next').textContent = job.nextRunAt
+        ? formatDate(job.nextRunAt)
+        : 'Soon';
+      const errEl = document.getElementById('ad-job-error');
+      if (job.lastError) {
+        errEl.textContent = job.lastError;
+        errEl.style.display = 'block';
+      } else {
+        errEl.style.display = 'none';
+      }
+    }
+
+    async function fetchAdJobs() {
+      try {
+        const data = await apiRequest('/api/ad-jobs');
+        renderAdJob(data.activeJob);
+        return data;
+      } catch (_) {
+        return null;
+      }
+    }
+
     function renderServices() {
       const sub = getActiveSubscription();
       const emptyEl = document.getElementById('services-empty');
@@ -2213,7 +2359,7 @@
 
       updateNavGlow(tab);
       document.getElementById('page-scroll').scrollTop = 0;
-      if (tab === 1) syncUserFromApi().then(() => { renderServices(); });
+      if (tab === 1) syncUserFromApi().then(() => { renderServices(); fetchAdJobs(); });
       if (tab === 2) renderReferrals();
       if (tab === 3) syncUserFromApi().then(() => { renderProfile(); });
     }
@@ -2475,7 +2621,8 @@
           method: 'POST',
           body: JSON.stringify({ link })
         });
-        tg.showAlert('Ad job #' + data.jobId + ' queued across ' + data.accounts + ' accounts!');
+        renderAdJob(data.job);
+        tg.showAlert('Ad queued — mirroring your post then posting across ' + data.accounts + ' accounts.');
         input.value = '';
       } catch (err) {
         tg.showAlert(err.message || 'Could not submit ad.');
@@ -2494,6 +2641,7 @@
       renderProfile();
       renderReferrals();
       updateDiscountUI();
+      fetchAdJobs();
     });
     switchTab(0);
   </script>
