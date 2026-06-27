@@ -2068,12 +2068,14 @@
       <button class="monitor-tab" data-monitor-tab="jobs" onclick="switchMonitorTab('jobs')">Jobs</button>
       <button class="monitor-tab" data-monitor-tab="errors" onclick="switchMonitorTab('errors')">Errors</button>
       <button class="monitor-tab" data-monitor-tab="success" onclick="switchMonitorTab('success')">Working</button>
+      <button class="monitor-tab" data-monitor-tab="invalid" onclick="switchMonitorTab('invalid')">Invalid</button>
     </div>
     <div class="monitor-body">
       <div id="monitor-panel-live" class="monitor-feed"></div>
       <div id="monitor-panel-jobs" class="monitor-feed" style="display:none"></div>
       <div id="monitor-panel-errors" class="monitor-feed" style="display:none"></div>
       <div id="monitor-panel-success" class="monitor-feed" style="display:none"></div>
+      <div id="monitor-panel-invalid" class="monitor-feed" style="display:none"></div>
     </div>
   </div>
 
@@ -2684,7 +2686,7 @@
       document.querySelectorAll('.monitor-tab').forEach(el => {
         el.classList.toggle('active', el.dataset.monitorTab === tab);
       });
-      ['live', 'jobs', 'errors', 'success'].forEach(name => {
+      ['live', 'jobs', 'errors', 'success', 'invalid'].forEach(name => {
         document.getElementById('monitor-panel-' + name).style.display = name === tab ? 'flex' : 'none';
       });
       if (lastMonitorData) renderMonitorPanels(lastMonitorData);
@@ -2701,6 +2703,7 @@
       const jobsEl = document.getElementById('monitor-panel-jobs');
       const errEl = document.getElementById('monitor-panel-errors');
       const okEl = document.getElementById('monitor-panel-success');
+      const invalidEl = document.getElementById('monitor-panel-invalid');
 
       const activity = data.activity || [];
       liveEl.innerHTML = activity.length
@@ -2730,6 +2733,11 @@
       okEl.innerHTML = working.length
         ? working.map(line => renderMonitorEntry('success', '', line)).join('')
         : '<div class="monitor-empty">No successful group logs yet.</div>';
+
+      const invalid = data.recentInvalid || [];
+      invalidEl.innerHTML = invalid.length
+        ? invalid.map(line => renderMonitorEntry('error', '', line)).join('')
+        : '<div class="monitor-empty">No invalid accounts removed yet.</div>';
     }
 
     function renderMonitorStats(data) {
@@ -2799,8 +2807,14 @@
 
     async function reloadAccounts() {
       try {
-        await apiRequest('/api/admin/reload-accounts', { method: 'POST', body: '{}' });
-        tg.showAlert('Accounts reloaded.');
+        tg.showAlert('Validating accounts… may take a minute.');
+        const data = await apiRequest('/api/admin/reload-accounts', { method: 'POST', body: '{}' });
+        const v = data.validation || {};
+        tg.showAlert(
+          'Checked: ' + (v.checked || 0) + '\n' +
+          'Valid: ' + (v.valid || 0) + '\n' +
+          'Removed: ' + (v.removed || 0)
+        );
         fetchMonitorDashboard();
       } catch (err) {
         tg.showAlert(err.message || 'Reload failed.');
