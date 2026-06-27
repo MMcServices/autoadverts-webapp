@@ -1157,6 +1157,68 @@
       font-weight: 500;
       margin-right: 6px;
     }
+    .admin-only { display: none; }
+    body.is-admin .admin-only { display: block; }
+    .btn-admin {
+      background: linear-gradient(135deg, #9b7bff, #7aa6ff);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(155, 123, 255, 0.3);
+      margin-top: 8px;
+    }
+    .plan-actions.has-admin {
+      grid-template-columns: 1fr;
+    }
+    .submit-ad-block {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+    }
+    .submit-ad-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    .submit-ad-row {
+      display: flex;
+      gap: 8px;
+    }
+    .submit-ad-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      min-width: 0;
+    }
+    .submit-ad-btn {
+      flex-shrink: 0;
+      padding: 12px 16px;
+      margin-top: 0;
+      width: auto;
+    }
+    .admin-test-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(155, 123, 255, 0.15);
+      border: 1px solid rgba(155, 123, 255, 0.3);
+      color: #b49aff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
@@ -1216,9 +1278,10 @@
             <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
           </div>
         </div>
-        <div class="plan-actions">
+        <div class="plan-actions" id="plan-actions-starter">
           <button class="btn-info" onclick="openPlanInfo(this)">More Info</button>
           <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
+          <button class="btn-admin admin-only" onclick="adminActivate(this)">Admin Test Activate</button>
         </div>
       </article>
 
@@ -1247,6 +1310,7 @@
         <div class="plan-actions">
           <button class="btn-info" onclick="openPlanInfo(this)">More Info</button>
           <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
+          <button class="btn-admin admin-only" onclick="adminActivate(this)">Admin Test Activate</button>
         </div>
       </article>
 
@@ -1275,6 +1339,7 @@
         <div class="plan-actions">
           <button class="btn-info" onclick="openPlanInfo(this)">More Info</button>
           <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
+          <button class="btn-admin admin-only" onclick="adminActivate(this)">Admin Test Activate</button>
         </div>
       </article>
     </div>
@@ -1340,6 +1405,16 @@
           </div>
           <div class="service-progress">
             <div class="service-progress-fill" id="service-progress-fill"></div>
+          </div>
+        </div>
+
+        <div id="admin-test-badge" class="admin-test-badge" style="display:none;">Admin test mode</div>
+
+        <div class="submit-ad-block">
+          <span class="submit-ad-label">Submit advert link</span>
+          <div class="submit-ad-row">
+            <input class="submit-ad-input" id="ad-link-input" type="url" placeholder="https://forum.example.com/thread/...">
+            <button class="btn-purchase submit-ad-btn" onclick="submitAd()">Submit</button>
           </div>
         </div>
 
@@ -1552,6 +1627,9 @@
     </div>
   </nav>
 
+  <!-- Set your bot API URL when the bot is deployed, e.g. https://your-server.com:8080 -->
+  <script>window.BOT_API_URL = '';</script>
+
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
@@ -1608,6 +1686,10 @@
     const BOT_USERNAME = 'MMcAddssBot';
     const REFERRAL_DISCOUNT = 0.2;
 
+    const API_BASE = window.BOT_API_URL || '';
+    let isAdmin = false;
+    let serverSubscription = null;
+
     const tgUser = tg.initDataUnsafe?.user;
     const userId = tgUser?.id;
     const displayName = tgUser?.username
@@ -1651,8 +1733,8 @@
     }
 
     function renderProfile() {
-      const sub = getSubscription();
-      const activeServices = sub && isSubscriptionActive(sub) ? 1 : 0;
+      const sub = getActiveSubscription();
+      const activeServices = sub ? 1 : 0;
       const memberDate = new Date(getMemberSince());
 
       document.getElementById('stat-services').textContent = activeServices;
@@ -1748,31 +1830,53 @@
       }
     }
 
-    async function syncReferralsFromApi() {
-      const API_BASE = window.BOT_API_URL || '';
-      if (!API_BASE || !tg.initData) return;
+    async function syncUserFromApi() {
+      if (!API_BASE || !tg.initData) return null;
       try {
         const res = await fetch(API_BASE + '/api/me', {
           headers: { Authorization: 'tma ' + tg.initData }
         });
-        if (!res.ok) return;
+        if (!res.ok) return null;
         const data = await res.json();
+
+        isAdmin = !!data.isAdmin;
+        document.body.classList.toggle('is-admin', isAdmin);
+        serverSubscription = data.subscription || null;
+
         saveRefStats({
           count: data.referralCount || 0,
           earned: data.purchasedReferrals || 0,
           credits: data.discountCredits || 0
         });
+
         if (data.referredBy && !localStorage.getItem(REFERRED_BY_KEY)) {
           localStorage.setItem(REFERRED_BY_KEY, String(data.referredBy));
         }
         if (data.hasWelcomeDiscount) {
           localStorage.removeItem(REF_DISCOUNT_USED_KEY);
         }
-      } catch (_) {}
+        if (typeof data.totalSpent === 'number') {
+          localStorage.setItem(SPENT_KEY, String(data.totalSpent));
+        }
+
+        if (serverSubscription) {
+          saveSubscription({
+            plan: serverSubscription.plan,
+            accounts: serverSubscription.accounts,
+            expiresAt: serverSubscription.expiresAt,
+            purchasedAt: serverSubscription.expiresAt,
+            isAdminTest: serverSubscription.isAdminTest
+          });
+        }
+
+        return data;
+      } catch (_) {
+        return null;
+      }
     }
 
     async function renderReferrals() {
-      await syncReferralsFromApi();
+      await syncUserFromApi();
       const stats = getRefStats();
       document.getElementById('ref-count').textContent = stats.count;
       document.getElementById('ref-earned').textContent = stats.earned;
@@ -1853,8 +1957,14 @@
       });
     }
 
+    function getActiveSubscription() {
+      if (serverSubscription?.active) return serverSubscription;
+      const local = getSubscription();
+      return isSubscriptionActive(local) ? local : null;
+    }
+
     function renderServices() {
-      const sub = getSubscription();
+      const sub = getActiveSubscription();
       const emptyEl = document.getElementById('services-empty');
       const activeEl = document.getElementById('services-active');
 
@@ -1864,27 +1974,37 @@
         return;
       }
 
-      const active = isSubscriptionActive(sub);
+      const expiresAt = sub.expiresAt;
+      const purchasedAt = sub.purchasedAt || sub.expiresAt;
+      const remainingMs = new Date(expiresAt) - new Date();
+      const totalMs = new Date(expiresAt) - new Date(purchasedAt);
+      const progress = totalMs > 0 ? Math.max(0, Math.min(100, (remainingMs / totalMs) * 100)) : 100;
+      const daysLeft = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
+
       emptyEl.style.display = 'none';
       activeEl.style.display = 'block';
 
-      const totalMs = new Date(sub.expiresAt) - new Date(sub.purchasedAt);
-      const remainingMs = new Date(sub.expiresAt) - new Date();
-      const progress = Math.max(0, Math.min(100, (remainingMs / totalMs) * 100));
-      const daysLeft = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
+      const planName = (sub.plan || 'STARTER').toString();
+      document.getElementById('service-plan-name').textContent =
+        planName.charAt(0) + planName.slice(1).toLowerCase();
+      document.getElementById('service-accounts').textContent = sub.accounts || planAccounts[planName.toUpperCase()] || '—';
+      document.getElementById('service-billing').textContent = sub.billing
+        ? (sub.billing === 'weekly' ? 'Weekly' : 'Monthly')
+        : '—';
+      document.getElementById('service-started').textContent = purchasedAt ? formatDate(purchasedAt) : '—';
+      document.getElementById('service-price').textContent = sub.price
+        ? '$' + sub.price + (sub.billing === 'weekly' ? '/wk' : '/mo')
+        : sub.isAdminTest ? 'Admin test' : '—';
+      document.getElementById('service-expires').textContent = formatDate(expiresAt);
 
-      document.getElementById('service-plan-name').textContent = sub.plan.charAt(0) + sub.plan.slice(1).toLowerCase();
-      document.getElementById('service-accounts').textContent = sub.accounts;
-      document.getElementById('service-billing').textContent = sub.billing === 'weekly' ? 'Weekly' : 'Monthly';
-      document.getElementById('service-started').textContent = formatDate(sub.purchasedAt);
-      document.getElementById('service-price').textContent = '$' + sub.price + (sub.billing === 'weekly' ? '/wk' : '/mo');
-      document.getElementById('service-expires').textContent = formatDate(sub.expiresAt);
+      const adminBadge = document.getElementById('admin-test-badge');
+      adminBadge.style.display = sub.isAdminTest ? 'inline-block' : 'none';
 
       const statusEl = document.getElementById('service-status');
       const progressEl = document.getElementById('service-progress-fill');
       const daysEl = document.getElementById('service-days-left');
 
-      if (active) {
+      if (remainingMs > 0) {
         statusEl.textContent = 'Active';
         statusEl.className = 'service-status service-status--active';
         daysEl.textContent = daysLeft + (daysLeft === 1 ? ' day left' : ' days left');
@@ -1920,9 +2040,9 @@
 
       updateNavGlow(tab);
       document.getElementById('page-scroll').scrollTop = 0;
-      if (tab === 1) renderServices();
+      if (tab === 1) syncUserFromApi().then(() => { renderServices(); });
       if (tab === 2) renderReferrals();
-      if (tab === 3) renderProfile();
+      if (tab === 3) syncUserFromApi().then(() => { renderProfile(); });
     }
 
     function toggleBilling(el) {
@@ -1982,51 +2102,63 @@
       const basePrice = Number(isWeekly ? card.dataset.weekly : card.dataset.monthly);
       const price = applyDiscount(basePrice);
       const hadDiscount = price < basePrice;
-      const discountInfo = hadDiscount ? consumeReferralDiscount() : null;
-      const purchasedAt = new Date();
-      const expiresAt = new Date(purchasedAt);
-      expiresAt.setDate(expiresAt.getDate() + (isWeekly ? 7 : 30));
-
-      saveSubscription({
-        plan: name,
-        accounts: planAccounts[name],
-        billing,
-        price,
-        basePrice,
-        discountApplied: hadDiscount,
-        purchasedAt: purchasedAt.toISOString(),
-        expiresAt: expiresAt.toISOString()
-      });
-
-      localStorage.setItem(SPENT_KEY, String(getTotalSpent() + price));
-
       const referredBy = localStorage.getItem(REFERRED_BY_KEY);
+
       tg.sendData(JSON.stringify({
-        action: 'buy_plan',
+        action: 'create_payment',
         price,
         basePrice,
         plan: name,
         billing,
         discountApplied: hadDiscount,
-        referrerId: discountInfo?.referrerId || referredBy || null
+        referrerId: referredBy || null
       }));
 
-      if (discountInfo?.type === 'welcome' && discountInfo.referrerId && String(discountInfo.referrerId) !== String(userId)) {
-        creditReferrer(discountInfo.referrerId);
+      const discountMsg = hadDiscount ? ` ($${price} after 20% off)` : ` ($${price})`;
+      tg.showAlert('Check Telegram for your payment link' + discountMsg);
+      updateDiscountUI();
+    }
+
+    function adminActivate(btn) {
+      const card = btn.closest('.plan-card');
+      const name = card.dataset.plan;
+      const isWeekly = card.querySelector('.billing-btn:last-child').classList.contains('active');
+      const billing = isWeekly ? 'weekly' : 'monthly';
+
+      tg.sendData(JSON.stringify({
+        action: 'admin_activate',
+        plan: name,
+        billing
+      }));
+
+      tg.showAlert('Admin test plan activating — check Telegram, then open Services.');
+      setTimeout(() => syncUserFromApi().then(() => {
+        renderServices();
+        switchTab(1);
+      }), 2000);
+    }
+
+    function submitAd() {
+      const input = document.getElementById('ad-link-input');
+      const link = (input.value || '').trim();
+      if (!link) {
+        tg.showAlert('Please enter an advert link.');
+        return;
       }
 
-      const discountMsg = hadDiscount ? ` (20% off — $${price})` : '';
-      tg.showAlert(`Payment for ${name} started!${discountMsg}`);
-      updateDiscountUI();
-      switchTab(1);
+      tg.sendData(JSON.stringify({ action: 'submit_ad', link }));
+      tg.showAlert('Ad submitted — check Telegram for confirmation.');
+      input.value = '';
     }
 
     initReferralFromUrl();
     initUser();
-    renderServices();
-    renderProfile();
-    renderReferrals();
-    updateDiscountUI();
+    syncUserFromApi().then(() => {
+      renderServices();
+      renderProfile();
+      renderReferrals();
+      updateDiscountUI();
+    });
     switchTab(0);
   </script>
 </body>
