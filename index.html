@@ -46,13 +46,7 @@
     .plan-header {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 8px;
-    }
-    .price { 
-      font-size: 32px; 
-      font-weight: 700; 
-      color: #00d4ff; 
+      margin-bottom: 12px;
     }
     .billing-toggle {
       display: flex;
@@ -60,7 +54,7 @@
       border-radius: 8px;
       padding: 4px;
       width: fit-content;
-      margin: 12px 0;
+      margin-bottom: 12px;
     }
     .billing-btn {
       padding: 6px 18px;
@@ -68,27 +62,34 @@
       font-size: 14px;
       cursor: pointer;
     }
-    .billing-btn.active { background: #2481cc; color: white; }
-    button { 
-      padding: 12px; 
-      border-radius: 8px; 
-      font-weight: 600; 
-      border: none; 
-      cursor: pointer; 
+    .billing-btn.active {
+      background: #2481cc;
+      color: white;
+    }
+    .price {
+      font-size: 32px;
+      font-weight: 700;
+      color: #00d4ff;
+      margin-bottom: 12px;
+    }
+    button {
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 8px;
     }
-    .btn-info { background: #2a2a2a; color: #fff; }
-    .btn-purchase { background: #2481cc; color: white; }
-    .card {
-      background: #1a1a1a;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 16px;
-      text-align: center;
+    .btn-info {
+      background: #2a2a2a;
+      color: #fff;
     }
-    /* Menu Modal */
-    .menu-modal {
+    .btn-purchase {
+      background: #2481cc;
+      color: white;
+    }
+    .menu-modal, .plan-modal {
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -97,35 +98,16 @@
       align-items: center;
       justify-content: center;
     }
-    .menu-content {
-      background: #1a1a1a;
-      border-radius: 16px;
-      width: 92%;
-      max-width: 380px;
-      padding: 20px;
-    }
-    .menu-item {
-      background: #252525;
-      padding: 16px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
   <!-- Top Bar -->
   <div class="top-bar">
     <div onclick="openMenu()" style="font-size:24px;cursor:pointer;">☰</div>
-    <div style="display:flex;align-items:center;gap:12px;">
+    <div style="display:flex;align-items:center;gap:8px;">
       <span>@mmcs_s</span>
     </div>
-    <div style="background:#252525;padding:6px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;">
-      $0.00 <span style="background:#00d4ff;color:#000;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;">+</span>
-    </div>
+    <div style="background:#252525;padding:6px 12px;border-radius:999px;">$0.00</div>
   </div>
 
   <div class="content" id="purchase-page">
@@ -134,101 +116,82 @@
     <!-- STARTER -->
     <div class="plan-card">
       <div class="plan-header">
-        <div><strong>STARTER</strong></div>
-        <div style="color:#aaa;font-size:14px;">Up to 20 accounts</div>
+        <strong>STARTER</strong>
+        <span style="color:#aaa">Up to 20 accounts</span>
       </div>
-      <div class="billing-toggle" id="toggle-0">
-        <div class="billing-btn active" onclick="toggleBilling(0)">Monthly</div>
-        <div class="billing-btn" onclick="toggleBilling(0)">Weekly</div>
+      <div class="billing-toggle">
+        <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
+        <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
       </div>
-      <div class="price" id="price-0">$15/mo</div>
-      <button class="btn-info" onclick="showPlanModal(15, 'STARTER')">More Info</button>
+      <div class="price">$15/mo</div>
+      <button class="btn-info">More Info</button>
       <button class="btn-purchase" onclick="buyPlan(15, 'STARTER')">Purchase</button>
     </div>
 
     <!-- PREMIUM -->
     <div class="plan-card">
       <div class="plan-header">
-        <div><strong>PREMIUM</strong></div>
-        <div style="color:#aaa;font-size:14px;">Up to 40 accounts</div>
+        <strong>PREMIUM</strong>
+        <span style="color:#aaa">Up to 40 accounts</span>
       </div>
-      <div class="billing-toggle" id="toggle-1">
-        <div class="billing-btn active" onclick="toggleBilling(1)">Monthly</div>
-        <div class="billing-btn" onclick="toggleBilling(1)">Weekly</div>
+      <div class="billing-toggle">
+        <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
+        <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
       </div>
-      <div class="price" id="price-1">$35/mo</div>
-      <button class="btn-info" onclick="showPlanModal(35, 'PREMIUM')">More Info</button>
+      <div class="price">$35/mo</div>
+      <button class="btn-info">More Info</button>
       <button class="btn-purchase" onclick="buyPlan(35, 'PREMIUM')">Purchase</button>
     </div>
 
     <!-- ULTIMATE -->
     <div class="plan-card">
       <div class="plan-header">
-        <div><strong>ULTIMATE</strong></div>
-        <div style="color:#aaa;font-size:14px;">Up to 100 accounts</div>
+        <strong>ULTIMATE</strong>
+        <span style="color:#aaa">Up to 100 accounts</span>
       </div>
-      <div class="billing-toggle" id="toggle-2">
-        <div class="billing-btn active" onclick="toggleBilling(2)">Monthly</div>
-        <div class="billing-btn" onclick="toggleBilling(2)">Weekly</div>
+      <div class="billing-toggle">
+        <div class="billing-btn active" onclick="toggleBilling(this)">Monthly</div>
+        <div class="billing-btn" onclick="toggleBilling(this)">Weekly</div>
       </div>
-      <div class="price" id="price-2">$80/mo</div>
-      <button class="btn-info" onclick="showPlanModal(80, 'ULTIMATE')">More Info</button>
+      <div class="price">$80/mo</div>
+      <button class="btn-info">More Info</button>
       <button class="btn-purchase" onclick="buyPlan(80, 'ULTIMATE')">Purchase</button>
     </div>
   </div>
 
-  <!-- Other pages -->
+  <!-- Other tabs (Services, Profile, Referrals) -->
   <div id="services-page" class="content" style="display:none;">
     <h2>Your Services</h2>
-    <div class="card"><p><strong>No Active Services</strong></p></div>
+    <div class="card" style="background:#1a1a1a;padding:20px;text-align:center;">No Active Services</div>
   </div>
   <div id="profile-page" class="content" style="display:none;">
-    <h2>👤 Profile</h2>
-    <div class="card">Profile content here</div>
+    <h2>Profile</h2>
+    <div class="card" style="background:#1a1a1a;padding:20px;text-align:center;">Profile content</div>
   </div>
   <div id="referrals-page" class="content" style="display:none;">
-    <h2>🔗 Referrals</h2>
-    <div class="card">Referrals content here</div>
+    <h2>Referrals</h2>
+    <div class="card" style="background:#1a1a1a;padding:20px;text-align:center;">Referrals content</div>
   </div>
 
-  <!-- Menu Modal -->
+  <!-- Hamburger Menu Modal -->
   <div id="menu-modal" class="menu-modal">
-    <div class="menu-content">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-        <h2>Menu</h2>
-        <span onclick="closeMenu()" style="font-size:28px;cursor:pointer;">×</span>
+    <div style="background:#1a1a1a;border-radius:16px;width:92%;max-width:380px;padding:20px;">
+      <h2 style="margin-bottom:20px;">Menu</h2>
+      <div onclick="tg.showAlert('Support')" style="background:#252525;padding:16px;border-radius:12px;margin-bottom:12px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+        🛟 <strong>Support</strong>
       </div>
-      
-      <div class="menu-item" onclick="tg.showAlert('Support opened')">
-        <span style="font-size:24px;">🛟</span>
-        <div>
-          <strong>Support</strong><br>
-          <small>Get help from our team</small>
-        </div>
+      <div onclick="tg.showAlert('Channel')" style="background:#252525;padding:16px;border-radius:12px;margin-bottom:12px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+        📢 <strong>Channel</strong>
       </div>
-      
-      <div class="menu-item" onclick="tg.showAlert('Channel opened')">
-        <span style="font-size:24px;">📢</span>
-        <div>
-          <strong>Channel</strong><br>
-          <small>Join our community channel</small>
-        </div>
+      <div onclick="tg.showAlert('FAQ')" style="background:#252525;padding:16px;border-radius:12px;margin-bottom:20px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+        ❓ <strong>Frequently Asked Questions</strong>
       </div>
-      
-      <div class="menu-item" onclick="tg.showAlert('FAQ opened')">
-        <span style="font-size:24px;">❓</span>
-        <div>
-          <strong>Frequently Asked Questions</strong><br>
-          <small>Browse common questions</small>
-        </div>
-      </div>
-
-      <button onclick="closeMenu()" style="background:#333;width:100%;padding:14px;border-radius:10px;margin-top:20px;">Close</button>
+      <button onclick="closeMenu()" style="width:100%;padding:14px;background:#333;border-radius:10px;">Close</button>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
-  <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #333;">
+  <!-- Bottom Nav -->
+  <div style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;">
     <div onclick="switchTab(0)" style="text-align:center;color:#fff;">🛒<br><small>Purchase</small></div>
     <div onclick="switchTab(1)" style="text-align:center;color:#aaa;">📋<br><small>Services</small></div>
     <div onclick="switchTab(2)" style="text-align:center;color:#aaa;">👤<br><small>Profile</small></div>
@@ -246,17 +209,10 @@
       document.getElementById('referrals-page').style.display = tab === 3 ? 'block' : 'none';
     }
 
-    function toggleBilling(planIndex) {
-      const toggle = document.getElementById(`toggle-${planIndex}`);
-      const buttons = toggle.querySelectorAll('.billing-btn');
-      buttons.forEach(b => b.classList.toggle('active'));
-      
-      const priceEl = document.getElementById(`price-${planIndex}`);
-      if (priceEl.textContent.includes('/mo')) {
-        priceEl.textContent = priceEl.textContent.replace('/mo', '/week');
-      } else {
-        priceEl.textContent = priceEl.textContent.replace('/week', '/mo');
-      }
+    function toggleBilling(el) {
+      const parent = el.parentElement;
+      parent.querySelectorAll('.billing-btn').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
     }
 
     function openMenu() {
@@ -267,17 +223,12 @@
       document.getElementById('menu-modal').style.display = 'none';
     }
 
-    function showPlanModal(price, name) {
-      tg.showAlert(`More info for ${name} plan`);
-    }
-
     function buyPlan(price, name) {
-      tg.sendData(JSON.stringify({ action: "buy_plan", price: price, plan: name }));
-      tg.showAlert(`Starting payment for ${name}...`);
+      tg.sendData(JSON.stringify({action: "buy_plan", price: price, plan: name}));
+      tg.showAlert(`Payment for ${name} started!`);
       switchTab(1);
     }
 
-    // Start on purchase tab
     switchTab(0);
   </script>
 </body>
