@@ -1362,6 +1362,211 @@
       font-size: 12px;
       color: #f87171;
     }
+
+    /* Admin Bot Monitor */
+    .monitor-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #0d0d0d;
+      z-index: 1100;
+      flex-direction: column;
+    }
+    .monitor-overlay.open {
+      display: flex;
+    }
+    .monitor-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      padding-top: calc(16px + env(safe-area-inset-top, 0px));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+    }
+    .monitor-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .monitor-subtitle {
+      margin: 2px 0 0;
+      font-size: 11px;
+      color: #666;
+    }
+    .monitor-header-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .monitor-btn {
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      color: #ccc;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .monitor-btn--primary {
+      border-color: rgba(0, 212, 255, 0.3);
+      color: #00d4ff;
+    }
+    .monitor-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 14px 18px;
+      flex-shrink: 0;
+    }
+    .monitor-stat {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .monitor-stat-label {
+      display: block;
+      font-size: 10px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .monitor-stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .monitor-stat-value.ok { color: #4ade80; }
+    .monitor-stat-value.warn { color: #fbbf24; }
+    .monitor-stat-value.bad { color: #f87171; }
+    .monitor-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 0 18px 12px;
+      flex-shrink: 0;
+      overflow-x: auto;
+    }
+    .monitor-tab {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #888;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .monitor-tab.active {
+      background: rgba(0, 212, 255, 0.15);
+      color: #00d4ff;
+    }
+    .monitor-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 18px 24px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .monitor-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .monitor-entry {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .monitor-entry--success { border-left: 3px solid #4ade80; }
+    .monitor-entry--error { border-left: 3px solid #f87171; }
+    .monitor-entry--warn { border-left: 3px solid #fbbf24; }
+    .monitor-entry--info { border-left: 3px solid #00d4ff; }
+    .monitor-entry-time {
+      display: block;
+      font-size: 10px;
+      color: #555;
+      margin-bottom: 4px;
+    }
+    .monitor-entry-msg {
+      color: #ccc;
+      word-break: break-word;
+    }
+    .monitor-job-card {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 8px;
+    }
+    .monitor-job-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .monitor-job-id {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .monitor-job-status {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      background: rgba(0, 212, 255, 0.12);
+      color: #00d4ff;
+    }
+    .monitor-job-status.failed { background: rgba(248,113,113,0.15); color: #f87171; }
+    .monitor-job-status.running,
+    .monitor-job-status.mirroring { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .monitor-job-meta {
+      font-size: 11px;
+      color: #777;
+      word-break: break-all;
+    }
+    .monitor-job-error {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #f87171;
+    }
+    .monitor-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #555;
+      font-size: 13px;
+    }
+    .monitor-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
+    }
+    .monitor-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: monitor-pulse 2s infinite;
+    }
+    .monitor-dot.off { background: #f87171; animation: none; }
+    @keyframes monitor-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .menu-item {
+      background: #252525;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 12px 0;
+      cursor: pointer;
+    }
     .submit-ad-row {
       display: flex;
       gap: 8px;
@@ -1832,10 +2037,43 @@
   <div id="menu-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:1000;align-items:center;justify-content:center;">
     <div style="background:#1a1a1a;border-radius:16px;width:92%;max-width:380px;padding:24px;">
       <h2>Menu</h2>
-      <div onclick="tg.showAlert('Support')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;cursor:pointer;">🛟 Support</div>
-      <div onclick="tg.showAlert('Channel')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;cursor:pointer;">📢 Channel</div>
-      <div onclick="tg.showAlert('FAQ')" style="background:#252525;padding:16px;border-radius:12px;margin:12px 0;cursor:pointer;">❓ FAQ</div>
+      <div class="menu-item admin-only" onclick="openMonitor()">📡 Bot Monitor</div>
+      <div class="menu-item" onclick="tg.showAlert('Support')">🛟 Support</div>
+      <div class="menu-item" onclick="tg.showAlert('Channel')">📢 Channel</div>
+      <div class="menu-item" onclick="tg.showAlert('FAQ')">❓ FAQ</div>
       <button onclick="closeMenu()" style="width:100%;padding:14px;background:#333;border-radius:10px;margin-top:20px;">Close</button>
+    </div>
+  </div>
+
+  <!-- Admin Bot Monitor -->
+  <div id="monitor-overlay" class="monitor-overlay">
+    <div class="monitor-header">
+      <div>
+        <h2 class="monitor-title">Bot Monitor</h2>
+        <p class="monitor-subtitle" id="monitor-updated">Loading…</p>
+        <div class="monitor-status-pill">
+          <span class="monitor-dot" id="monitor-dot"></span>
+          <span id="monitor-config-status">Checking…</span>
+        </div>
+      </div>
+      <div class="monitor-header-actions">
+        <button class="monitor-btn monitor-btn--primary" onclick="reloadAccounts()">Reload</button>
+        <button class="monitor-btn" onclick="fetchMonitorDashboard()">Refresh</button>
+        <button class="monitor-btn" onclick="closeMonitor()">Close</button>
+      </div>
+    </div>
+    <div class="monitor-stats" id="monitor-stats"></div>
+    <div class="monitor-tabs">
+      <button class="monitor-tab active" data-monitor-tab="live" onclick="switchMonitorTab('live')">Live</button>
+      <button class="monitor-tab" data-monitor-tab="jobs" onclick="switchMonitorTab('jobs')">Jobs</button>
+      <button class="monitor-tab" data-monitor-tab="errors" onclick="switchMonitorTab('errors')">Errors</button>
+      <button class="monitor-tab" data-monitor-tab="success" onclick="switchMonitorTab('success')">Working</button>
+    </div>
+    <div class="monitor-body">
+      <div id="monitor-panel-live" class="monitor-feed"></div>
+      <div id="monitor-panel-jobs" class="monitor-feed" style="display:none"></div>
+      <div id="monitor-panel-errors" class="monitor-feed" style="display:none"></div>
+      <div id="monitor-panel-success" class="monitor-feed" style="display:none"></div>
     </div>
   </div>
 
@@ -1930,6 +2168,9 @@
     let serverSubscription = null;
     let activePayment = null;
     let paymentPollTimer = null;
+    let monitorPollTimer = null;
+    let monitorTab = 'live';
+    let lastMonitorData = null;
 
     const tgUser = tg.initDataUnsafe?.user;
     const userId = tgUser?.id;
@@ -2411,6 +2652,140 @@
 
     function closeMenu() {
       document.getElementById('menu-modal').style.display = 'none';
+    }
+
+    function formatMonitorTime(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function switchMonitorTab(tab) {
+      monitorTab = tab;
+      document.querySelectorAll('.monitor-tab').forEach(el => {
+        el.classList.toggle('active', el.dataset.monitorTab === tab);
+      });
+      ['live', 'jobs', 'errors', 'success'].forEach(name => {
+        document.getElementById('monitor-panel-' + name).style.display = name === tab ? 'flex' : 'none';
+      });
+      if (lastMonitorData) renderMonitorPanels(lastMonitorData);
+    }
+
+    function renderMonitorEntry(level, time, message) {
+      return '<div class="monitor-entry monitor-entry--' + level + '">' +
+        '<span class="monitor-entry-time">' + time + '</span>' +
+        '<span class="monitor-entry-msg">' + message + '</span></div>';
+    }
+
+    function renderMonitorPanels(data) {
+      const liveEl = document.getElementById('monitor-panel-live');
+      const jobsEl = document.getElementById('monitor-panel-jobs');
+      const errEl = document.getElementById('monitor-panel-errors');
+      const okEl = document.getElementById('monitor-panel-success');
+
+      const activity = data.activity || [];
+      liveEl.innerHTML = activity.length
+        ? activity.map(e => renderMonitorEntry(e.level, formatMonitorTime(e.ts), e.message)).join('')
+        : '<div class="monitor-empty">No activity yet — submit an ad to see live updates.</div>';
+
+      const jobs = data.recentJobs || [];
+      jobsEl.innerHTML = jobs.length
+        ? jobs.map(j => {
+            let html = '<div class="monitor-job-card">' +
+              '<div class="monitor-job-top"><span class="monitor-job-id">Job #' + j.id + '</span>' +
+              '<span class="monitor-job-status ' + j.status + '">' + j.status + '</span></div>' +
+              '<div class="monitor-job-meta">User ' + j.ownerId + ' · ' + j.forwardsTotal + ' forwards · ' +
+              j.mirrorCount + ' mirrors</div>' +
+              '<div class="monitor-job-meta">' + (j.sourceLink || '') + '</div>';
+            if (j.lastError) html += '<div class="monitor-job-error">' + j.lastError + '</div>';
+            return html + '</div>';
+          }).join('')
+        : '<div class="monitor-empty">No ad jobs yet.</div>';
+
+      const failed = data.recentFailed || [];
+      errEl.innerHTML = failed.length
+        ? failed.map(line => renderMonitorEntry('error', '', line)).join('')
+        : '<div class="monitor-empty">No failed group logs.</div>';
+
+      const working = data.recentWorking || [];
+      okEl.innerHTML = working.length
+        ? working.map(line => renderMonitorEntry('success', '', line)).join('')
+        : '<div class="monitor-empty">No successful group logs yet.</div>';
+    }
+
+    function renderMonitorStats(data) {
+      const f = data.forwarder || {};
+      const s = data.jobStats || {};
+      const inProgress = (s.mirroring || 0) + (s.running || 0) + (s.pending || 0);
+      const statsEl = document.getElementById('monitor-stats');
+      statsEl.innerHTML =
+        '<div class="monitor-stat"><span class="monitor-stat-label">Poster accounts</span>' +
+        '<span class="monitor-stat-value">' + (f.posterAccounts || 0) + '</span></div>' +
+        '<div class="monitor-stat"><span class="monitor-stat-label">Mirror bots</span>' +
+        '<span class="monitor-stat-value">' + (f.mirrorBots || 0) + '</span></div>' +
+        '<div class="monitor-stat"><span class="monitor-stat-label">Jobs in progress</span>' +
+        '<span class="monitor-stat-value ' + (inProgress ? 'warn' : '') + '">' + inProgress + '</span></div>' +
+        '<div class="monitor-stat"><span class="monitor-stat-label">Failed logs</span>' +
+        '<span class="monitor-stat-value ' + ((data.recentFailed || []).length ? 'bad' : 'ok') + '">' +
+        (data.summary?.failedLogged || 0) + '</span></div>';
+
+      const dot = document.getElementById('monitor-dot');
+      const statusEl = document.getElementById('monitor-config-status');
+      if (f.configured) {
+        dot.classList.remove('off');
+        statusEl.textContent = 'Engine configured · staging ' + (f.stagingChannel || '—');
+      } else {
+        dot.classList.add('off');
+        statusEl.textContent = 'Not fully configured — check STAGING_CHANNEL & accounts/';
+      }
+    }
+
+    async function fetchMonitorDashboard() {
+      try {
+        const data = await apiRequest('/api/admin/dashboard');
+        lastMonitorData = data;
+        renderMonitorStats(data);
+        renderMonitorPanels(data);
+        document.getElementById('monitor-updated').textContent =
+          'Updated ' + new Date().toLocaleTimeString('en-GB');
+      } catch (err) {
+        document.getElementById('monitor-config-status').textContent = err.message || 'Failed to load';
+        document.getElementById('monitor-dot').classList.add('off');
+      }
+    }
+
+    function startMonitorPolling() {
+      stopMonitorPolling();
+      monitorPollTimer = setInterval(fetchMonitorDashboard, 5000);
+    }
+
+    function stopMonitorPolling() {
+      if (monitorPollTimer) {
+        clearInterval(monitorPollTimer);
+        monitorPollTimer = null;
+      }
+    }
+
+    function openMonitor() {
+      closeMenu();
+      document.getElementById('monitor-overlay').classList.add('open');
+      fetchMonitorDashboard();
+      startMonitorPolling();
+    }
+
+    function closeMonitor() {
+      stopMonitorPolling();
+      document.getElementById('monitor-overlay').classList.remove('open');
+    }
+
+    async function reloadAccounts() {
+      try {
+        await apiRequest('/api/admin/reload-accounts', { method: 'POST', body: '{}' });
+        tg.showAlert('Accounts reloaded.');
+        fetchMonitorDashboard();
+      } catch (err) {
+        tg.showAlert(err.message || 'Reload failed.');
+      }
     }
 
     function setPaymentView(view) {
