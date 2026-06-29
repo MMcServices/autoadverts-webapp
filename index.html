@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AutoAdverts</title>
+  <title>MMcAds</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -174,6 +174,19 @@
       background: rgba(60, 180, 100, 0.12);
       color: #a8f0c0;
     }
+    .expiry-warning {
+      margin: 0 0 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.45;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      background: rgba(251, 191, 36, 0.1);
+      color: #fde68a;
+    }
+    .expiry-warning strong {
+      color: #fff;
+    }
     .page {
       padding: 20px 16px 8px;
     }
@@ -233,6 +246,26 @@
     .plan-card--featured {
       border-color: rgba(0, 212, 255, 0.28);
       box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.08), 0 12px 40px rgba(0, 212, 255, 0.08);
+    }
+    .plan-card--custom {
+      border-color: rgba(167, 139, 250, 0.35);
+      box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.1), 0 12px 40px rgba(139, 92, 246, 0.1);
+    }
+    .plan-badge--custom {
+      background: rgba(167, 139, 250, 0.2);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      color: #c4b5fd;
+    }
+    .plan-price--custom {
+      font-size: 22px;
+      font-weight: 600;
+      color: #c4b5fd;
+      line-height: 1.2;
+    }
+    .btn-custom-plan {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
     }
     .plan-card-top {
       display: flex;
@@ -353,10 +386,15 @@
       grid-template-columns: 1fr 1.4fr;
       gap: 8px;
       position: relative;
-      z-index: 1;
+      z-index: 5;
+      touch-action: manipulation;
     }
     .plan-actions button {
       margin-top: 0;
+      position: relative;
+      z-index: 2;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     button {
       padding: 12px 14px;
@@ -367,6 +405,13 @@
       cursor: pointer;
       width: 100%;
       transition: transform 0.15s ease, opacity 0.15s ease;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
     }
     button:active {
       transform: scale(0.98);
@@ -419,12 +464,12 @@
       position: absolute;
       top: 50%;
       left: 6px;
-      width: calc((100% - 12px) / 5);
+      width: calc((100% - 12px) / 4);
       height: 52px;
       transform: translateX(0%) translateY(-50%);
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(93, 142, 255, 0.45) 0%, rgba(93, 142, 255, 0.12) 55%, transparent 72%);
-      box-shadow: 0 0 28px rgba(93, 142, 255, 0.35);
+      background: radial-gradient(circle, rgba(93, 142, 255, 0.2) 0%, rgba(93, 142, 255, 0.06) 55%, transparent 72%);
+      box-shadow: 0 0 14px rgba(93, 142, 255, 0.16);
       transition: transform 0.34s cubic-bezier(0.34, 1.4, 0.64, 1);
       pointer-events: none;
       opacity: 0;
@@ -463,8 +508,8 @@
       transition: background 0.25s ease, box-shadow 0.25s ease;
     }
     .nav-item.active .nav-icon-wrap {
-      background: rgba(93, 142, 255, 0.14);
-      box-shadow: 0 0 20px rgba(93, 142, 255, 0.25);
+      background: rgba(93, 142, 255, 0.1);
+      box-shadow: 0 0 10px rgba(93, 142, 255, 0.14);
     }
     .nav-icon {
       width: 20px;
@@ -535,10 +580,14 @@
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.06);
       color: #aaa;
-      font-size: 18px;
+      font-size: 20px;
       line-height: 1;
       cursor: pointer;
       margin-top: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .modal-desc {
       margin: 0 0 16px;
@@ -1315,7 +1364,7 @@
       margin-right: 6px;
     }
     .admin-only { display: none; }
-    body.is-admin .admin-only { display: block; }
+    body.is-admin .admin-only { display: block; width: 100%; }
     .btn-admin {
       background: linear-gradient(135deg, #9b7bff, #7aa6ff);
       color: #fff;
@@ -1324,6 +1373,25 @@
     }
     .plan-actions.has-admin {
       grid-template-columns: 1fr;
+    }
+    .ad-setup-card {
+      margin-bottom: 16px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 212, 255, 0.28);
+      background: rgba(0, 212, 255, 0.07);
+    }
+    .ad-setup-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #00d4ff;
+    }
+    .ad-setup-card p {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: #bbb;
+      line-height: 1.45;
     }
     .submit-ad-block {
       margin-top: 16px;
@@ -1389,9 +1457,14 @@
       background: rgba(74, 222, 128, 0.15);
       color: #4ade80;
     }
-    .ad-job-status-badge.failed {
-      background: rgba(248, 113, 113, 0.15);
-      color: #f87171;
+    .ad-job-status-badge.queued,
+    .ad-job-status-badge.live {
+      background: rgba(0, 212, 255, 0.15);
+      color: #00d4ff;
+    }
+    .ad-job-status-badge.posting {
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
     }
     .ad-job-link {
       margin: 0 0 12px;
@@ -1401,7 +1474,7 @@
     }
     .ad-job-stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr;
       gap: 8px;
     }
     .ad-job-stats div {
@@ -1678,7 +1751,7 @@
       </div>
     </div>
     <div class="top-bar-center">
-      <div class="brand-logo" aria-label="AutoAdverts"></div>
+      <div class="brand-logo" aria-label="MMcAds"></div>
     </div>
     <div class="top-bar-right">
       <button class="wallet-pill" onclick="addBalance()" aria-label="Add balance">
@@ -1694,20 +1767,19 @@
     <div class="purchase-hero">
       <div class="purchase-eyebrow">Forums</div>
       <h1 class="purchase-title">Choose your plan</h1>
-      <p class="purchase-subtitle">Scale your advert accounts with flexible billing.</p>
+      <p class="purchase-subtitle">Purchase a plan first. After payment confirms, paste your ad on Services.</p>
     </div>
 
     <div class="discount-banner" id="discount-banner">
-      <span>🎉</span>
-      <span id="discount-banner-text"><strong>20% off</strong> applied to your next purchase!</span>
+      <span>🆓</span>
+      <span id="discount-banner-text"><strong>20% off</strong> your first plan!</span>
     </div>
 
     <div class="plans-list">
-      <article class="plan-card" data-plan="STARTER" data-monthly="60" data-weekly="25">
+      <article class="plan-card" data-plan="STARTER" data-monthly="1" data-weekly="1">
         <div class="plan-card-top">
           <div>
             <h2 class="plan-name">Starter</h2>
-            <p class="plan-limit">Up to 20 accounts</p>
           </div>
           <span class="plan-badge">Basic</span>
         </div>
@@ -1717,7 +1789,7 @@
         </ul>
         <div class="plan-pricing">
           <div class="plan-price-wrap">
-            <div class="plan-price">$<span class="price-value">60</span></div>
+            <div class="plan-price">$<span class="price-value">1</span></div>
             <div class="plan-period">/<span class="price-period">mo</span></div>
           </div>
           <div class="billing-toggle">
@@ -1727,8 +1799,8 @@
         </div>
         <div class="plan-actions" id="plan-actions-starter">
           <button class="btn-info" onclick="openPlanInfo(this)">More Info</button>
-          <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
-          <button class="btn-admin admin-only" onclick="adminActivate(this)">Admin Test Activate</button>
+          <button type="button" class="btn-purchase" onclick="buyPlan(this)">Purchase Plan</button>
+          <button type="button" class="btn-admin admin-only" onclick="adminActivate(this)">Admin Test Activate</button>
         </div>
       </article>
 
@@ -1736,7 +1808,6 @@
         <div class="plan-card-top">
           <div>
             <h2 class="plan-name">Premium</h2>
-            <p class="plan-limit">Up to 40 accounts</p>
           </div>
           <span class="plan-badge plan-badge--popular">Popular</span>
         </div>
@@ -1756,8 +1827,8 @@
         </div>
         <div class="plan-actions">
           <button class="btn-info" onclick="openPlanInfo(this)">More Info</button>
-          <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
-          <button class="btn-admin admin-only" onclick="adminActivate(this)">Admin Test Activate</button>
+          <button type="button" class="btn-purchase" onclick="buyPlan(this)">Purchase Plan</button>
+          <button type="button" class="btn-admin admin-only" onclick="adminActivate(this)">Admin Test Activate</button>
         </div>
       </article>
 
@@ -1765,7 +1836,6 @@
         <div class="plan-card-top">
           <div>
             <h2 class="plan-name">Ultimate</h2>
-            <p class="plan-limit">Up to 100 accounts</p>
           </div>
           <span class="plan-badge">Pro</span>
         </div>
@@ -1785,8 +1855,31 @@
         </div>
         <div class="plan-actions">
           <button class="btn-info" onclick="openPlanInfo(this)">More Info</button>
-          <button class="btn-purchase" onclick="buyPlan(this)">Purchase</button>
-          <button class="btn-admin admin-only" onclick="adminActivate(this)">Admin Test Activate</button>
+          <button type="button" class="btn-purchase" onclick="buyPlan(this)">Purchase Plan</button>
+          <button type="button" class="btn-admin admin-only" onclick="adminActivate(this)">Admin Test Activate</button>
+        </div>
+      </article>
+
+      <article class="plan-card plan-card--custom">
+        <div class="plan-card-top">
+          <div>
+            <h2 class="plan-name">Custom</h2>
+            <p class="plan-limit">Tailored volume & pricing</p>
+          </div>
+          <span class="plan-badge plan-badge--custom">Private</span>
+        </div>
+        <ul class="plan-features">
+          <li>Custom account count & schedule</li>
+          <li>Private payment arrangements</li>
+          <li>Direct setup with our team</li>
+        </ul>
+        <div class="plan-pricing">
+          <div class="plan-price-wrap">
+            <div class="plan-price--custom">Message us</div>
+          </div>
+        </div>
+        <div class="plan-actions">
+          <button type="button" class="btn-purchase btn-custom-plan" onclick="openCustomPlan()">Contact for Custom Plan</button>
         </div>
       </article>
     </div>
@@ -1828,10 +1921,6 @@
 
         <div class="service-details">
           <div class="service-detail">
-            <span class="service-detail-label">Accounts</span>
-            <span class="service-detail-value" id="service-accounts">20</span>
-          </div>
-          <div class="service-detail">
             <span class="service-detail-label">Billing</span>
             <span class="service-detail-value" id="service-billing">Monthly</span>
           </div>
@@ -1857,27 +1946,34 @@
 
         <div id="admin-test-badge" class="admin-test-badge" style="display:none;">Admin test mode</div>
 
-        <div class="submit-ad-block">
-          <span class="submit-ad-label">Submit Telegram ad message</span>
-          <p class="submit-ad-hint">Paste your channel post link — e.g. <code>https://t.me/mmcadds/206</code></p>
+        <div id="expiry-warning" class="expiry-warning" style="display:none;" role="status"></div>
+
+        <div id="ad-setup-card" class="ad-setup-card" style="display:none;">
+          <h3>Start your ad campaign</h3>
+          <p id="ad-setup-msg">Payment confirmed! Paste your Telegram post link below and we'll start posting.</p>
+        </div>
+
+        <div class="submit-ad-block" id="submit-ad-block">
+          <span class="submit-ad-label" id="submit-ad-label">Your Telegram ad post</span>
+          <p class="submit-ad-hint" id="submit-ad-hint">Paste your channel message link — e.g. <code>https://t.me/mmcadds/206</code></p>
           <div class="submit-ad-row">
             <input class="submit-ad-input" id="ad-link-input" type="url" placeholder="https://t.me/yourchannel/123">
-            <button class="btn-purchase submit-ad-btn" onclick="submitAd()">Submit</button>
+            <button type="button" class="btn-purchase submit-ad-btn" id="submit-ad-btn" onclick="submitAd()">Start Posting</button>
           </div>
         </div>
 
         <div id="ad-job-status" class="ad-job-status" style="display:none;">
           <div class="ad-job-status-header">
-            <span class="ad-job-status-label">Current ad campaign</span>
-            <span class="ad-job-status-badge" id="ad-job-badge">Pending</span>
+            <span class="ad-job-status-label">Campaign status</span>
+            <span class="ad-job-status-badge" id="ad-job-badge">—</span>
           </div>
-          <p class="ad-job-link" id="ad-job-link">—</p>
+          <p class="ad-job-link" id="ad-job-link"></p>
           <div class="ad-job-stats">
-            <div><span class="ad-job-stat-label">Forwards</span><strong id="ad-job-forwards">0</strong></div>
-            <div><span class="ad-job-stat-label">Accounts</span><strong id="ad-job-accounts">—</strong></div>
-            <div><span class="ad-job-stat-label">Next run</span><strong id="ad-job-next">—</strong></div>
+            <div>
+              <span class="ad-job-stat-label">Last post</span>
+              <strong id="ad-job-last-run">—</strong>
+            </div>
           </div>
-          <p class="ad-job-error" id="ad-job-error" style="display:none;"></p>
         </div>
 
         <div class="service-actions">
@@ -1985,23 +2081,23 @@
 
     <p class="profile-section-label">Navigation</p>
     <div class="profile-nav-list">
-      <div class="profile-nav-card" onclick="tg.showAlert('Contact our support team for help.')">
+      <div class="profile-nav-card" onclick="openSupportLink()">
         <div class="profile-nav-icon">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 2-3 4"/><path d="M12 17h.01"/></svg>
         </div>
         <div class="profile-nav-text">
           <span class="profile-nav-title">Support</span>
-          <span class="profile-nav-desc">Get help with your account</span>
+          <span class="profile-nav-desc">@mmcs_s on Telegram</span>
         </div>
         <span class="profile-nav-arrow">›</span>
       </div>
-      <div class="profile-nav-card" onclick="tg.showAlert('Join our Telegram channel for updates.')">
+      <div class="profile-nav-card" onclick="openChannelLink()">
         <div class="profile-nav-icon">
           <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
         </div>
         <div class="profile-nav-text">
-          <span class="profile-nav-title">Telegram</span>
-          <span class="profile-nav-desc">News, updates & announcements</span>
+          <span class="profile-nav-title">Channel</span>
+          <span class="profile-nav-desc">@mmcadds — news & updates</span>
         </div>
         <span class="profile-nav-arrow">›</span>
       </div>
@@ -2082,8 +2178,8 @@
       </div>
       <div id="payment-waiting" class="payment-status" style="display:none">
         <div class="payment-spinner"></div>
-        <p class="payment-status-text">Waiting for payment confirmation…</p>
-        <p class="payment-note">This usually takes 1–5 minutes after you pay.</p>
+        <p class="payment-status-text" id="payment-status-label">Waiting for payment confirmation…</p>
+        <p class="payment-note">Crypto can take 5–20 minutes. Keep this screen open or return here — we’ll detect confirmation automatically.</p>
       </div>
       <div id="payment-success" class="payment-status" style="display:none">
         <p class="payment-status-text success" style="font-size:18px;font-weight:700;margin-bottom:8px">Payment confirmed!</p>
@@ -2127,9 +2223,8 @@
     <div style="background:#1a1a1a;border-radius:16px;width:92%;max-width:380px;padding:24px;">
       <h2>Menu</h2>
       <div class="menu-item admin-only" onclick="openMonitor()">📡 Bot Monitor</div>
-      <div class="menu-item" onclick="tg.showAlert('Support')">🛟 Support</div>
-      <div class="menu-item" onclick="tg.showAlert('Channel')">📢 Channel</div>
-      <div class="menu-item" onclick="tg.showAlert('FAQ')">❓ FAQ</div>
+      <div class="menu-item" onclick="openSupportLink(); closeMenu();">🛟 Support (@mmcs_s)</div>
+      <div class="menu-item" onclick="openChannelLink(); closeMenu();">📢 Channel (@mmcadds)</div>
       <button onclick="closeMenu()" style="width:100%;padding:14px;background:#333;border-radius:10px;margin-top:20px;">Close</button>
     </div>
   </div>
@@ -2188,27 +2283,34 @@
         <div class="nav-icon-wrap"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
         Profile
       </div>
-      <div class="nav-item" onclick="openMenu()" role="button" aria-label="Menu">
-        <div class="nav-icon-wrap"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></div>
-        Menu
-      </div>
     </div>
   </nav>
 
   <!-- Set your bot API URL when the bot is deployed, e.g. https://your-server.com:8080 -->
-  <script>window.BOT_API_URL = 'https://buses-vacuum-greatly-nor.trycloudflare.com';</script>
+  <script>window.BOT_API_URL = '';</script>
 
   <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+    const tg = window.Telegram?.WebApp || {
+      initData: '',
+      initDataUnsafe: {},
+      expand() {},
+      ready() {},
+      showAlert(msg) { alert(msg); },
+      openTelegramLink(url) { window.open(url, '_blank'); },
+      openLink(url) { window.open(url, '_blank'); }
+    };
+    if (window.Telegram?.WebApp) {
+      tg.ready();
+      tg.expand();
+    }
+    const inTelegram = !!(window.Telegram?.WebApp?.initData);
 
     const planInfo = {
       STARTER: {
         title: 'Starter Plan',
-        subtitle: 'Up to 20 forum accounts',
+        subtitle: 'Forum advert automation',
         desc: 'Get started with automated forum advertising. Your ads are posted continuously across your account network with small delays between each group.',
         features: [
-          'Up to 20 forum accounts',
           'Continuous reposting with short delays',
           'Submit ad links from the dashboard',
           'Forum network distribution',
@@ -2217,10 +2319,9 @@
       },
       PREMIUM: {
         title: 'Premium Plan',
-        subtitle: 'Up to 40 forum accounts',
-        desc: 'Scale your reach with double the accounts. Ideal for users running multiple campaigns who need faster distribution and priority handling.',
+        subtitle: 'Scale your reach',
+        desc: 'Ideal for users running multiple campaigns who need faster distribution and priority handling.',
         features: [
-          'Up to 40 forum accounts',
           'Everything in Starter',
           'Priority ad queue',
           'Faster distribution across forums',
@@ -2229,10 +2330,9 @@
       },
       ULTIMATE: {
         title: 'Ultimate Plan',
-        subtitle: 'Up to 100 forum accounts',
-        desc: 'Maximum capacity for high-volume advertisers. Run large-scale forum campaigns with the full account network at your disposal.',
+        subtitle: 'Maximum capacity',
+        desc: 'Maximum capacity for high-volume advertisers. Run large-scale forum campaigns with top priority support.',
         features: [
-          'Up to 100 forum accounts',
           'Everything in Premium',
           'Maximum posting capacity',
           'Best for high-volume campaigns',
@@ -2243,15 +2343,17 @@
 
     let activeInfoCard = null;
 
-    const planAccounts = { STARTER: 20, PREMIUM: 40, ULTIMATE: 100 };
-    const SUBSCRIPTION_KEY = 'autoadverts_subscription';
-    const SPENT_KEY = 'autoadverts_total_spent';
-    const MEMBER_KEY = 'autoadverts_member_since';
-    const REF_STATS_KEY = 'autoadverts_ref_stats';
-    const REFERRED_BY_KEY = 'autoadverts_referred_by';
-    const REF_DISCOUNT_USED_KEY = 'autoadverts_ref_discount_used';
+    const planAccounts = { STARTER: 2, PREMIUM: 4, ULTIMATE: 8, CUSTOM: 2 };
+    const SUBSCRIPTION_KEY = 'mmcads_subscription';
+    const SPENT_KEY = 'mmcads_total_spent';
+    const MEMBER_KEY = 'mmcads_member_since';
+    const REF_STATS_KEY = 'mmcads_ref_stats';
+    const REFERRED_BY_KEY = 'mmcads_referred_by';
+    const REF_DISCOUNT_USED_KEY = 'mmcads_ref_discount_used';
     const BOT_USERNAME = 'MMcAddssBot';
     const REFERRAL_DISCOUNT = 0.2;
+    const PENDING_AD_KEY = 'mmcads_pending_ad';
+    const PENDING_PAYMENT_KEY = 'mmcads_pending_payment';
 
     function resolveApiBase() {
       const params = new URLSearchParams(window.location.search);
@@ -2270,16 +2372,20 @@
 
     function detectWrongAppHost() {
       const host = window.location.hostname;
+      const path = window.location.pathname || '';
       const params = new URLSearchParams(window.location.search);
       const hasApi = !!(params.get('api') || (window.BOT_API_URL && !window.BOT_API_URL.includes('localhost')));
+      const onTunnelApp = path === '/app' || path.endsWith('/app');
+
       if (host.includes('trycloudflare.com')) {
-        return 'Old tunnel link (Error 1033). Send /dashboard in @MMcAddssBot and tap Open Dashboard.';
+        if (onTunnelApp || hasApi) return null;
+        return 'Tunnel expired (Error 1033). Send /start in @MMcAddssBot and tap Open App.';
       }
       if (host.includes('onrender.com') && !hasApi) {
-        return 'Tap /dashboard in @MMcAddssBot — do not open Render directly (needs ?api= link).';
+        return 'Send /start in @MMcAddssBot and tap Open App (do not open Render without ?api=).';
       }
-      if (host !== 'localhost' && !host.includes('ngrok') && !host.includes('onrender.com') && !hasApi) {
-        return 'Wrong app link (' + host + '). Send /dashboard and tap Open Dashboard.';
+      if (host !== 'localhost' && !host.includes('ngrok') && !host.includes('onrender.com') && !hasApi && !onTunnelApp) {
+        return 'Wrong app link. Send /start in @MMcAddssBot and tap Open App.';
       }
       return null;
     }
@@ -2287,7 +2393,13 @@
     const API_BASE = resolveApiBase();
     const WRONG_HOST_ERROR = detectWrongAppHost();
     let isAdmin = false;
+    let freePlansMode = false;
+    let supportUrl = 'https://t.me/mmcs_s';
+    let channelUrl = 'https://t.me/mmcadds';
+    let adJobPollTimer = null;
+    let lastAdJobData = null;
     let serverSubscription = null;
+    let serverAssignedAccounts = 0;
     let subscriptionSynced = false;
     let apiSyncError = null;
     let activePayment = null;
@@ -2297,7 +2409,6 @@
     let monitorPollTimer = null;
     let monitorTab = 'live';
     let lastMonitorData = null;
-
     const tgUser = tg.initDataUnsafe?.user;
     const userId = tgUser?.id;
     const displayName = tgUser?.username
@@ -2413,6 +2524,14 @@
           body: JSON.stringify({ amount })
         });
         closeBalanceModal();
+        if (result.free) {
+          if (typeof result.walletBalance === 'number') {
+            serverWalletBalance = result.walletBalance;
+            updateWalletDisplay();
+          }
+          tg.showAlert('+$' + Number(amount).toFixed(2) + ' added — test mode (no payment).');
+          return;
+        }
         openPaymentModal({
           order_id: result.order_id,
           invoice_url: result.invoice_url,
@@ -2494,7 +2613,7 @@
     }
 
     function creditReferrer(referrerId) {
-      const key = 'autoadverts_ref_stats_' + referrerId;
+      const key = 'mmcads_ref_stats_' + referrerId;
       let stats;
       try {
         stats = JSON.parse(localStorage.getItem(key)) || { count: 0, earned: 0, credits: 0 };
@@ -2523,73 +2642,158 @@
       return API_BASE + path + sep + 'ngrok-skip-browser-warning=1';
     }
 
+    function formatPlanName(plan) {
+      if (!plan) return 'Plan';
+      const p = String(plan).toLowerCase();
+      return p.charAt(0).toUpperCase() + p.slice(1);
+    }
+
     function renderSyncBanner() {
       const el = document.getElementById('sync-banner');
       if (!el) return;
-      if (serverSubscription?.active) {
-        el.className = 'sync-banner ok';
-        el.textContent = 'Connected — ' + (serverSubscription.plan || 'plan') + ' active' + (userId ? ' (ID ' + userId + ')' : '');
+      if (!inTelegram) {
+        el.className = 'sync-banner';
+        el.textContent = 'Open from Telegram: send /start to @MMcAddssBot and tap Open App (browser links cannot purchase).';
         el.style.display = 'block';
         return;
       }
       if (apiSyncError) {
         el.className = 'sync-banner';
-        el.textContent = apiSyncError + (userId ? ' (ID ' + userId + ')' : '');
+        el.textContent = apiSyncError;
+        el.style.display = 'block';
+        return;
+      }
+      if (!isAdmin) {
+        el.style.display = 'none';
+        return;
+      }
+      if (serverSubscription?.active) {
+        el.className = 'sync-banner ok';
+        const plan = formatPlanName(serverSubscription.plan);
+        el.textContent = 'MMcAds connected · ' + plan + ' active';
+        el.style.display = 'block';
+        return;
+      }
+      if (apiSyncError) {
+        el.className = 'sync-banner';
+        el.textContent = apiSyncError;
         el.style.display = 'block';
         return;
       }
       if (subscriptionSynced && !serverSubscription?.active && userId) {
         el.className = 'sync-banner';
-        el.textContent = 'Connected, but no plan on Telegram ID ' + userId + ' — run /grant while logged into this account.';
+        el.textContent = 'MMcAds connected — no active plan. Choose a plan to get started.';
         el.style.display = 'block';
         return;
       }
       if (!subscriptionSynced) {
         el.className = 'sync-banner';
-        el.textContent = 'Checking subscription…';
+        el.textContent = 'Connecting to MMcAds…';
         el.style.display = 'block';
         return;
       }
       el.style.display = 'none';
     }
 
-    async function checkBotOnline() {
+    let _healthCache = { ok: false, at: 0 };
+    let _lastSyncAt = 0;
+    let _syncInFlight = null;
+
+    function fetchWithTimeout(url, options = {}, ms = 12000) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), ms);
+      return fetch(url, { ...options, signal: ctrl.signal }).finally(() => clearTimeout(timer));
+    }
+
+    async function checkBotOnline(force = false) {
       if (!API_BASE) return false;
+      const now = Date.now();
+      if (!force && now - _healthCache.at < 45000) return _healthCache.ok;
       try {
-        const res = await fetch(apiUrl('/api/health'), { method: 'GET' });
+        const res = await fetchWithTimeout(apiUrl('/api/health'), { method: 'GET' }, 8000);
         const data = await res.json();
-        return !!(res.ok && data.ok);
+        _healthCache = { ok: !!(res.ok && data.ok), at: now };
+        return _healthCache.ok;
       } catch (_) {
+        _healthCache = { ok: false, at: now };
         return false;
       }
+    }
+
+    function savePendingPayment(payment, waiting = false) {
+      if (!payment?.order_id) return;
+      try {
+        sessionStorage.setItem(PENDING_PAYMENT_KEY, JSON.stringify({
+          ...payment,
+          waiting: !!waiting,
+          savedAt: Date.now()
+        }));
+      } catch (_) {}
+    }
+
+    function loadPendingPayment() {
+      try {
+        const raw = sessionStorage.getItem(PENDING_PAYMENT_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function clearPendingPayment() {
+      try {
+        sessionStorage.removeItem(PENDING_PAYMENT_KEY);
+      } catch (_) {}
+    }
+
+    async function paymentStatusRequest(orderId) {
+      if (!API_BASE || !tg.initData) {
+        throw new Error('Not connected');
+      }
+      const res = await fetchWithTimeout(
+        apiUrl('/api/payment-status?order_id=' + encodeURIComponent(orderId)),
+        { headers: apiHeaders() },
+        12000
+      );
+      const raw = await res.text();
+      let data = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch (_) {
+        throw new Error('Bad payment status response');
+      }
+      if (!res.ok) {
+        throw new Error(data.error || 'Payment status check failed');
+      }
+      return data;
     }
 
     async function apiRequest(path, options = {}) {
       if (WRONG_HOST_ERROR) {
         throw new Error(WRONG_HOST_ERROR);
       }
-      if (!API_BASE || !tg.initData) {
-        throw new Error('App not connected. Send /dashboard to @MMcAddssBot and tap Open Dashboard.');
+      if (!inTelegram || !tg.initData) {
+        throw new Error('Open from Telegram: /start → Open App in @MMcAddssBot.');
       }
-      const online = await checkBotOnline();
-      if (!online) {
-        throw new Error('Bot offline or old link. On your PC run start-all.bat, then /dashboard in Telegram.');
+      if (!API_BASE) {
+        throw new Error('App not connected. Send /start to @MMcAddssBot and tap Open App.');
       }
       let res;
       try {
-        res = await fetch(apiUrl(path), {
+        res = await fetchWithTimeout(apiUrl(path), {
           ...options,
           headers: { ...apiHeaders(), ...(options.headers || {}) }
-        });
+        }, 15000);
       } catch (_) {
-        throw new Error('Cannot reach bot. Run start-all.bat on your PC, then /dashboard → Open Dashboard.');
+        _healthCache = { ok: false, at: Date.now() };
+        throw new Error('Cannot reach bot. Start MMcAds on your PC, then /start → Open App.');
       }
       const raw = await res.text();
       let data = {};
       try {
         data = raw ? JSON.parse(raw) : {};
       } catch (_) {
-        throw new Error('Bot returned bad data — old app link. Run start-all.bat then /dashboard.');
+        throw new Error('Bot returned bad data — old app link. Run start-all.bat then /start.');
       }
       if (!res.ok) {
         throw new Error(data.error || 'Request failed');
@@ -2602,7 +2806,14 @@
       serverSubscription = null;
     }
 
-    async function syncUserFromApi() {
+    async function syncUserFromApi(force = false) {
+      if (_syncInFlight) return _syncInFlight;
+      if (!force && subscriptionSynced && Date.now() - _lastSyncAt < 15000) {
+        renderSyncBanner();
+        return serverSubscription;
+      }
+
+      _syncInFlight = (async () => {
       subscriptionSynced = true;
       apiSyncError = WRONG_HOST_ERROR;
 
@@ -2613,7 +2824,7 @@
       }
 
       if (!API_BASE) {
-        apiSyncError = 'No API URL — send /dashboard to @MMcAddssBot and tap Open Dashboard.';
+        apiSyncError = 'No API URL — send /start to @MMcAddssBot and tap Open App.';
         clearLocalSubscription();
         renderSyncBanner();
         return null;
@@ -2625,28 +2836,21 @@
         return null;
       }
 
-      const online = await checkBotOnline();
-      if (!online) {
-        apiSyncError = 'Bot offline or stale link. Run start-all.bat, then /dashboard.';
-        clearLocalSubscription();
-        renderSyncBanner();
-        return null;
-      }
-
       try {
-        const res = await fetch(apiUrl('/api/me'), {
+        const res = await fetchWithTimeout(apiUrl('/api/me'), {
           headers: {
             Authorization: 'tma ' + tg.initData,
             'ngrok-skip-browser-warning': 'true'
           }
-        });
+        }, 15000);
 
         const raw = await res.text();
         let data = null;
         try {
           data = raw ? JSON.parse(raw) : null;
         } catch (_) {
-          apiSyncError = 'Bad API response. Run start-all.bat, then /dashboard.';
+          apiSyncError = 'Bad API response. Run start-all.bat, then /start.';
+          _healthCache = { ok: false, at: Date.now() };
           clearLocalSubscription();
           renderSyncBanner();
           return null;
@@ -2654,16 +2858,24 @@
 
         if (!res.ok) {
           apiSyncError = res.status === 401
-            ? 'Auth failed — send /dashboard in Telegram and tap Open Dashboard (do not use the Render link).'
-            : 'Bot API error (' + res.status + '). Run start-all.bat, then /dashboard.';
+            ? 'Auth failed — send /start in Telegram and tap Open App (do not use the Render link).'
+            : 'Bot API error (' + res.status + '). Run start-all.bat, then /start.';
+          _healthCache = { ok: false, at: Date.now() };
           clearLocalSubscription();
           renderSyncBanner();
           return null;
         }
 
+        _healthCache = { ok: true, at: Date.now() };
+        _lastSyncAt = Date.now();
+
         isAdmin = !!data.isAdmin;
+        freePlansMode = !!data.freePlans;
+        if (data.supportUrl) supportUrl = data.supportUrl;
+        if (data.channelUrl) channelUrl = data.channelUrl;
         document.body.classList.toggle('is-admin', isAdmin);
         serverSubscription = data.subscription?.active ? data.subscription : null;
+        serverAssignedAccounts = Number(data.assignedAccounts || 0);
 
         saveRefStats({
           count: data.referralCount || 0,
@@ -2690,8 +2902,12 @@
             plan: serverSubscription.plan,
             accounts: serverSubscription.accounts,
             expiresAt: serverSubscription.expiresAt,
-            purchasedAt: serverSubscription.expiresAt,
-            isAdminTest: serverSubscription.isAdminTest
+            purchasedAt: serverSubscription.purchasedAt || serverSubscription.expiresAt,
+            billing: serverSubscription.billing,
+            price: serverSubscription.price,
+            isAdminTest: serverSubscription.isAdminTest,
+            daysLeft: serverSubscription.daysLeft,
+            expiringSoon: serverSubscription.expiringSoon
           });
         } else {
           clearLocalSubscription();
@@ -2700,10 +2916,21 @@
         renderSyncBanner();
         return data;
       } catch (_) {
-        apiSyncError = 'Cannot reach bot API. Run start-all.bat, then send /dashboard and tap Open Dashboard.';
+        const onRender = window.location.hostname.includes('onrender.com');
+        apiSyncError = onRender
+          ? 'API link expired. Send /start in @MMcAddssBot and tap Open App (do not reuse old bookmarks).'
+          : 'Cannot reach bot API. Run start-all.bat, then send /start and tap Open App.';
+        _healthCache = { ok: false, at: Date.now() };
         clearLocalSubscription();
         renderSyncBanner();
         return null;
+      }
+      })();
+
+      try {
+        return await _syncInFlight;
+      } finally {
+        _syncInFlight = null;
       }
     }
 
@@ -2720,11 +2947,17 @@
     function updateDiscountUI() {
       const banner = document.getElementById('discount-banner');
       const eligible = hasReferralDiscount();
-      banner.classList.toggle('visible', eligible);
-      if (eligible) {
-        const reason = getDiscountReason();
+      if (freePlansMode) {
+        banner.classList.add('visible');
         document.getElementById('discount-banner-text').innerHTML =
-          '<strong>20% off</strong> applied — ' + (reason === 'referral credit' ? 'referral reward' : 'welcome via referral link') + '!';
+          '<strong>Test mode</strong> — tap Purchase to activate instantly. No crypto payment required.';
+      } else {
+        banner.classList.toggle('visible', eligible);
+        if (eligible) {
+          const reason = getDiscountReason();
+          document.getElementById('discount-banner-text').innerHTML =
+            '<strong>20% off</strong> applied — ' + (reason === 'referral credit' ? 'referral reward' : 'welcome via referral link') + '!';
+        }
       }
       document.querySelectorAll('.plan-card').forEach(updatePlanCardPrice);
     }
@@ -2763,7 +2996,7 @@
 
     function shareReferralLink() {
       const link = getReferralLink();
-      const text = encodeURIComponent('Join AutoAdverts and get 20% off your first plan! ' + link);
+      const text = encodeURIComponent('Join MMcAds and get 20% off your first plan! ' + link);
       tg.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + text);
     }
 
@@ -2794,49 +3027,163 @@
       return serverSubscription?.active ? serverSubscription : null;
     }
 
-    function formatJobStatus(status) {
+    function formatJobStatus(status, statusLabel) {
       const labels = {
-        pending: 'Queued',
-        mirroring: 'Queued',
-        running: 'Posting',
-        ready: 'Active',
-        paused: 'Paused',
-        failed: 'Failed'
+        live: 'Live',
+        posting: 'Posting',
+        queued: 'Queued'
       };
-      return labels[status] || status;
+      if (statusLabel && labels[status]) return labels[status];
+      return labels[status] || 'Queued';
+    }
+
+    function formatJobTime(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return '—';
+      const diff = Date.now() - d.getTime();
+      if (diff < 60000) return 'Just now';
+      if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+      if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    }
+
+    function openExternalUrl(url) {
+      if (!url) {
+        tg.showAlert('Link not available.');
+        return;
+      }
+      if (tg.openTelegramLink && url.includes('t.me/')) {
+        tg.openTelegramLink(url);
+      } else if (tg.openLink) {
+        tg.openLink(url);
+      } else {
+        window.open(url, '_blank');
+      }
+    }
+
+    function openSupportLink() {
+      openExternalUrl(supportUrl);
+    }
+
+    function openChannelLink() {
+      openExternalUrl(channelUrl);
+    }
+
+    function openCustomPlan() {
+      const base = (supportUrl || 'https://t.me/mmcs_s').split('?')[0];
+      const username = base.replace(/https?:\/\/t\.me\//i, '').replace('@', '').trim() || 'mmcs_s';
+      let text = 'Hi, I\'m interested in a custom MMcAds plan.';
+      if (userId) {
+        text += ' My Telegram ID: ' + userId + '.';
+      }
+      openExternalUrl('https://t.me/' + username + '?text=' + encodeURIComponent(text));
+    }
+
+    function renderExpiryWarning(sub) {
+      const el = document.getElementById('expiry-warning');
+      if (!el || !sub) {
+        if (el) el.style.display = 'none';
+        return;
+      }
+      const daysLeft = sub.daysLeft ?? sub.days_left;
+      const expiringSoon = sub.expiringSoon ?? (typeof daysLeft === 'number' && daysLeft <= 3);
+      if (!expiringSoon || !daysLeft) {
+        el.style.display = 'none';
+        return;
+      }
+      const dayWord = daysLeft === 1 ? 'day' : 'days';
+      el.innerHTML =
+        '⏳ <strong>Plan expires in ' + daysLeft + ' ' + dayWord + '</strong> — renew below to keep your ads running.';
+      el.style.display = 'block';
     }
 
     function renderAdJob(job) {
       const block = document.getElementById('ad-job-status');
-      if (!job) {
+      if (!block) return;
+      if (!job || !job.active) {
         block.style.display = 'none';
         return;
       }
-      block.style.display = 'block';
+
+      const status = ['live', 'posting', 'queued'].includes(job.status) ? job.status : 'queued';
+      const label = formatJobStatus(status, job.statusLabel);
       const badge = document.getElementById('ad-job-badge');
-      badge.textContent = formatJobStatus(job.status);
-      badge.className = 'ad-job-status-badge ' + (job.status || '');
-      document.getElementById('ad-job-link').textContent = job.sourceLink || '—';
-      document.getElementById('ad-job-forwards').textContent = job.forwardsTotal || 0;
-      const sub = getActiveSubscription();
-      document.getElementById('ad-job-accounts').textContent = sub?.accounts || '—';
-      document.getElementById('ad-job-next').textContent = job.nextRunAt
-        ? formatDate(job.nextRunAt)
-        : 'Soon';
-      const errEl = document.getElementById('ad-job-error');
-      if (job.lastError) {
-        errEl.textContent = job.lastError;
-        errEl.style.display = 'block';
-      } else {
-        errEl.style.display = 'none';
+      if (badge) {
+        badge.textContent = label;
+        badge.className = 'ad-job-status-badge ' + status;
+      }
+
+      const linkEl = document.getElementById('ad-job-link');
+      if (linkEl) linkEl.textContent = job.sourceLink || '';
+
+      const lastRunEl = document.getElementById('ad-job-last-run');
+      if (lastRunEl) lastRunEl.textContent = formatJobTime(job.lastRunAt);
+
+      block.style.display = 'block';
+    }
+
+    function stopAdJobPolling() {
+      if (adJobPollTimer) {
+        clearInterval(adJobPollTimer);
+        adJobPollTimer = null;
+      }
+    }
+
+    function startAdJobPolling() {
+      stopAdJobPolling();
+      adJobPollTimer = setInterval(async () => {
+        const data = await fetchAdJobs();
+        if (data) {
+          lastAdJobData = data;
+          renderAdJob(data.activeJob);
+        }
+      }, 30000);
+    }
+
+    function markPendingAdSetup() {
+      sessionStorage.setItem(PENDING_AD_KEY, '1');
+    }
+
+    function clearPendingAdSetup() {
+      sessionStorage.removeItem(PENDING_AD_KEY);
+    }
+
+    function updateAdSetupUI(hasActiveJob, entitled) {
+      const setup = document.getElementById('ad-setup-card');
+      const label = document.getElementById('submit-ad-label');
+      const hint = document.getElementById('submit-ad-hint');
+      const btn = document.getElementById('submit-ad-btn');
+      const pending = sessionStorage.getItem(PENDING_AD_KEY) === '1';
+
+      if (setup) {
+        setup.style.display = (!hasActiveJob && pending) ? 'block' : 'none';
+        const msg = document.getElementById('ad-setup-msg');
+        if (msg) {
+          msg.textContent =
+            'Payment confirmed! Paste your Telegram post link below and we\'ll start posting.';
+        }
+      }
+      if (label) label.textContent = hasActiveJob ? 'Change ad message' : 'Your Telegram ad post';
+      if (hint) {
+        hint.innerHTML = hasActiveJob
+          ? 'Submit a new link to replace your current campaign — e.g. <code>https://t.me/mmcadds/206</code>'
+          : 'Paste your channel message link — e.g. <code>https://t.me/mmcadds/206</code>';
+      }
+      if (btn) btn.textContent = hasActiveJob ? 'Update Ad' : 'Start Posting';
+    }
+
+    function focusAdInput() {
+      const input = document.getElementById('ad-link-input');
+      if (input) {
+        input.focus();
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
 
     async function fetchAdJobs() {
       try {
-        const data = await apiRequest('/api/ad-jobs');
-        renderAdJob(data.activeJob);
-        return data;
+        return await apiRequest('/api/ad-jobs');
       } catch (_) {
         return null;
       }
@@ -2850,6 +3197,8 @@
       if (!sub) {
         emptyEl.style.display = 'block';
         activeEl.style.display = 'none';
+        renderExpiryWarning(null);
+        renderAdJob(null);
         const msgEl = document.getElementById('services-empty-msg');
         if (msgEl) {
           const who = userId ? ' (Telegram ID ' + userId + ')' : '';
@@ -2873,16 +3222,20 @@
       activeEl.style.display = 'block';
 
       const planName = (sub.plan || 'STARTER').toString();
-      document.getElementById('service-plan-name').textContent =
-        planName.charAt(0) + planName.slice(1).toLowerCase();
-      document.getElementById('service-accounts').textContent = sub.accounts || planAccounts[planName.toUpperCase()] || '—';
-      document.getElementById('service-billing').textContent = sub.billing
-        ? (sub.billing === 'weekly' ? 'Weekly' : 'Monthly')
-        : '—';
+      const entitled = sub.accounts || planAccounts[planName.toUpperCase()] || 2;
+      const displayPlan = planName.toUpperCase() === 'CUSTOM'
+        ? 'Custom (' + entitled + ' accounts)'
+        : planName.charAt(0) + planName.slice(1).toLowerCase();
+      document.getElementById('service-plan-name').textContent = displayPlan;
+      const billing = (sub.billing || 'monthly').toLowerCase();
+      document.getElementById('service-billing').textContent =
+        billing === 'weekly' ? 'Weekly' : 'Monthly';
       document.getElementById('service-started').textContent = purchasedAt ? formatDate(purchasedAt) : '—';
-      document.getElementById('service-price').textContent = sub.price
-        ? '$' + sub.price + (sub.billing === 'weekly' ? '/wk' : '/mo')
-        : sub.isAdminTest ? 'Admin test' : '—';
+      document.getElementById('service-price').textContent =
+        sub.isAdminTest ? 'Admin test'
+        : typeof sub.price === 'number'
+          ? '$' + sub.price.toFixed(2) + (billing === 'weekly' ? '/wk' : '/mo')
+          : '—';
       document.getElementById('service-expires').textContent = formatDate(expiresAt);
 
       const adminBadge = document.getElementById('admin-test-badge');
@@ -2905,6 +3258,14 @@
         progressEl.classList.add('expired');
         progressEl.style.width = '0%';
       }
+
+      renderExpiryWarning(sub);
+
+      fetchAdJobs().then((data) => {
+        lastAdJobData = data;
+        updateAdSetupUI(!!data?.activeJob, entitled);
+        renderAdJob(data?.activeJob);
+      });
     }
 
     function updateNavGlow(tab) {
@@ -2928,7 +3289,21 @@
 
       updateNavGlow(tab);
       document.getElementById('page-scroll').scrollTop = 0;
-      if (tab === 1) syncUserFromApi().then(() => { renderServices(); fetchAdJobs(); });
+      if (tab === 1) {
+        startAdJobPolling();
+        syncUserFromApi().then(() => {
+          renderServices();
+          fetchAdJobs().then((data) => {
+            lastAdJobData = data;
+            const hasJob = !!(data?.activeJob);
+            updateAdSetupUI(hasJob, getActiveSubscription()?.accounts);
+            renderAdJob(data?.activeJob);
+            if (sessionStorage.getItem(PENDING_AD_KEY) === '1' && !hasJob) focusAdInput();
+          });
+        });
+      } else {
+        stopAdJobPolling();
+      }
       if (tab === 2) renderReferrals();
       if (tab === 3) syncUserFromApi().then(() => { renderProfile(); });
     }
@@ -3135,6 +3510,11 @@
       document.getElementById('payment-failed').style.display = view === 'failed' ? 'block' : 'none';
     }
 
+    function updatePaymentStatusLabel(label) {
+      const el = document.getElementById('payment-status-label');
+      if (el && label) el.textContent = label;
+    }
+
     function stopPaymentPolling() {
       if (paymentPollTimer) {
         clearInterval(paymentPollTimer);
@@ -3145,11 +3525,13 @@
     function closePaymentModal(event) {
       if (event && event.target !== event.currentTarget) return;
       stopPaymentPolling();
+      clearPendingPayment();
       document.getElementById('payment-modal').classList.remove('open');
     }
 
-    function openPaymentModal(payment) {
+    function openPaymentModal(payment, options = {}) {
       activePayment = payment;
+      savePendingPayment(payment, !!options.waiting);
       const isBalance = payment.type === 'balance' || payment.plan === 'balance';
       document.getElementById('payment-subtitle').textContent = isBalance
         ? 'Pay with crypto to top up your wallet'
@@ -3167,16 +3549,22 @@
       if (pendingNote) {
         pendingNote.textContent = isBalance
           ? 'Payment opens in Telegram. Return here — your balance updates automatically once confirmed.'
-          : 'Payment opens in Telegram. Return here — your plan activates automatically once confirmed.';
+          : 'Payment opens in Telegram. Return here — then paste your ad on Services to start posting.';
       }
       const successNote = document.querySelector('#payment-success .payment-status-text:last-child');
       if (successNote) {
         successNote.textContent = isBalance
           ? 'Your wallet has been topped up. Redirecting to Profile…'
-          : 'Your plan is now active. Redirecting to Services…';
+          : 'Plan active! Opening Services — paste your ad link to start posting.';
       }
-      setPaymentView('pending');
+      setPaymentView(options.waiting ? 'waiting' : 'pending');
+      if (options.waiting) {
+        updatePaymentStatusLabel('Waiting for payment confirmation…');
+      }
       document.getElementById('payment-modal').classList.add('open');
+      if (options.resumePolling) {
+        startPaymentPolling();
+      }
     }
 
     function openPaymentLink() {
@@ -3185,17 +3573,23 @@
         return;
       }
       setPaymentView('waiting');
+      updatePaymentStatusLabel('Opening payment page…');
+      savePendingPayment(activePayment, true);
       tg.openLink(activePayment.invoice_url);
       startPaymentPolling();
     }
 
     function retryPayment() {
       if (!activePayment) return;
-      setPaymentView('pending');
+      setPaymentView('waiting');
+      updatePaymentStatusLabel('Checking payment status…');
+      savePendingPayment(activePayment, true);
+      startPaymentPolling();
     }
 
     function handleBalancePaymentConfirmed(data) {
       stopPaymentPolling();
+      clearPendingPayment();
       setPaymentView('success');
       if (typeof data.walletBalance === 'number') {
         serverWalletBalance = data.walletBalance;
@@ -3214,6 +3608,7 @@
 
     function handlePaymentConfirmed(data) {
       stopPaymentPolling();
+      clearPendingPayment();
       setPaymentView('success');
       updateDiscountUI();
 
@@ -3230,15 +3625,29 @@
         serverSubscription = data.subscription;
       }
 
+      markPendingAdSetup();
       setTimeout(() => {
         closePaymentModal();
         syncUserFromApi().then(() => {
           renderServices();
           renderProfile();
           renderReferrals();
+          fetchAdJobs().then((jobs) => {
+            updateAdSetupUI(!!jobs?.activeJob, getActiveSubscription()?.accounts);
+            focusAdInput();
+          });
           switchTab(1);
         });
       }, 2000);
+    }
+
+    function paymentLooksConfirmed(data, isBalance) {
+      const status = (data.status || '').toLowerCase();
+      return status === 'finished'
+        || status === 'confirmed'
+        || status === 'paid'
+        || data.confirmed
+        || (!isBalance && data.subscriptionActive);
     }
 
     function startPaymentPolling() {
@@ -3246,9 +3655,10 @@
       if (!activePayment?.order_id) return;
 
       let attempts = 0;
-      const maxAttempts = 120;
+      let consecutiveErrors = 0;
+      const maxAttempts = 450;
 
-      paymentPollTimer = setInterval(async () => {
+      const pollOnce = async () => {
         attempts += 1;
         if (attempts > maxAttempts) {
           stopPaymentPolling();
@@ -3257,26 +3667,78 @@
         }
 
         try {
-          const data = await apiRequest('/api/payment-status?order_id=' + encodeURIComponent(activePayment.order_id));
+          const data = await paymentStatusRequest(activePayment.order_id);
+          consecutiveErrors = 0;
           const isBalance = data.type === 'balance' || activePayment?.type === 'balance';
-          if (data.status === 'finished') {
+
+          if (paymentLooksConfirmed(data, isBalance)) {
             if (isBalance) handleBalancePaymentConfirmed(data);
             else handlePaymentConfirmed(data);
-          } else if (!isBalance && data.subscriptionActive) {
-            handlePaymentConfirmed(data);
-          } else if (data.status === 'failed' || data.status === 'expired' || data.status === 'refunded') {
+            return;
+          }
+
+          if (data.status === 'failed' || data.status === 'expired' || data.status === 'refunded') {
             stopPaymentPolling();
             setPaymentView('failed');
+            return;
+          }
+
+          if (data.processing || data.statusLabel) {
+            updatePaymentStatusLabel(data.statusLabel || 'Processing payment…');
           }
         } catch (_) {
-          /* keep polling on transient errors */
+          consecutiveErrors += 1;
+          if (consecutiveErrors >= 15) {
+            updatePaymentStatusLabel('Connection issue — still checking…');
+          }
         }
-      }, 3000);
+      };
+
+      pollOnce();
+      paymentPollTimer = setInterval(pollOnce, 3000);
+    }
+
+    async function resumePendingPayment() {
+      const pending = loadPendingPayment();
+      if (!pending?.order_id) return;
+
+      activePayment = pending;
+      if (!pending.waiting) return;
+
+      try {
+        const data = await paymentStatusRequest(pending.order_id);
+        const isBalance = data.type === 'balance' || pending.type === 'balance';
+        if (paymentLooksConfirmed(data, isBalance)) {
+          openPaymentModal(pending, { waiting: true });
+          if (isBalance) handleBalancePaymentConfirmed(data);
+          else handlePaymentConfirmed(data);
+          return;
+        }
+        if (data.status === 'failed' || data.status === 'expired' || data.status === 'refunded') {
+          openPaymentModal(pending, { waiting: false });
+          setPaymentView('failed');
+          return;
+        }
+        openPaymentModal(pending, { waiting: true, resumePolling: true });
+        if (data.statusLabel) updatePaymentStatusLabel(data.statusLabel);
+      } catch (_) {
+        openPaymentModal(pending, { waiting: true, resumePolling: true });
+        updatePaymentStatusLabel('Reconnecting — checking payment…');
+      }
     }
 
     async function buyPlan(btn) {
+      if (!btn || btn.disabled) return;
+      if (!inTelegram || !tg.initData) {
+        tg.showAlert('Open from Telegram: send /start to @MMcAddssBot and tap Open App.');
+        return;
+      }
       const card = btn.closest('.plan-card');
-      const name = card.dataset.plan;
+      if (!card) {
+        tg.showAlert('Could not read plan — refresh and try again.');
+        return;
+      }
+      const name = (card.dataset.plan || '').toLowerCase();
       const isWeekly = card.querySelector('.billing-btn:last-child').classList.contains('active');
       const billing = isWeekly ? 'weekly' : 'monthly';
       const basePrice = Number(isWeekly ? card.dataset.weekly : card.dataset.monthly);
@@ -3301,6 +3763,33 @@
           })
         });
 
+        if (result.free) {
+          if (result.subscription) {
+            saveSubscription({
+              plan: result.subscription.plan,
+              accounts: result.subscription.accounts,
+              expiresAt: result.subscription.expiresAt,
+              purchasedAt: new Date().toISOString(),
+              billing,
+              isAdminTest: true
+            });
+            serverSubscription = result.subscription;
+          }
+          markPendingAdSetup();
+          tg.showAlert(
+            (result.plan || name).toUpperCase() + ' activated! Go to Services and paste your ad link.'
+          );
+          await syncUserFromApi();
+          renderServices();
+          fetchAdJobs().then((jobs) => {
+            updateAdSetupUI(!!jobs?.activeJob, result.subscription?.accounts || result.accounts);
+            focusAdInput();
+          });
+          switchTab(1);
+          updateDiscountUI();
+          return;
+        }
+
         openPaymentModal({
           order_id: result.order_id,
           invoice_url: result.invoice_url,
@@ -3320,10 +3809,9 @@
 
     async function adminActivate(btn) {
       const card = btn.closest('.plan-card');
-      const name = card.dataset.plan;
+      const name = (card.dataset.plan || '').toLowerCase();
       const isWeekly = card.querySelector('.billing-btn:last-child').classList.contains('active');
       const billing = isWeekly ? 'weekly' : 'monthly';
-
       const originalText = btn.textContent;
       btn.disabled = true;
       btn.textContent = 'Activating…';
@@ -3346,9 +3834,14 @@
           serverSubscription = data.subscription;
         }
 
-        tg.showAlert(data.plan + ' test plan activated!');
+        markPendingAdSetup();
+        tg.showAlert(data.plan + ' test plan activated! Paste your ad on Services.');
         await syncUserFromApi();
         renderServices();
+        fetchAdJobs().then((jobs) => {
+          updateAdSetupUI(!!jobs?.activeJob, data.subscription?.accounts);
+          focusAdInput();
+        });
         switchTab(1);
       } catch (err) {
         tg.showAlert(err.message || 'Activation failed.');
@@ -3378,8 +3871,12 @@
           method: 'POST',
           body: JSON.stringify({ link })
         });
-        renderAdJob(data.job);
-        tg.showAlert('Ad queued — posting across ' + data.accounts + ' accounts.');
+        serverAssignedAccounts = Number(data.assignedAccounts || data.accounts || 0);
+        clearPendingAdSetup();
+        updateAdSetupUI(true, getActiveSubscription()?.accounts);
+        renderServices();
+        renderAdJob(data.job || data.activeJob);
+        tg.showAlert('Your ad is now posting.');
         input.value = '';
       } catch (err) {
         tg.showAlert(err.message || 'Could not submit ad.');
@@ -3400,8 +3897,12 @@
       renderProfile();
       renderReferrals();
       updateDiscountUI();
-      fetchAdJobs();
+      fetchAdJobs().then((data) => {
+        lastAdJobData = data;
+        renderAdJob(data?.activeJob);
+      });
       renderSyncBanner();
+      resumePendingPayment();
     });
     switchTab(0);
   </script>
