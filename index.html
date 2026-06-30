@@ -1776,10 +1776,11 @@
     </div>
 
     <div class="plans-list">
-      <article class="plan-card" data-plan="STARTER" data-monthly="1" data-weekly="1">
+      <article class="plan-card" data-plan="STARTER" data-monthly="60" data-weekly="25">
         <div class="plan-card-top">
           <div>
             <h2 class="plan-name">Starter</h2>
+            <p class="plan-limit">Up to 20 accounts</p>
           </div>
           <span class="plan-badge">Basic</span>
         </div>
@@ -1789,7 +1790,7 @@
         </ul>
         <div class="plan-pricing">
           <div class="plan-price-wrap">
-            <div class="plan-price">$<span class="price-value">1</span></div>
+            <div class="plan-price">$<span class="price-value">60</span></div>
             <div class="plan-period">/<span class="price-period">mo</span></div>
           </div>
           <div class="billing-toggle">
@@ -1808,6 +1809,7 @@
         <div class="plan-card-top">
           <div>
             <h2 class="plan-name">Premium</h2>
+            <p class="plan-limit">Up to 40 accounts</p>
           </div>
           <span class="plan-badge plan-badge--popular">Popular</span>
         </div>
@@ -1836,6 +1838,7 @@
         <div class="plan-card-top">
           <div>
             <h2 class="plan-name">Ultimate</h2>
+            <p class="plan-limit">Up to 100 accounts</p>
           </div>
           <span class="plan-badge">Pro</span>
         </div>
@@ -2308,9 +2311,10 @@
     const planInfo = {
       STARTER: {
         title: 'Starter Plan',
-        subtitle: 'Forum advert automation',
+        subtitle: 'Up to 20 forum accounts',
         desc: 'Get started with automated forum advertising. Your ads are posted continuously across your account network with small delays between each group.',
         features: [
+          'Up to 20 forum accounts',
           'Continuous reposting with short delays',
           'Submit ad links from the dashboard',
           'Forum network distribution',
@@ -2319,9 +2323,10 @@
       },
       PREMIUM: {
         title: 'Premium Plan',
-        subtitle: 'Scale your reach',
-        desc: 'Ideal for users running multiple campaigns who need faster distribution and priority handling.',
+        subtitle: 'Up to 40 forum accounts',
+        desc: 'Scale your reach with double the accounts. Ideal for users running multiple campaigns who need faster distribution and priority handling.',
         features: [
+          'Up to 40 forum accounts',
           'Everything in Starter',
           'Priority ad queue',
           'Faster distribution across forums',
@@ -2330,9 +2335,10 @@
       },
       ULTIMATE: {
         title: 'Ultimate Plan',
-        subtitle: 'Maximum capacity',
-        desc: 'Maximum capacity for high-volume advertisers. Run large-scale forum campaigns with top priority support.',
+        subtitle: 'Up to 100 forum accounts',
+        desc: 'Maximum capacity for high-volume advertisers. Run large-scale forum campaigns with the full account network at your disposal.',
         features: [
+          'Up to 100 forum accounts',
           'Everything in Premium',
           'Maximum posting capacity',
           'Best for high-volume campaigns',
@@ -2343,7 +2349,7 @@
 
     let activeInfoCard = null;
 
-    const planAccounts = { STARTER: 2, PREMIUM: 4, ULTIMATE: 8, CUSTOM: 2 };
+    const planAccounts = { STARTER: 20, PREMIUM: 40, ULTIMATE: 100, CUSTOM: 2 };
     const SUBSCRIPTION_KEY = 'mmcads_subscription';
     const SPENT_KEY = 'mmcads_total_spent';
     const MEMBER_KEY = 'mmcads_member_since';
