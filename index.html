@@ -2824,7 +2824,11 @@
         throw new Error('Bot returned bad data — old app link. Run start-all.bat then /start.');
       }
       if (!res.ok) {
-        throw new Error(data.error || 'Request failed');
+        const msg = data.error || data.message || ('Request failed (' + res.status + ')');
+        if (res.status === 401) {
+          throw new Error('Session expired — close the app, send /start to @MMcAddssBot, tap Open App.');
+        }
+        throw new Error(msg);
       }
       return data;
     }
@@ -3759,6 +3763,15 @@
       if (!btn || btn.disabled) return;
       if (!inTelegram || !tg.initData) {
         tg.showAlert('Open from Telegram: send /start to @MMcAddssBot and tap Open App.');
+        return;
+      }
+      if (!API_BASE) {
+        tg.showAlert('App not linked to API. Send /start and tap Open App again.');
+        return;
+      }
+      const online = await checkBotOnline(true);
+      if (!online) {
+        tg.showAlert('Cannot reach bot API at ' + API_BASE + '. Start MMcAds on your RDP (start-all-console.bat), then /start → Open App.');
         return;
       }
       const card = btn.closest('.plan-card');
