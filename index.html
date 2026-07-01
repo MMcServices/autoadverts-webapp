@@ -2301,7 +2301,7 @@
   </nav>
 
   <!-- Set your bot API URL when the bot is deployed, e.g. https://your-server.com:8080 -->
-  <script>window.BOT_API_URL = 'https://kathy-johnston-cpu-with.trycloudflare.com';</script>
+  <script>window.BOT_API_URL = 'https://api.mmcadss.com';</script>
 
   <script>
     const tg = window.Telegram?.WebApp || {
@@ -2373,16 +2373,24 @@
     const PENDING_PAYMENT_KEY = 'mmcads_pending_payment';
 
     function resolveApiBase() {
+      const host = window.location.hostname;
+      const origin = window.location.origin.replace(/\/$/, '');
       const params = new URLSearchParams(window.location.search);
+
+      // app.mmcadss.com and api.mmcadss.com both hit the same bot — use same-origin API (fixes payments in Telegram)
+      if (host === 'app.mmcadss.com' || host === 'api.mmcadss.com') {
+        return origin;
+      }
+
       const fromQuery = params.get('api');
       if (fromQuery) return fromQuery.replace(/\/$/, '');
       const fromScript = window.BOT_API_URL || '';
-      if (fromScript) return fromScript.replace(/\/$/, '');
+      if (fromScript && !fromScript.includes('localhost')) return fromScript.replace(/\/$/, '');
       if (window.location.pathname === '/app' || window.location.pathname.endsWith('/app')) {
-        return window.location.origin;
+        return origin;
       }
-      if (window.location.hostname.includes('trycloudflare.com')) {
-        return window.location.origin;
+      if (host.includes('trycloudflare.com')) {
+        return origin;
       }
       return '';
     }
@@ -2394,6 +2402,9 @@
       const hasApi = !!(params.get('api') || (window.BOT_API_URL && !window.BOT_API_URL.includes('localhost')));
       const onTunnelApp = path === '/app' || path.endsWith('/app');
 
+      if (host.endsWith('mmcadss.com')) {
+        return null;
+      }
       if (host.includes('trycloudflare.com')) {
         if (onTunnelApp || hasApi) return null;
         return 'Tunnel expired (Error 1033). Send /start in @MMcAddssBot and tap Open App.';
